@@ -1,0 +1,2768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PMP Operations Center v3.49</title>
+
+  <meta name="theme-color" content="#0b2743" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="PMP Operations" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <style>
+    :root {
+      --navy: #123a63;
+      --navy-dark: #0b2743;
+      --red: #d9232e;
+      --light: #f4f7fb;
+      --card: #ffffff;
+      --text: #17324d;
+      --muted: #6b7b8c;
+      --border: #d7e0e8;
+      --shadow: 0 14px 35px rgba(18, 58, 99, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: var(--light);
+      color: var(--text);
+    }
+
+    body {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .app-shell {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-rows: 104px 1fr 42px;
+      background:
+        radial-gradient(circle at top right, rgba(217, 35, 46, 0.18), transparent 30%),
+        linear-gradient(180deg, #5f88ad 0%, #46729a 45%, #315d86 100%);
+    }
+
+    .topbar {
+      background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      border-bottom: 6px solid var(--red);
+      box-shadow: 0 6px 18px rgba(11, 39, 67, 0.18);
+    }
+
+    .brand-block h1 {
+      margin: 0;
+      font-size: clamp(1.7rem, 2.5vw, 2.5rem);
+      letter-spacing: 0.04em;
+      font-weight: 800;
+    }
+
+    .brand-block p {
+      margin: 7px 0 0;
+      font-size: 0.98rem;
+      opacity: 0.85;
+      letter-spacing: 0.03em;
+    }
+
+    .status-badge {
+      border: 1px solid rgba(255,255,255,0.35);
+      background: rgba(255,255,255,0.10);
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    main {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 28px 48px 24px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .intro h2 {
+      margin: 0;
+      font-size: clamp(1.6rem, 2.2vw, 2.2rem);
+      color: white;
+      font-weight: 800;
+    }
+
+    .intro p {
+      margin: 8px 0 0;
+      color: rgba(255,255,255,.88);
+      font-size: 1rem;
+    }
+
+    .dashboard-grid {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .dashboard-card {
+      min-height: 0;
+      background: var(--navy);
+      border: 2px solid rgba(255,255,255,0.35);
+      border-radius: 14px;
+      box-shadow: 0 16px 36px rgba(0,0,0,.22);
+      padding: 15px 18px 9px;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dashboard-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 7px;
+      background: var(--navy);
+    }
+
+    .dashboard-card:hover,
+    .dashboard-card:focus-visible {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 42px rgba(18, 58, 99, 0.18);
+      border-color: #aab9c8;
+      outline: none;
+    }
+
+    .dashboard-card:hover::before,
+    .dashboard-card:focus-visible::before {
+      background: var(--red);
+    }
+
+    .icon-wrap {
+      width: 30px;
+      height: 30px;
+      margin: 2px 0 9px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-wrap svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .dashboard-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.45rem;
+      color: white;
+    }
+
+    .dashboard-card p {
+      margin: 0;
+      color: rgba(255,255,255,.88);
+      line-height: 1.32;
+      font-size: 0.96rem;
+      margin-bottom:0;
+    }
+
+    .arrow {
+      font-size: 1.25rem;
+    }
+
+    footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #718093;
+      font-size: 0.82rem;
+      border-top: 1px solid rgba(18, 58, 99, 0.08);
+      background: rgba(255,255,255,0.65);
+    }
+
+
+    .screen {
+      display: none;
+      min-height: 0;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    .inventory-header {
+      width: min(1180px, 100%);
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .inventory-title h2 {
+      margin: 0;
+      color: white;
+      font-size: clamp(1.6rem, 2.2vw, 2.2rem);
+      font-weight: 800;
+    }
+
+    .inventory-title p {
+      margin: 8px 0 0;
+      color: rgba(255,255,255,.88);
+    }
+
+    .back-button {
+      border: 2px solid rgba(255,255,255,.45);
+      background: rgba(11,39,67,.45);
+      color: white;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: .92rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .back-button:hover,
+    .back-button:focus-visible {
+      background: var(--navy-dark);
+      outline: none;
+    }
+
+    .module-grid {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .inventory-main-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    @media (max-width: 1050px) {
+      .inventory-main-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .module-tile {
+      min-height: 0;
+      background: var(--navy);
+      border: 2px solid rgba(255,255,255,0.35);
+      border-radius: 14px;
+      padding: 15px 18px 12px;
+      box-shadow: 0 16px 36px rgba(0,0,0,.22);
+      color: white;
+      cursor: pointer;
+      text-align: left;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .module-tile::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 7px;
+      background: var(--navy);
+    }
+
+    .module-tile:hover,
+    .module-tile:focus-visible {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 42px rgba(18,58,99,.18);
+      border-color: #aab9c8;
+      outline: none;
+    }
+
+    .module-tile:hover::before,
+    .module-tile:focus-visible::before {
+      background: var(--red);
+    }
+
+    .module-icon {
+      width: 30px;
+      height: 30px;
+      margin: 2px 0 9px;
+      color: white;
+    }
+
+    .module-icon svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .module-tile h3 {
+      margin: 0 0 10px;
+      font-size: 1.22rem;
+      color: white;
+    }
+
+    .module-tile p {
+      margin: 0;
+      color: rgba(255,255,255,.88);
+      font-size: .9rem;
+      line-height: 1.32;
+    }
+
+
+
+    .price-review-screen {
+      justify-content:flex-start;
+      padding:0;
+      overflow:hidden;
+    }
+    .price-review-shell {
+      width:min(1320px,100%);
+      height:100%;
+      min-height:0;
+      margin:0 auto;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .price-review-screen .inventory-header {
+      margin:0;
+      width:100%;
+      flex:0 0 auto;
+    }
+    .price-review-summary {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      margin:0;
+      flex:0 0 auto;
+    }
+    .price-review-card {
+      background:rgba(255,255,255,.97);
+      border:2px solid rgba(255,255,255,.45);
+      border-radius:12px;
+      padding:11px 15px;
+      box-shadow:0 10px 24px rgba(0,0,0,.13);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .price-review-card span { color:var(--muted); font-size:.8rem; font-weight:800; }
+    .price-review-card strong { font-size:1.35rem; color:var(--navy-dark); }
+    .price-review-toolbar {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin:0;
+      padding:11px 14px;
+      background:rgba(255,255,255,.97);
+      border-radius:12px;
+      box-shadow:0 10px 24px rgba(0,0,0,.13);
+      flex:0 0 auto;
+    }
+    .price-review-toolbar select {
+      min-width:210px;
+      border:1px solid var(--border);
+      border-radius:9px;
+      padding:9px 11px;
+      background:#fff;
+      font-weight:700;
+      color:var(--navy);
+    }
+    .price-review-table-wrap {
+      min-height:0;
+      flex:1 1 auto;
+      overflow:auto;
+      border:2px solid rgba(255,255,255,.45);
+      border-radius:14px;
+      background:#fff;
+      box-shadow:0 16px 36px rgba(0,0,0,.18);
+      scrollbar-gutter:stable;
+    }
+    .price-review-table { width:100%; border-collapse:collapse; min-width:1120px; font-size:.84rem; }
+    .price-review-table th {
+      position:sticky;
+      top:0;
+      z-index:3;
+      background:var(--navy-dark);
+      color:#fff;
+      text-align:left;
+      padding:10px 12px;
+      font-size:.75rem;
+      text-transform:uppercase;
+      letter-spacing:.035em;
+      white-space:nowrap;
+      border-bottom:4px solid var(--red);
+    }
+    .price-review-table td { padding:9px 12px; border-bottom:1px solid var(--border); vertical-align:middle; }
+    .price-review-table tbody tr:hover { background:#f4f8fb; }
+    .price-review-table .number { text-align:right; white-space:nowrap; }
+    .price-review-table th:last-child,
+    .price-review-table td:last-child {
+      position:sticky;
+      right:0;
+      z-index:2;
+      background:#fff;
+      box-shadow:-8px 0 12px rgba(11,39,67,.06);
+    }
+    .price-review-table th:last-child { z-index:4; background:var(--navy-dark); }
+    .price-up { color:#b42318; font-weight:800; }
+    .price-down { color:#067647; font-weight:800; }
+    .price-current { color:#475467; font-weight:700; }
+    .price-action {
+      border:0;
+      border-radius:8px;
+      padding:8px 11px;
+      background:var(--navy);
+      color:#fff;
+      font-weight:800;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .price-action:hover,.price-action:focus-visible { background:var(--red); outline:none; }
+    .price-review-empty { text-align:center; color:var(--muted); padding:34px !important; }
+    @media (max-width:760px){
+      .price-review-summary{grid-template-columns:1fr;}
+      .price-review-toolbar{align-items:stretch;flex-direction:column;}
+      .price-review-toolbar select{width:100%;}
+    }
+
+    .products-screen {
+      justify-content: flex-start;
+      padding-top: 0;
+    }
+
+    .products-shell {
+      width: min(1320px, 100%);
+      height: 100%;
+      min-height: 0;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .products-toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 1.4fr) minmax(180px, .8fr) auto auto auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .products-toolbar input,
+    .products-toolbar select {
+      width: 100%;
+      border: 2px solid rgba(255,255,255,.35);
+      background: rgba(255,255,255,.96);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: inherit;
+      outline: none;
+    }
+
+    .products-toolbar input:focus,
+    .products-toolbar select:focus {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(217,35,46,.15);
+    }
+
+    .excel-button {
+      border: 2px solid rgba(255,255,255,.45);
+      background: var(--red);
+      color: white;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: .9rem;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .excel-button:hover,
+    .excel-button:focus-visible {
+      filter: brightness(.95);
+      outline: none;
+    }
+
+    .low-stock-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      font-weight: 700;
+      white-space: nowrap;
+      background: rgba(11,39,67,.45);
+      border: 2px solid rgba(255,255,255,.35);
+      border-radius: 10px;
+      padding: 9px 12px;
+    }
+
+    .low-stock-toggle input {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      accent-color: var(--red);
+    }
+
+    .reorder-button {
+      border: 2px solid rgba(255,255,255,.45);
+      background: rgba(11,39,67,.62);
+      color: white;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: .9rem;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .reorder-button:hover,
+    .reorder-button:focus-visible {
+      background: var(--navy-dark);
+      outline: none;
+    }
+
+    .reorder-button.active {
+      background: var(--red);
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(217,35,46,.14);
+    }
+
+    .reorder-export-hidden{display:none}
+    .reorder-export-visible{display:inline-block}
+
+    .receiving-details{
+      display:grid;
+      grid-template-columns:minmax(180px,1fr) minmax(180px,1fr) minmax(150px,.65fr) auto;
+      gap:12px;
+      align-items:end;
+      padding:14px;
+      margin-bottom:14px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:#f8fafc;
+    }
+    .receiving-details label{display:block;font-size:.8rem;font-weight:700;margin-bottom:5px;color:var(--muted)}
+    .receiving-details input{width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:9px;background:#fff}
+    .receiving-qty{width:92px;padding:7px 8px;border:1px solid var(--border);border-radius:8px;text-align:right}
+    @media(max-width:900px){.receiving-details{grid-template-columns:1fr 1fr}.receiving-details button{width:100%}}
+
+    .manager-number{width:92px;padding:7px 8px;border:1px solid var(--border);border-radius:8px;text-align:right}
+    .manager-status{min-width:170px;padding:7px 8px;border:1px solid var(--border);border-radius:8px;background:#fff}
+    .status-badge{display:inline-flex;min-width:76px;justify-content:center;padding:5px 9px;border-radius:999px;font-size:.78rem;font-weight:900}
+    .status-badge.active{background:#dcfce7;color:#166534}
+    .status-badge.use-remaining{background:#fef3c7;color:#92400e}
+    .status-badge.inactive{background:#e5e7eb;color:#4b5563}
+    .status-toggle{border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--navy-dark);padding:7px 10px;font-weight:800;cursor:pointer;white-space:nowrap}
+    .status-toggle:hover,.status-toggle:focus-visible{border-color:var(--navy);outline:none}
+    .reorder-qty-control{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .reorder-qty-control button{
+      width:30px;
+      height:30px;
+      border:1px solid var(--border);
+      border-radius:7px;
+      background:#fff;
+      color:var(--navy-dark);
+      font-weight:900;
+      cursor:pointer;
+    }
+    .reorder-qty-control button:hover,
+    .reorder-qty-control button:focus-visible{
+      border-color:var(--navy);
+      outline:none;
+    }
+    .reorder-qty-control input{
+      width:64px;
+      text-align:center;
+      border:1px solid var(--border);
+      border-radius:7px;
+      padding:6px 4px;
+      font:inherit;
+      font-weight:800;
+      color:var(--navy-dark);
+      background:#fff;
+    }
+
+    .products-table-wrap {
+      min-height: 0;
+      flex: 1;
+      overflow: auto;
+      background: rgba(255,255,255,.97);
+      border: 2px solid rgba(255,255,255,.4);
+      border-radius: 14px;
+      box-shadow: 0 16px 36px rgba(0,0,0,.2);
+    }
+
+    .products-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .88rem;
+    }
+
+    .products-table th {
+      cursor:pointer;
+      user-select:none;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: var(--navy-dark);
+      color: white;
+      text-align: left;
+      padding: 11px 12px;
+      border-bottom: 4px solid var(--red);
+      white-space: nowrap;
+    }
+
+    .products-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .products-table tbody tr:hover {
+      background: #edf4fb;
+    }
+
+    .products-table td.number {
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .stock-badge {
+      display: inline-flex;
+      min-width: 42px;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-weight: 800;
+      background: #e7f3ea;
+      color: #236b35;
+    }
+
+    .stock-badge.low {
+      background: #fde8ea;
+      color: #a81722;
+    }
+
+    .empty-state {
+      display: none;
+      padding: 30px;
+      text-align: center;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    @media (max-width: 820px) {
+      .products-toolbar {
+        grid-template-columns: 1fr;
+      }
+      .products-table {
+        min-width: 920px;
+      }
+    }
+
+
+    .count-screen{justify-content:flex-start;padding-top:0}.count-shell{width:min(1320px,100%);height:100%;min-height:0;margin:0 auto;display:flex;flex-direction:column;gap:14px}.count-details{display:grid;grid-template-columns:170px 1fr 1fr 1fr;gap:12px;background:rgba(255,255,255,.96);border:2px solid rgba(255,255,255,.4);border-radius:14px;padding:14px;box-shadow:0 16px 36px rgba(0,0,0,.16)}.count-field label{display:block;font-size:.76rem;font-weight:800;color:var(--muted);margin:0 0 5px;text-transform:uppercase;letter-spacing:.04em}.count-field input,.count-field select{width:100%;border:1px solid var(--border);border-radius:9px;padding:9px 10px;font:inherit;color:var(--text);background:white}.count-table-wrap{min-height:0;flex:1;overflow:auto;background:rgba(255,255,255,.97);border:2px solid rgba(255,255,255,.4);border-radius:14px;box-shadow:0 16px 36px rgba(0,0,0,.2)}.count-table{width:100%;border-collapse:collapse;font-size:.86rem}.count-table th{position:sticky;top:0;z-index:2;background:var(--navy-dark);color:white;text-align:left;padding:10px 12px;border-bottom:4px solid var(--red);white-space:nowrap}.count-table td{padding:7px 12px;border-bottom:1px solid var(--border);vertical-align:middle}.count-table input[type=number],.count-table input[type=text]{width:100%;border:1px solid var(--border);border-radius:7px;padding:7px 8px;font:inherit}.count-table input[type=number]{max-width:100px}.difference{font-weight:800;text-align:center}.difference.match{color:#236b35}.difference.mismatch{color:#a81722}.count-actions{display:flex;justify-content:flex-end;gap:10px}.action-button{border:2px solid rgba(255,255,255,.45);background:rgba(11,39,67,.6);color:white;border-radius:10px;padding:10px 16px;font-size:.9rem;font-weight:800;cursor:pointer}.action-button.primary{background:var(--red);border-color:var(--red)}.action-button:hover,.action-button:focus-visible{filter:brightness(.95);outline:none}@media(max-width:900px){.count-details{grid-template-columns:1fr 1fr}.count-table{min-width:900px}}
+    .notice {
+      position: fixed;
+      left: 50%;
+      bottom: 54px;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--navy-dark);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 12px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.20);
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.2s ease;
+      font-size: 0.92rem;
+      z-index: 10;
+    }
+
+    .notice.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 980px) {
+      html, body {
+        overflow: auto;
+      }
+
+      .app-shell {
+        min-height: 100%;
+        height: auto;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .module-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .dashboard-card {
+        min-height: 0;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .topbar {
+        padding: 0 22px;
+      }
+
+      .status-badge {
+        display: none;
+      }
+
+      main {
+        padding: 24px 20px;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .module-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .inventory-header {
+        align-items: flex-start;
+        flex-direction: column-reverse;
+      }
+
+      .dashboard-card {
+        min-height: 0;
+      }
+    }
+  
+    .usage-screen{justify-content:flex-start;padding-top:0;overflow:auto}.usage-shell{width:min(1320px,100%);height:auto;min-height:100%;margin:0 auto;display:flex;flex-direction:column;gap:14px}.usage-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.money-card{background:rgba(255,255,255,.97);border-radius:14px;padding:14px 16px;box-shadow:0 12px 28px rgba(0,0,0,.16);border:2px solid rgba(255,255,255,.45)}.money-card span{display:block;color:var(--muted);font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}.money-card strong{display:block;margin-top:6px;color:var(--navy-dark);font-size:1.45rem}.usage-tools{display:grid;grid-template-columns:minmax(260px,1fr) 180px 220px auto;gap:12px;background:rgba(255,255,255,.97);padding:14px;border-radius:14px;box-shadow:0 12px 28px rgba(0,0,0,.16)}.usage-tools input,.usage-tools select{width:100%;border:1px solid var(--border);border-radius:9px;padding:10px;font:inherit;background:#fff}.upload-label{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:86px;background:#f7fafc;color:var(--navy-dark);border:2px dashed #7f98ad;border-radius:12px;font-weight:800;cursor:pointer;padding:14px;text-align:center;transition:.18s ease}.upload-label:hover,.upload-label.drag-active{background:#eaf1f7;border-color:var(--red);box-shadow:0 0 0 3px rgba(192,28,39,.08)}.upload-label strong{font-size:.95rem}.upload-label span{margin-top:4px;color:var(--muted);font-size:.78rem;font-weight:600}.upload-label input{display:none}.usage-table-wrap{min-height:0;flex:1;overflow:auto;background:rgba(255,255,255,.97);border-radius:14px;box-shadow:0 16px 36px rgba(0,0,0,.2)}.usage-table{width:100%;border-collapse:collapse;font-size:.84rem}.usage-table th{position:sticky;top:0;z-index:2;background:var(--navy-dark);color:white;text-align:left;padding:10px;border-bottom:4px solid var(--red);white-space:nowrap}.usage-table td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle}.usage-table input,.usage-table select{width:100%;border:1px solid var(--border);border-radius:7px;padding:7px;font:inherit}.match-ok{color:#236b35;font-weight:800}.match-review{color:#a81722;font-weight:800}.usage-actions{display:flex;justify-content:flex-end;gap:10px}@media(max-width:900px){.usage-summary{grid-template-columns:1fr}.usage-tools{grid-template-columns:1fr}.usage-table{min-width:1100px}}
+  
+    .products-total-bar{display:flex;justify-content:space-between;align-items:center;gap:20px;background:rgba(255,255,255,.97);border:2px solid rgba(255,255,255,.4);border-radius:12px;padding:11px 16px;box-shadow:0 10px 24px rgba(0,0,0,.14);color:var(--navy-dark);font-weight:800}
+    .products-total-bar strong{font-size:1.05rem}
+    .products-total-actions{display:flex;align-items:center;justify-content:flex-end;gap:14px;flex-wrap:wrap}
+    .reviewed-order-cost{color:var(--red)}
+    .reviewed-order-cost.hidden{display:none}
+    .tech-spend-panel{background:rgba(255,255,255,.97);border-radius:14px;box-shadow:0 12px 28px rgba(0,0,0,.16);overflow:hidden;flex:0 0 auto}
+    .tech-spend-panel.hidden{display:none}
+    .tech-spend-title{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 18px;background:#eaf2f8;border-bottom:3px solid var(--red)}
+    .tech-spend-title h3{margin:0;color:var(--navy-dark);font-size:1.05rem}.tech-spend-title p{margin:0;color:var(--muted);font-size:.84rem}
+    .technician-card-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;padding:18px}
+    .technician-button{border:2px solid #c8d7e4;background:#fff;border-radius:12px;padding:16px;text-align:left;cursor:pointer;box-shadow:0 7px 16px rgba(13,45,74,.08);transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
+    .technician-button:hover,.technician-button:focus-visible{transform:translateY(-2px);box-shadow:0 12px 24px rgba(13,45,74,.15);border-color:var(--navy);outline:none}
+    .technician-button-name{display:block;color:var(--navy-dark);font-size:1rem;font-weight:800;text-align:center}
+    .technician-button-stats{display:none}
+    .technician-button-stats strong{display:block;color:var(--navy-dark);font-size:.94rem;margin-top:2px}
+    .technician-button-last{grid-column:1/-1;padding-top:8px;border-top:1px solid var(--border)}
+    .empty-tech{text-align:center;color:var(--muted)}.tech-profile{display:none;background:rgba(255,255,255,.97);border-radius:14px;box-shadow:0 12px 28px rgba(0,0,0,.16);overflow:hidden;flex:0 0 auto}.tech-profile.active{display:block}.tech-profile-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 18px;background:#eaf2f8;border-bottom:3px solid var(--red)}.tech-profile-header h3{margin:0;color:var(--navy-dark)}.tech-profile-header p{margin:3px 0 0;color:var(--muted);font-size:.84rem}.tech-profile-close{border:0;background:var(--navy);color:#fff;border-radius:9px;padding:9px 13px;font-weight:800;cursor:pointer}.tech-history-wrap{max-height:none;overflow:auto}.tech-history-table{width:100%;border-collapse:collapse;font-size:.82rem;min-width:900px}.tech-history-table th{position:sticky;top:0;background:var(--navy-dark);color:#fff;text-align:left;padding:10px 12px}.tech-history-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}.tech-history-table td.number{text-align:right;font-weight:800}.tech-history-products{color:var(--muted);line-height:1.45}
+    .checkout-summary-row{cursor:pointer;background:#fff;transition:background .15s ease}
+    .checkout-summary-row:hover{background:#f3f7fb}
+    .checkout-summary-row td{vertical-align:middle}
+    .checkout-date{font-weight:800;color:var(--navy-dark)}
+    .checkout-order{font-weight:700}
+    .checkout-toggle{border:0;background:var(--navy);color:#fff;border-radius:8px;padding:8px 12px;font-weight:800;cursor:pointer;white-space:nowrap}
+    .checkout-toggle:hover,.checkout-toggle:focus-visible{background:var(--red);outline:none}
+    .checkout-detail-row{display:none;background:#f7fafc}
+    .checkout-detail-row.open{display:table-row}
+    .checkout-detail-cell{padding:0!important}
+    .checkout-detail-card{padding:14px 16px 18px;border-top:1px solid var(--border)}
+    .checkout-detail-table{width:100%;border-collapse:collapse;font-size:.82rem;background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+    .checkout-detail-table th{position:static;background:#eaf2f8;color:var(--navy-dark);padding:9px 10px;border-bottom:2px solid var(--red)}
+    .checkout-detail-table td{padding:9px 10px;border-bottom:1px solid var(--border)}
+    .checkout-detail-table tr:last-child td{border-bottom:0}
+    .checkout-detail-table td.number{text-align:right;font-weight:800}
+
+    @media(max-width:1100px){.technician-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:650px){.technician-card-grid{grid-template-columns:1fr}}
+    .usage-screen.profile-mode{overflow:hidden}
+    .usage-screen.profile-mode .usage-shell{height:100%;min-height:0}
+    .usage-screen.profile-mode .inventory-header,
+    .usage-screen.profile-mode .usage-summary,
+    .usage-screen.profile-mode .usage-tools,
+    .usage-screen.profile-mode #checkout-detected,
+    .usage-screen.profile-mode .review-toolbar,
+    .usage-screen.profile-mode .usage-table-wrap,
+    .usage-screen.profile-mode #tech-directory,
+    .usage-screen.profile-mode .usage-actions{display:none!important}
+    .usage-screen.profile-mode .tech-profile{
+      display:flex;
+      flex-direction:column;
+      flex:1 1 auto;
+      min-height:0;
+      margin:0;
+    }
+    .usage-screen.profile-mode .tech-history-wrap{
+      flex:1 1 auto;
+      min-height:0;
+      overflow:auto;
+    }
+
+  
+    .checkout-review-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr);gap:18px;align-items:start;margin-bottom:18px}
+    .pdf-preview-card{background:#f7fafc;border:1px solid var(--border);border-radius:14px;overflow:hidden;min-height:520px}
+    .pdf-preview-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#eaf1f7;border-bottom:1px solid var(--border);font-weight:700}
+    .pdf-preview-frame{display:block;width:100%;height:620px;border:0;background:#fff}
+    .pdf-preview-empty{display:flex;align-items:center;justify-content:center;min-height:520px;padding:24px;text-align:center;color:var(--muted)}
+    @media(max-width:1100px){.checkout-review-grid{grid-template-columns:1fr}.pdf-preview-frame{height:520px}}
+
+    .review-toolbar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 18px;padding:16px 18px;background:#f7fafc;border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 20px rgba(13,45,74,.08)}
+    .review-toolbar-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+    .review-toolbar-copy strong{font-size:17px;color:var(--navy)}
+    .review-toolbar-copy span{font-size:14px;color:var(--muted)}
+    .preview-button{appearance:none;border:0;border-radius:10px;background:var(--navy);color:#fff;font-weight:800;font-size:15px;padding:12px 18px;cursor:pointer;white-space:nowrap;box-shadow:0 5px 12px rgba(13,45,74,.18)}
+    .preview-button:hover:not(:disabled){transform:translateY(-1px)}
+    .preview-button:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+    @media(max-width:760px){.review-toolbar{align-items:stretch;flex-direction:column}.preview-button{width:100%}}
+
+
+    .history-screen{justify-content:flex-start;padding-top:0;overflow:hidden}
+    .history-shell{width:min(1320px,100%);height:100%;min-height:0;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+    .history-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;flex:0 0 auto}
+    .history-summary-card{background:rgba(255,255,255,.97);border:2px solid rgba(255,255,255,.4);border-radius:12px;padding:11px 15px;box-shadow:0 10px 24px rgba(0,0,0,.14)}
+    .history-summary-card span{display:block;color:var(--muted);font-size:.76rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+    .history-summary-card strong{display:block;margin-top:5px;color:var(--navy-dark);font-size:1.35rem}
+    .history-toolbar{display:grid;grid-template-columns:minmax(240px,1.4fr) 220px 170px 170px auto;gap:12px;align-items:center;flex:0 0 auto}
+    .history-toolbar input,.history-toolbar select{width:100%;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.97);color:var(--text);border-radius:10px;padding:10px 12px;font:inherit;outline:none}
+    .history-toolbar input:focus,.history-toolbar select:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(217,35,46,.15)}
+    .history-table-wrap{min-height:0;flex:1 1 auto;overflow:auto;background:rgba(255,255,255,.97);border:2px solid rgba(255,255,255,.4);border-radius:14px;box-shadow:0 16px 36px rgba(0,0,0,.2)}
+    .history-table{width:100%;border-collapse:collapse;font-size:.84rem;min-width:1120px}
+    .history-table th{position:sticky;top:0;z-index:2;background:var(--navy-dark);color:#fff;text-align:left;padding:10px 12px;border-bottom:4px solid var(--red);white-space:nowrap}
+    .history-table td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+    .history-table tbody tr:hover{background:#edf4fb}
+    .history-table td.number{text-align:right;font-weight:800;white-space:nowrap}
+    .history-type{display:inline-flex;align-items:center;justify-content:center;min-width:112px;padding:5px 9px;border-radius:999px;font-size:.75rem;font-weight:900;white-space:nowrap}
+    .history-type.receiving{background:#dcfce7;color:#166534}.history-type.technician-usage{background:#dbeafe;color:#1d4ed8}.history-type.physical-count{background:#fef3c7;color:#92400e}.history-type.price-change{background:#fce7f3;color:#9d174d}.history-type.minimum-change{background:#ede9fe;color:#6d28d9}
+    .history-positive{color:#166534}.history-negative{color:#b42318}.history-neutral{color:var(--muted)}
+    .history-empty{text-align:center;color:var(--muted);padding:34px!important;font-weight:700}
+    @media(max-width:980px){.history-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.history-toolbar{grid-template-columns:1fr 1fr}.history-toolbar button{width:100%}}
+    @media(max-width:620px){.history-summary,.history-toolbar{grid-template-columns:1fr}}
+
+</style>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <h1>PMP OPERATIONS CENTER</h1>
+        <p>Virginia Pest Management Professional Dashboard</p>
+      </div>
+      <div class="status-badge">INVENTORY BUILD • v3.49</div>
+    </header>
+
+    <main>
+      <section id="dashboard-screen" class="screen active">
+        <section class="intro">
+          <h2>Service Manager Dashboard</h2>
+          <p>Select a section to begin.</p>
+        </section>
+
+        <section class="dashboard-grid" aria-label="PMP dashboard sections">
+        <button class="dashboard-card" type="button" data-section="Inventory">
+          <div>
+            <div class="icon-wrap" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 7.5 12 3l8 4.5-8 4.5-8-4.5Z" />
+                <path d="M4 7.5V16.5L12 21l8-4.5V7.5" />
+                <path d="M12 12v9" />
+              </svg>
+            </div>
+            <h3>Inventory</h3>
+            <p>Manage products, stock levels, receiving, technician usage, inventory history, and reorder needs.</p>
+          </div>
+        </button>
+
+        <button class="dashboard-card" type="button" data-section="QA">
+          <div>
+            <div class="icon-wrap" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M9 4h6" />
+                <path d="M9 2h6v4H9z" />
+                <path d="M7 4H5.5A1.5 1.5 0 0 0 4 5.5v15h16v-15A1.5 1.5 0 0 0 18.5 4H17" />
+                <path d="m8 13 2.5 2.5L16 10" />
+              </svg>
+            </div>
+            <h3>QA</h3>
+            <p>Access quality assurance visits, account tracking, observations, follow-up actions, and reporting.</p>
+          </div>
+        </button>
+
+        <button class="dashboard-card" type="button" data-section="Training">
+          <div>
+            <div class="icon-wrap" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="m3 9 9-5 9 5-9 5-9-5Z" />
+                <path d="M7 11.2V16c2.8 2.2 7.2 2.2 10 0v-4.8" />
+                <path d="M21 9v6" />
+              </svg>
+            </div>
+            <h3>Training</h3>
+            <p>Organize technician training, seasonal topics, product guidance, certifications, and learning materials.</p>
+          </div>
+        </button>
+
+        <button class="dashboard-card" type="button" data-section="Resources">
+          <div>
+            <div class="icon-wrap" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v17H6.5A2.5 2.5 0 0 0 4 22V5.5Z" />
+                <path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v17h4.5A2.5 2.5 0 0 1 20 22V5.5Z" />
+              </svg>
+            </div>
+            <h3>Resources</h3>
+            <p>Access product labels, SDS, MOA information, technical references, policies, forms, and regulatory resources.</p>
+          </div>
+        </button>
+        </section>
+      </section>
+
+      <section id="inventory-screen" class="screen" aria-label="Inventory module">
+        <div class="inventory-header">
+          <div class="inventory-title">
+            <h2>Inventory</h2>
+            <p>Manage physical stock and product movement.</p>
+          </div>
+          <button id="back-to-dashboard" class="back-button" type="button">← Back to Dashboard</button>
+        </div>
+
+        <section class="module-grid inventory-main-grid" aria-label="Inventory tools">
+          <button class="module-tile" type="button" data-module="Products">
+            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7.5 12 3l8 4.5-8 4.5-8-4.5Z"/><path d="M4 7.5V16.5L12 21l8-4.5V7.5"/><path d="M12 12v9"/></svg></div>
+            <h3>Products</h3>
+            <p>View and search the current inventory product list.</p>
+          </button>
+
+          <button class="module-tile" type="button" data-module="Product Manager Menu">
+            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.12 2.12-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.55V20.3h-3v-.09a1.7 1.7 0 0 0-1.03-1.55 1.7 1.7 0 0 0-1.88.34l-.06.06-2.12-2.12.06-.06A1.7 1.7 0 0 0 7.02 15a1.7 1.7 0 0 0-1.55-1.03H5.4v-3h.09a1.7 1.7 0 0 0 1.55-1.03 1.7 1.7 0 0 0-.34-1.88L6.64 8l2.12-2.12.06.06a1.7 1.7 0 0 0 1.88.34 1.7 1.7 0 0 0 1.03-1.55V4.7h3v.09a1.7 1.7 0 0 0 1.03 1.55 1.7 1.7 0 0 0 1.88-.34l.06-.06L19.82 8l-.06.06a1.7 1.7 0 0 0-.34 1.88 1.7 1.7 0 0 0 1.55 1.03h.09v3h-.09A1.7 1.7 0 0 0 19.4 15Z"/></svg></div>
+            <h3>Product Manager</h3>
+            <p>Open minimums, ordering, receiving, physical count, and price review.</p>
+          </button>
+
+          <button class="module-tile" type="button" data-module="Technician Usage">
+            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><path d="M4 21v-3a5 5 0 0 1 10 0v3"/><path d="M16 8h5"/><path d="m19 5 3 3-3 3"/></svg></div>
+            <h3>Technician Usage</h3>
+            <p>Upload checkout PDFs, review product matches, and track technician spend.</p>
+          </button>
+
+          <button class="module-tile" type="button" data-module="Inventory History">
+            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l3 2"/></svg></div>
+            <h3>Inventory History</h3>
+            <p>Review receiving, usage, and adjustment activity.</p>
+          </button>
+        </section>
+      </section>
+
+      <section id="product-manager-menu-screen" class="screen" aria-label="Product Manager tools">
+        <div class="inventory-header">
+          <div class="inventory-title">
+            <h2>Product Manager</h2>
+            <p>Choose the inventory maintenance task you need.</p>
+          </div>
+          <button id="back-from-product-manager-menu" class="back-button" type="button">← Back to Inventory</button>
+        </div>
+
+        <section class="module-grid" aria-label="Product Manager tools">
+          <button class="module-tile manager-menu-tile" type="button" data-manager-module="Order">
+            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L20 7H7"/><circle cx="10" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg></div>
+            <h3>Order</h3>
+            <p>Review products below minimum and build the next order.</p>
+          </button>
+          <button class="module-tile manager-menu-tile" type="button" data-manager-module="Receive">
+            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7h11v10H3z"/><path d="M14 10h4l3 3v4h-7z"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg></div>
+            <h3>Receive</h3>
+            <p>Post incoming shipments and update on-hand inventory.</p>
+          </button>
+          <button class="module-tile manager-menu-tile" type="button" data-manager-module="Price Review">
+            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 6.5c0-1.9-2.2-3.5-5-3.5S7 4.6 7 6.5 9.2 10 12 10s5 1.6 5 3.5S14.8 17 12 17s-5-1.6-5-3.5"/><path d="M4 21h16"/></svg></div>
+            <h3>Price Review</h3>
+            <p>Compare checkout prices with the master price and approve updates.</p>
+          </button>
+          <button class="module-tile manager-menu-tile" type="button" data-manager-module="Physical Count">
+            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 4h6"/><path d="M9 2h6v4H9z"/><path d="M7 4H5.5A1.5 1.5 0 0 0 4 5.5v15h16v-15A1.5 1.5 0 0 0 18.5 4H17"/><path d="M8 11h8"/><path d="M8 15h5"/></svg></div>
+            <h3>Physical Count</h3>
+            <p>Compare manual counts with inventory and correct differences.</p>
+          </button>
+          <button class="module-tile manager-menu-tile" type="button" data-manager-module="Minimums">
+            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16"/><path d="M4 12h10"/><path d="M4 19h7"/><path d="M18 9v10"/><path d="m15 16 3 3 3-3"/></svg></div>
+            <h3>Minimums</h3>
+            <p>Set product minimums and active status.</p>
+          </button>
+          <button class="module-tile manager-menu-tile" type="button" data-manager-module="Master Data Review">
+            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+            <h3>Master Data Review</h3>
+            <p>Check products, counts, minimums, pricing, and required fields before go-live.</p>
+          </button>
+        </section>
+      </section>
+
+      <section id="products-screen" class="screen products-screen" aria-label="Products inventory">
+        <div class="products-shell">
+          <div class="inventory-header">
+            <div class="inventory-title">
+              <h2>Products</h2>
+              <p>Current physical inventory from the PMP master inventory workbook.</p>
+            </div>
+            <button id="back-to-inventory" class="back-button" type="button">← Back to Inventory</button>
+          </div>
+
+          <div class="products-toolbar">
+            <input id="product-search" type="search" placeholder="Search product or manufacturer…" aria-label="Search products" />
+            <select id="category-filter" aria-label="Filter by category">
+              <option value="">All categories</option>
+            </select>
+            <select id="status-filter" aria-label="Filter by product status">
+              <option value="active" selected>Active products</option>
+              <option value="use-remaining">Use remaining stock</option>
+              <option value="inactive">Inactive products</option>
+              <option value="all">All products</option>
+            </select>
+            <button id="export-on-hand-excel" class="excel-button" type="button">Export On-Hand Excel</button>
+          </div>
+
+          <div class="products-table-wrap">
+            <table class="products-table">
+              <thead>
+                <tr id="products-header-row">
+                  <th data-sort="name">Product</th>
+                  <th data-sort="manufacturer">Manufacturer</th>
+                  <th data-sort="category">Category</th>
+                  <th data-sort="onHand">On Hand</th>
+                  <th data-sort="price">Unit Price</th>
+                  <th data-sort="inventoryValue">Inventory Value</th>
+                  <th data-sort="unit">Unit</th>
+                </tr>
+              </thead>
+              <tbody id="products-body"></tbody>
+            </table>
+            <div id="products-empty" class="empty-state">No products match the current filters.</div>
+          </div>
+          <div class="products-total-bar">
+            <span id="products-on-hand-count">Products on Hand: 0</span>
+            <div class="products-total-actions">
+              <strong id="products-inventory-total">Total Inventory Value: $0.00</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+      <section id="order-inventory-screen" class="screen products-screen" aria-label="Order Inventory">
+        <div class="products-shell">
+          <div class="inventory-header">
+            <div class="inventory-title">
+              <h2>Order Inventory</h2>
+              <p>Review products below minimum, adjust quantities, and export the order.</p>
+            </div>
+            <button id="back-from-order-inventory" class="back-button" type="button">← Back to Product Manager</button>
+          </div>
+
+          <div class="products-toolbar">
+            <input id="order-search" type="search" placeholder="Search product or manufacturer…" aria-label="Search products to order" />
+            <select id="order-status-filter" aria-label="Filter order products by status">
+              <option value="active" selected>Active products</option>
+              <option value="all">All statuses</option>
+            </select>
+            <button id="order-export-excel" class="excel-button" type="button">Export Order Excel</button>
+          </div>
+
+          <div class="products-table-wrap">
+            <table class="products-table">
+              <thead>
+                <tr>
+                  <th>Item #</th>
+                  <th>Product</th>
+                  <th>Manufacturer</th>
+                  <th>On Hand</th>
+                  <th>Minimum</th>
+                  <th>Suggested</th>
+                  <th>Unit Price</th>
+                  <th>Order Quantity</th>
+                  <th>Line Total</th>
+                </tr>
+              </thead>
+              <tbody id="order-body"></tbody>
+            </table>
+            <div id="order-empty" class="empty-state">No products currently need to be ordered.</div>
+          </div>
+
+          <div class="products-total-bar">
+            <span id="order-product-count">Products to Order: 0</span>
+            <div class="products-total-actions">
+              <strong id="order-quantity-total">Reviewed Order Quantity: 0</strong>
+              <strong id="order-cost-total">Reviewed Cost: $0.00</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="receive-inventory-screen" class="screen products-screen" aria-label="Receive Inventory">
+        <div class="products-shell">
+          <div class="inventory-header">
+            <div class="inventory-title">
+              <h2>Receive Inventory</h2>
+              <p>Enter shipment details, review new totals, and post received inventory.</p>
+            </div>
+            <button id="back-from-receive-inventory" class="back-button" type="button">← Back to Product Manager</button>
+          </div>
+
+          <div class="receiving-details">
+            <div>
+              <label for="receive-vendor">Vendor / Distributor</label>
+              <input id="receive-vendor" type="text" placeholder="Forshaw, Target Specialty Products…" />
+            </div>
+            <div>
+              <label for="receive-reference">PO / Invoice / Packing Slip</label>
+              <input id="receive-reference" type="text" placeholder="Optional reference number" />
+            </div>
+            <div>
+              <label for="receive-date">Received Date</label>
+              <input id="receive-date" type="date" />
+            </div>
+            <button id="receive-post" class="excel-button" type="button">Post Received Inventory</button>
+          </div>
+
+          <div class="products-toolbar">
+            <input id="receive-search" type="search" placeholder="Search active products…" aria-label="Search products to receive" />
+          </div>
+
+          <div class="products-table-wrap">
+            <table class="products-table">
+              <thead>
+                <tr>
+                  <th>Item #</th>
+                  <th>Product</th>
+                  <th>Manufacturer</th>
+                  <th>Current On Hand</th>
+                  <th>Unit</th>
+                  <th>Unit Price</th>
+                  <th>Quantity Received</th>
+                  <th>New On Hand</th>
+                </tr>
+              </thead>
+              <tbody id="receive-body"></tbody>
+            </table>
+            <div id="receive-empty" class="empty-state">No active products match the search.</div>
+          </div>
+
+          <div class="products-total-bar">
+            <span id="receive-product-count">Products Selected: 0</span>
+            <div class="products-total-actions">
+              <strong id="receive-quantity-total">Total Quantity Received: 0</strong>
+              <strong id="receive-value-total">Shipment Value: $0.00</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="master-data-review-screen" class="screen products-screen" aria-label="Master Data Review">
+        <div class="products-shell">
+          <div class="inventory-header">
+            <div class="inventory-title">
+              <h2>Master Data Review</h2>
+              <p>Pre–go-live audit of the product master. This review does not change any data.</p>
+            </div>
+            <button id="back-from-master-data-review" class="back-button" type="button">← Back to Product Manager</button>
+          </div>
+
+          <div class="history-summary-grid" aria-label="Master data review summary">
+            <div class="history-summary-card"><span>Total Products</span><strong id="master-total-products">0</strong></div>
+            <div class="history-summary-card"><span>Ready</span><strong id="master-ready-products">0</strong></div>
+            <div class="history-summary-card"><span>Needs Review</span><strong id="master-review-products">0</strong></div>
+            <div class="history-summary-card"><span>Critical Issues</span><strong id="master-critical-issues">0</strong></div>
+          </div>
+
+          <div class="products-toolbar">
+            <input id="master-review-search" type="search" placeholder="Search product, manufacturer, or issue…" aria-label="Search master data review" />
+            <select id="master-review-filter" aria-label="Filter master data issues">
+              <option value="all" selected>All products</option>
+              <option value="critical">Critical issues</option>
+              <option value="review">Needs review</option>
+              <option value="ready">Ready</option>
+              <option value="missing-count">Missing on-hand count</option>
+              <option value="zero-minimum">Zero minimum</option>
+              <option value="missing-price">Missing price</option>
+              <option value="duplicate-name">Repeated product name</option>
+            </select>
+          </div>
+
+          <div class="products-table-wrap">
+            <table class="products-table">
+              <thead><tr><th>Item #</th><th>Product</th><th>Manufacturer</th><th>Unit</th><th>On Hand</th><th>Minimum</th><th>Price</th><th>Review Result</th></tr></thead>
+              <tbody id="master-review-body"></tbody>
+            </table>
+            <div id="master-review-empty" class="empty-state">No products match the current review filter.</div>
+          </div>
+          <p class="section-note"><strong>Review rule:</strong> Missing counts are critical. A zero minimum, missing price, or repeated name is flagged for confirmation because it may be intentional.</p>
+        </div>
+      </section>
+
+      <section id="product-manager-screen" class="screen products-screen" aria-label="Product Manager">
+        <div class="products-shell">
+          <div class="inventory-header">
+            <div class="inventory-title">
+              <h2>Minimums</h2>
+              <p>Maintain product minimums and status.</p>
+            </div>
+            <button id="back-from-product-manager" class="back-button" type="button">← Back to Product Manager</button>
+          </div>
+
+          <div class="products-toolbar">
+            <input id="manager-search" type="search" placeholder="Search product or manufacturer…" aria-label="Search managed products" />
+            <select id="manager-status-filter" aria-label="Filter managed products by status">
+              <option value="all" selected>All statuses</option>
+              <option value="active">Active</option>
+              <option value="use-remaining">Use Remaining Stock</option>
+              <option value="inactive">Inactive</option>
+            </select>
+            <button id="update-minimums" class="excel-button" type="button">Update Minimums</button>
+            <button id="export-reorder-excel" class="excel-button reorder-export-hidden" type="button">Export Reviewed Order Excel</button>
+          </div>
+
+          <div class="products-table-wrap">
+            <table class="products-table">
+              <thead>
+                <tr id="manager-header-row">
+                  <th>Item #</th>
+                  <th>Product</th>
+                  <th>Manufacturer</th>
+                  <th>Category</th>
+                  <th>On Hand</th>
+                  <th>Minimum</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="manager-body"></tbody>
+            </table>
+            <div id="manager-empty" class="empty-state">No products match the current filters.</div>
+          </div>
+        </div>
+      </section>
+
+
+      <section id="price-review-screen" class="screen price-review-screen" aria-label="Inventory price review">
+        <div class="price-review-shell">
+          <div class="inventory-header">
+            <div class="inventory-title">
+              <h2>Price Review</h2>
+              <p>Checkout PDFs supply the transaction price. Review differences before updating the master inventory price.</p>
+            </div>
+            <button id="back-from-price-review" class="back-button" type="button">← Back to Product Manager</button>
+          </div>
+          <div class="price-review-summary">
+            <div class="price-review-card"><span>Products Needing Review</span><strong id="price-review-count">0</strong></div>
+            <div class="price-review-card"><span>Price Increases</span><strong id="price-increase-count">0</strong></div>
+            <div class="price-review-card"><span>Price Decreases</span><strong id="price-decrease-count">0</strong></div>
+          </div>
+          <div class="price-review-toolbar">
+            <div><strong>Latest checkout price by product</strong><div style="color:var(--muted);font-size:.88rem;margin-top:3px">Prices are never changed automatically.</div></div>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
+              <select id="price-review-filter" aria-label="Filter price review"><option value="review">All Price Changes</option><option value="increase">Price Increased</option><option value="decrease">Price Decreased</option></select>
+              <button id="update-all-master-prices" class="excel-button" type="button">Update Master Prices</button>
+              <button id="export-price-difference-report" class="reorder-button" type="button">Export Price Difference Report</button>
+            </div>
+          </div>
+          <div class="price-review-table-wrap">
+            <table class="price-review-table">
+              <thead><tr><th>SKU</th><th>Product</th><th>Manufacturer</th><th>Master Price</th><th>Latest PDF Price</th><th>Difference</th><th>Last Seen</th><th>Order</th></tr></thead>
+              <tbody id="price-review-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <section id="inventory-history-screen" class="screen history-screen" aria-label="Inventory History">
+        <div class="history-shell">
+          <div class="inventory-header">
+            <div class="inventory-title">
+              <h2>Inventory History</h2>
+              <p>Complete audit trail for receiving, technician usage, counts, prices, and minimums.</p>
+            </div>
+            <button id="back-from-inventory-history" class="back-button" type="button">← Back to Inventory</button>
+          </div>
+          <div class="history-summary">
+            <div class="history-summary-card"><span>Visible Activity</span><strong id="history-visible-count">0</strong></div>
+            <div class="history-summary-card"><span>Quantity Added</span><strong id="history-added-total">0</strong></div>
+            <div class="history-summary-card"><span>Quantity Removed</span><strong id="history-removed-total">0</strong></div>
+            <div class="history-summary-card"><span>Latest Activity</span><strong id="history-latest-date">—</strong></div>
+          </div>
+          <div class="history-toolbar">
+            <input id="history-search" type="search" placeholder="Search product, technician, vendor, order, or reference…" aria-label="Search inventory history" />
+            <select id="history-type-filter" aria-label="Filter inventory history by activity type">
+              <option value="all">All activity</option>
+              <option value="Receiving">Receiving</option>
+              <option value="Technician Usage">Technician Usage</option>
+              <option value="Physical Count">Physical Count</option>
+              <option value="Price Change">Price Changes</option>
+              <option value="Minimum Change">Minimum Changes</option>
+            </select>
+            <input id="history-start-date" type="date" aria-label="History start date" />
+            <input id="history-end-date" type="date" aria-label="History end date" />
+            <button id="history-clear-filters" class="action-button" type="button">Clear Filters</button>
+          </div>
+          <div class="history-table-wrap">
+            <table class="history-table">
+              <thead><tr><th>Date</th><th>Activity</th><th>Product</th><th>Change</th><th>Before</th><th>After</th><th>Person / Source</th><th>Reference</th><th>Details</th></tr></thead>
+              <tbody id="inventory-history-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="usage-screen" class="screen usage-screen" aria-label="Technician checkout"><div class="usage-shell"><div class="inventory-header"><div class="inventory-title"><h2>Technician Checkout</h2><p>Upload one or more technician checkout PDFs. The technician, checkout date, order number, quantities, and historical prices are read directly from each document.</p></div><button id="back-from-usage" class="back-button" type="button">← Back to Inventory</button></div><div class="usage-summary"><div class="money-card"><span>This Checkout</span><strong id="checkout-value">$0.00</strong></div><div class="money-card"><span>Total Product Value Issued</span><strong id="issued-value">$0.00</strong></div></div><div class="usage-tools"><label id="checkout-drop-zone" class="upload-label"><strong>Drag & Drop Checkout PDFs Here</strong><span>Drop multiple PDFs at once, or click to choose them</span><input id="checkout-pdf" type="file" accept="application/pdf" multiple></label><button id="clear-usage" class="action-button" type="button">Clear Review</button></div><div id="checkout-detected" style="display:none;margin:0 0 16px;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:#f7fafc;font-weight:600"></div><div class="review-toolbar"><div class="review-toolbar-copy"><strong>Checkout Review</strong><span>Compare the parsed items with the original checkout documents before posting.</span></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><select id="pdf-preview-select" class="usage-product" aria-label="Select PDF to preview" disabled style="min-width:240px"><option value="">Select PDF…</option></select><button id="open-pdf-preview" class="preview-button" type="button" disabled>View Selected PDF ↗</button></div></div><div class="usage-table-wrap"><table class="usage-table"><thead><tr><th>Use</th><th>PDF Description</th><th>Matched Product</th><th>Qty</th><th>Unit Price</th><th>Price UOM</th><th>Extended Cost</th><th>Status</th></tr></thead><tbody id="usage-body"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">Upload a checkout PDF to begin.</td></tr></tbody></table></div><div id="tech-directory" class="tech-spend-panel"><div class="tech-spend-title"><h3>Technician Usage</h3><p>Select a technician to open their checkout history.</p></div><div id="tech-spend-body" class="technician-card-grid"></div></div><div id="tech-profile" class="tech-profile"><div class="tech-profile-header"><div><h3 id="tech-profile-name">Technician</h3><p id="tech-profile-summary">Checkout history</p></div><button id="close-tech-profile" class="tech-profile-close" type="button">← Back to Technicians</button></div><div class="tech-history-wrap"><table class="tech-history-table checkout-history-table"><thead><tr><th>Checkout Date</th><th>Order #</th><th>Items</th><th>Total Value</th><th></th></tr></thead><tbody id="tech-history-body"></tbody></table></div></div><div class="usage-actions"><button id="post-checkout" class="action-button primary" type="button">Post Approved Checkout</button></div></div></section>
+      <section id="count-screen" class="screen count-screen" aria-label="Physical inventory count">
+        <div class="count-shell">
+          <div class="inventory-header">
+            <div class="inventory-title"><h2>Physical Count</h2><p>Compare the manual count with the quantity currently on record.</p></div>
+            <button id="back-from-count" class="back-button" type="button">← Back to Product Manager</button>
+          </div>
+          <div class="count-details">
+            <div class="count-field"><label for="count-date">Count Date</label><input id="count-date" type="date" /></div>
+            <div class="count-field"><label for="counted-by">Counted By</label><input id="counted-by" type="text" placeholder="Name" /></div>
+            <div class="count-field"><label for="count-location">Location</label><input id="count-location" type="text" placeholder="Warehouse or branch" /></div>
+            <div class="count-field"><label for="count-reason">Reason</label><select id="count-reason"><option>Spot Check</option><option>Monthly Inventory</option><option>Quarterly Audit</option><option>Annual Audit</option></select></div>
+          </div>
+          <div class="count-table-wrap"><table class="count-table"><thead><tr><th>Product</th><th>Expected</th><th>Counted</th><th>Difference</th><th>Notes</th></tr></thead><tbody id="count-body"></tbody></table></div>
+          <div class="count-actions"><button id="clear-count" class="action-button" type="button">Clear Count</button><button id="apply-count" class="action-button primary" type="button">Apply Counted Quantities</button></div>
+        </div>
+      </section>
+    </main>
+
+    <footer>PMP Operations Center • Inventory build • v3.49</footer>
+  </div>
+
+  <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+  <script>
+    const notice = document.getElementById("notice");
+    const dashboardScreen = document.getElementById("dashboard-screen");
+    const inventoryScreen = document.getElementById("inventory-screen");
+    const productManagerMenuScreen = document.getElementById("product-manager-menu-screen");
+    const backFromProductManagerMenu = document.getElementById("back-from-product-manager-menu");
+    const productsScreen = document.getElementById("products-screen");
+    const orderInventoryScreen = document.getElementById("order-inventory-screen");
+    const receiveInventoryScreen = document.getElementById("receive-inventory-screen");
+    orderInventoryScreen.classList.remove("active");
+    receiveInventoryScreen.classList.remove("active");
+    const backFromOrderInventory = document.getElementById("back-from-order-inventory");
+    const backFromReceiveInventory = document.getElementById("back-from-receive-inventory");
+    const orderSearch = document.getElementById("order-search");
+    const orderStatusFilter = document.getElementById("order-status-filter");
+    const orderExportExcel = document.getElementById("order-export-excel");
+    const orderBody = document.getElementById("order-body");
+    const orderEmpty = document.getElementById("order-empty");
+    const orderProductCount = document.getElementById("order-product-count");
+    const orderQuantityTotal = document.getElementById("order-quantity-total");
+    const orderCostTotal = document.getElementById("order-cost-total");
+    const receiveSearch = document.getElementById("receive-search");
+    const receiveVendor = document.getElementById("receive-vendor");
+    const receiveReference = document.getElementById("receive-reference");
+    const receiveDate = document.getElementById("receive-date");
+    const receivePost = document.getElementById("receive-post");
+    const receiveBody = document.getElementById("receive-body");
+    const receiveEmpty = document.getElementById("receive-empty");
+    const receiveProductCount = document.getElementById("receive-product-count");
+    const receiveQuantityTotal = document.getElementById("receive-quantity-total");
+    const receiveValueTotal = document.getElementById("receive-value-total");
+    const receiveQuantitiesDedicated = {};
+
+    const masterDataReviewScreen = document.getElementById("master-data-review-screen");
+    const backFromMasterDataReview = document.getElementById("back-from-master-data-review");
+    const masterReviewSearch = document.getElementById("master-review-search");
+    const masterReviewFilter = document.getElementById("master-review-filter");
+    const masterReviewBody = document.getElementById("master-review-body");
+    const masterReviewEmpty = document.getElementById("master-review-empty");
+    const masterTotalProducts = document.getElementById("master-total-products");
+    const masterReadyProducts = document.getElementById("master-ready-products");
+    const masterReviewProducts = document.getElementById("master-review-products");
+    const masterCriticalIssues = document.getElementById("master-critical-issues");
+
+    const productManagerScreen = document.getElementById("product-manager-screen");
+    const backFromProductManager = document.getElementById("back-from-product-manager");
+    const managerSearch = document.getElementById("manager-search");
+    const managerStatusFilter = document.getElementById("manager-status-filter");
+    const managerBody = document.getElementById("manager-body");
+    const managerEmpty = document.getElementById("manager-empty");
+    const updateMinimums = document.getElementById("update-minimums");
+    const managerHeaderRow = document.getElementById("manager-header-row");
+    const managerOrderList = null;
+    const managerReceiving = null;
+    const managerReceivingDetails = document.getElementById("manager-receiving-details");
+    const receivingVendor = document.getElementById("receiving-vendor");
+    const receivingReference = document.getElementById("receiving-reference");
+    const receivingDate = document.getElementById("receiving-date");
+    const postReceiving = document.getElementById("post-receiving");
+    const receivingQuantities = {};
+    const priceReviewScreen = document.getElementById("price-review-screen");
+    const backFromPriceReview = document.getElementById("back-from-price-review");
+    const priceReviewBody = document.getElementById("price-review-body");
+    const priceReviewFilter = document.getElementById("price-review-filter");
+    const priceReviewCount = document.getElementById("price-review-count");
+    const priceIncreaseCount = document.getElementById("price-increase-count");
+    const priceDecreaseCount = document.getElementById("price-decrease-count");
+    const updateAllMasterPrices = document.getElementById("update-all-master-prices");
+    const exportPriceDifferenceReport = document.getElementById("export-price-difference-report");
+    const backButton = document.getElementById("back-to-dashboard");
+    const backToInventory = document.getElementById("back-to-inventory");
+    const productSearch = document.getElementById("product-search");
+    const categoryFilter = document.getElementById("category-filter");
+    const statusFilter = document.getElementById("status-filter");
+    const productsBody = document.getElementById("products-body");
+    const productsEmpty = document.getElementById("products-empty");
+    const exportOnHandExcel = document.getElementById("export-on-hand-excel");
+    const exportReorderExcel = document.getElementById("export-reorder-excel");
+    const reviewedOrderCost = document.getElementById("reviewed-order-cost");
+
+    const usageScreen=document.getElementById("usage-screen"),backFromUsage=document.getElementById("back-from-usage"),checkoutPdf=document.getElementById("checkout-pdf"),checkoutDropZone=document.getElementById("checkout-drop-zone"),usageBody=document.getElementById("usage-body"),clearUsage=document.getElementById("clear-usage"),postCheckout=document.getElementById("post-checkout"),checkoutValue=document.getElementById("checkout-value"),issuedValue=document.getElementById("issued-value"),checkoutDetected=document.getElementById("checkout-detected"),productsOnHandCount=document.getElementById("products-on-hand-count"),productsInventoryTotal=document.getElementById("products-inventory-total"),techSpendBody=document.getElementById("tech-spend-body"),techProfile=document.getElementById("tech-profile"),techProfileName=document.getElementById("tech-profile-name"),techProfileSummary=document.getElementById("tech-profile-summary"),techHistoryBody=document.getElementById("tech-history-body"),closeTechProfile=document.getElementById("close-tech-profile");
+    const countScreen = document.getElementById("count-screen");
+    const backFromCount = document.getElementById("back-from-count");
+    const countBody = document.getElementById("count-body");
+    const countDate = document.getElementById("count-date");
+    const countedBy = document.getElementById("counted-by");
+    const countLocation = document.getElementById("count-location");
+    const countReason = document.getElementById("count-reason");
+    const clearCount = document.getElementById("clear-count");
+    const applyCount = document.getElementById("apply-count");
+    const inventoryHistoryScreen = document.getElementById("inventory-history-screen");
+    const backFromInventoryHistory = document.getElementById("back-from-inventory-history");
+    const inventoryHistoryBody = document.getElementById("inventory-history-body");
+    const historySearch = document.getElementById("history-search");
+    const historyTypeFilter = document.getElementById("history-type-filter");
+    const historyStartDate = document.getElementById("history-start-date");
+    const historyEndDate = document.getElementById("history-end-date");
+    const historyClearFilters = document.getElementById("history-clear-filters");
+    const historyVisibleCount = document.getElementById("history-visible-count");
+    const historyAddedTotal = document.getElementById("history-added-total");
+    const historyRemovedTotal = document.getElementById("history-removed-total");
+    const historyLatestDate = document.getElementById("history-latest-date");
+    const productData = [{"item":1,"name":"Advance Granular Carpenter Ant Bait","onHand":10,"unit":"8 oz","minimum":10,"reorder":0,"manufacturer":"BASF","category":"Baits","price":25.61,"priceUom":"EACH"},{"item":2,"name":"Advion Ant Bait Arena","onHand":12,"unit":"Bag of 30 Stations","minimum":10,"reorder":0,"manufacturer":"Syngenta","category":"Baits","price":27.68,"priceUom":"12/PK"},{"item":3,"name":"Advion Ant Gel Bait","onHand":11,"unit":"Box of 4 x 30g tubes","minimum":10,"reorder":0,"manufacturer":"Syngenta","category":"Baits","price":31.8,"priceUom":"4/CS"},{"item":4,"name":"Advion Cockroach Gel Bait","onHand":4,"unit":"4 x 1.06 oz syringes","minimum":10,"reorder":1,"manufacturer":"Syngenta","category":"Baits","price":25.14,"priceUom":"4/CS"},{"item":5,"name":"Advion Evolution Cockroach Gel","onHand":11,"unit":"Box of 4 x 30g tubes","minimum":10,"reorder":0,"manufacturer":"Syngenta","category":"Baits","price":30.2,"priceUom":"4/CS"},{"item":6,"name":"Advion Fire Ant Bait","onHand":6,"unit":"2 lb Jug","minimum":10,"reorder":0,"manufacturer":"Syngenta","category":"Baits","price":39.32,"priceUom":"each"},{"item":7,"name":"Advion WDG","onHand":1,"unit":"16.5 oz Bottle","minimum":10,"reorder":4,"manufacturer":"Syngenta","category":"General Pest Products","price":null,"priceUom":""},{"item":8,"name":"Allure Stored Product Moth Kit","onHand":0,"unit":"Case of 25","minimum":5,"reorder":4,"manufacturer":"BASF / Whitmire","category":"Monitoring & Equipment","price":6.68,"priceUom":"EACH"},{"item":9,"name":"Alpine WSG","onHand":3,"unit":"500g Bottle","minimum":10,"reorder":1,"manufacturer":"BASF","category":"General Pest Products","price":123.93,"priceUom":"EACH"},{"item":10,"name":"Altosid Pro-G","onHand":23,"unit":"2.5 lb","minimum":10,"reorder":0,"manufacturer":"Central Life Sciences","category":"Granules","price":34.54,"priceUom":"EACH"},{"item":11,"name":"Archer IGR","onHand":3,"unit":"16 Ounce Bottle","minimum":10,"reorder":0,"manufacturer":"Syngenta","category":"IGRs","price":53.13,"priceUom":"EACH"},{"item":12,"name":"Aspen 2 gas","onHand":10,"unit":"1.3 Gallon Bottle","minimum":10,"reorder":0,"manufacturer":"Aspen USA / Lantm\u00e4nnen Aspen","category":"Equipment & Supplies","price":null,"priceUom":""},{"item":13,"name":"Bac-A-Zap","onHand":10,"unit":"16 oz Bottle","minimum":10,"reorder":0,"manufacturer":"Nisus Corporation","category":"Sanitation","price":11.98,"priceUom":"EACH"},{"item":14,"name":"Bedlam Plus","onHand":10,"unit":"17 oz can","minimum":10,"reorder":0,"manufacturer":"MGK","category":"Aerosols & Pressurized Products","price":15.97,"priceUom":"EACH"},{"item":15,"name":"Bifen I/T","onHand":6,"unit":"1 Gallon","minimum":10,"reorder":1,"manufacturer":"Control Solutions","category":"Termite / WDI","price":30.94,"priceUom":"EACH"},{"item":16,"name":"Bifen L/P Granules","onHand":3,"unit":"25 lb bag","minimum":5,"reorder":1,"manufacturer":"Control Solutions","category":"Granules","price":null,"priceUom":"EACH"},{"item":17,"name":"Bora-Care","onHand":2,"unit":"Gallon","minimum":2,"reorder":3,"manufacturer":"Nisus","category":"General Pest Products","price":73.21,"priceUom":"EACH"},{"item":18,"name":"Catchmaster #907 Fly light","onHand":6,"unit":"Case of 12","minimum":5,"reorder":0,"manufacturer":"Catchmaster","category":"Monitoring & Equipment","price":14.93,"priceUom":"12/PK"},{"item":19,"name":"Catchmaster 48R","onHand":57,"unit":"Each","minimum":48,"reorder":0,"manufacturer":"Catchmaster","category":"Monitoring & Equipment","price":3.11,"priceUom":"EACH"},{"item":20,"name":"Catchmaster 612MC","onHand":2,"unit":"Case of 12","minimum":2,"reorder":4.5,"manufacturer":"Catchmaster","category":"Monitoring & Equipment","price":4.87,"priceUom":"EACH"},{"item":21,"name":"Catchmaster 612MCS","onHand":0,"unit":"Case of 12","minimum":10,"reorder":5,"manufacturer":"Catchmaster","category":"Monitoring & Equipment","price":4.87,"priceUom":"EACH"},{"item":22,"name":"Catchmaster 72MB","onHand":34,"unit":"Case of 72","minimum":10,"reorder":0,"manufacturer":"Catchmaster","category":"Monitoring & Equipment","price":24.82,"priceUom":"72/PK"},{"item":23,"name":"Catchmaster 72TC","onHand":1,"unit":"Case of 72","minimum":10,"reorder":5,"manufacturer":"Catchmaster","category":"Monitoring & Equipment","price":15.38,"priceUom":"72/PK"},{"item":24,"name":"CimeXa Dust","onHand":10,"unit":"4 oz Bottle","minimum":10,"reorder":0,"manufacturer":"Rockwell Labs","category":"Dusts","price":10.26,"priceUom":"EACH"},{"item":25,"name":"Cobweb Duster","onHand":16,"unit":"Each","minimum":12,"reorder":0,"manufacturer":"JT Eaton","category":"Dusts","price":6.64,"priceUom":"EACH"},{"item":26,"name":"Contrac All-Weather Blox","onHand":0,"unit":"18 lb pail / 1 oz blocks","minimum":10,"reorder":1,"manufacturer":"Bell Laboratories","category":"Rodent Control","price":87.84,"priceUom":"EACH"},{"item":27,"name":"Copper Stuff-It","onHand":3,"unit":"100 ft Roll","minimum":10,"reorder":1,"manufacturer":"Allen Special Products","category":"General Pest Products","price":57.21,"priceUom":"ROLL"},{"item":28,"name":"Crossfire Aerosol","onHand":10,"unit":"17 oz can","minimum":10,"reorder":0,"manufacturer":"MGK","category":"Aerosols & Pressurized Products","price":22.12,"priceUom":"EACH"},{"item":29,"name":"Crossfire Bed Bug Concentrate","onHand":3,"unit":"13 oz / concentrate","minimum":10,"reorder":2,"manufacturer":"MGK","category":"General Pest Products","price":35.42,"priceUom":"130OZ"},{"item":30,"name":"DeltaDust","onHand":6,"unit":"1 lb","minimum":5,"reorder":0,"manufacturer":"Bayer / Envu","category":"Dusts","price":20.63,"priceUom":"EACH"},{"item":31,"name":"Demand CS","onHand":14,"unit":"Quart (32 oz)","minimum":10,"reorder":0,"manufacturer":"Syngenta","category":"General Pest Products","price":112.75,"priceUom":"EACH"},{"item":32,"name":"Demon Max","onHand":2,"unit":"Pint Bottle","minimum":0,"reorder":3,"manufacturer":"Syngenta","category":"Termite / WDI","price":null,"priceUom":""},{"item":33,"name":"Earth Care Odor Remover Bags","onHand":11,"unit":"Bag","minimum":12,"reorder":5,"manufacturer":"Earth Care Products","category":"Sanitation","price":12.83,"priceUom":"EACH"},{"item":34,"name":"EcoPCO ACU","onHand":2,"unit":"15 oz Can","minimum":10,"reorder":4,"manufacturer":"EcoSMART / FBS","category":"Aerosols & Pressurized Products","price":13.96,"priceUom":"EACH"},{"item":35,"name":"EVO Express RTU Bait Stations","onHand":14,"unit":"Each","minimum":18,"reorder":0,"manufacturer":"Bell / VM Products","category":"Baits","price":12.17,"priceUom":"EACH"},{"item":36,"name":"Final All-Weather Blox","onHand":5,"unit":"18 lb pail / 1 oz blocks","minimum":0,"reorder":0,"manufacturer":"Bell Laboratories","category":"Rodent Control","price":96.68,"priceUom":"EACH"},{"item":37,"name":"Fuse Foam RTU","onHand":2,"unit":"15 oz Can","minimum":0,"reorder":4,"manufacturer":"Control Solutions","category":"Termite / WDI","price":null,"priceUom":""},{"item":38,"name":"Fuse Termiticide/Insecticide","onHand":2,"unit":"1 Quart","minimum":0,"reorder":3,"manufacturer":"Control Solutions","category":"Termite / WDI","price":null,"priceUom":""},{"item":39,"name":"Gentrol IGR Concentrate","onHand":9,"unit":"16 oz Bottle","minimum":10,"reorder":0,"manufacturer":"Zoecon / Wellmark","category":"IGRs","price":96.76,"priceUom":"EACH"},{"item":40,"name":"Gentrol Point Source","onHand":9,"unit":"Box of 20 Disks","minimum":10,"reorder":1,"manufacturer":"Zoecon / Wellmark","category":"IGRs","price":38.31,"priceUom":"BOX OF 20"},{"item":41,"name":"Instant soap-n-water","onHand":3,"unit":"9 oz can","minimum":10,"reorder":1,"manufacturer":"BASF","category":"PPE / Sanitation Supplies","price":7.41,"priceUom":"EACH"},{"item":42,"name":"InTice 10 Perimeter Bait","onHand":0,"unit":"10 lb Bag","minimum":0,"reorder":5,"manufacturer":"Rockwell Labs","category":"Baits","price":21.94,"priceUom":"EACH"},{"item":43,"name":"InVade Hot Spot","onHand":5,"unit":"19 oz can","minimum":10,"reorder":0,"manufacturer":"Rockwell Labs","category":"Aerosols & Pressurized Products","price":12.53,"priceUom":"EACH"},{"item":44,"name":"Niban Granular Bait","onHand":9,"unit":"10 lb Bag","minimum":10,"reorder":0,"manufacturer":"Nisus","category":"Baits","price":17.78,"priceUom":"EACH"},{"item":45,"name":"Nibor-D","onHand":8,"unit":"5 lb pail","minimum":10,"reorder":0,"manufacturer":"Nisus","category":"Dusts","price":34.31,"priceUom":"EACH"},{"item":46,"name":"Nibor-D Foam + IGR","onHand":6,"unit":"21 oz Can","minimum":10,"reorder":0,"manufacturer":"Nisus","category":"IGRs","price":30.31,"priceUom":"EACH"},{"item":47,"name":"Nitrile Gloves Large","onHand":8,"unit":"Box of 100","minimum":20,"reorder":5,"manufacturer":"N/A","category":"General Pest Products","price":6.58,"priceUom":"BOX"},{"item":48,"name":"Nitrile Gloves Medium","onHand":14,"unit":"Box of 100","minimum":20,"reorder":1,"manufacturer":"N/A","category":"General Pest Products","price":6.58,"priceUom":"BOX"},{"item":49,"name":"Nitrile Gloves XLarge","onHand":6,"unit":"Box of 100","minimum":20,"reorder":2,"manufacturer":"N/A","category":"General Pest Products","price":6.58,"priceUom":"BOX"},{"item":50,"name":"NyGuard IGR Concentrate","onHand":1,"unit":"480 mL Bottle","minimum":0,"reorder":4,"manufacturer":"MGK","category":"IGRs","price":142.53,"priceUom":""},{"item":51,"name":"NyGuard IGR Concentrate","onHand":0,"unit":"140 mL Bottle","minimum":10,"reorder":3,"manufacturer":"MGK","category":"IGRs","price":45.34,"priceUom":"EACH"},{"item":52,"name":"NyGuard Plus Flea & Tick","onHand":14,"unit":"17 oz Can","minimum":10,"reorder":0,"manufacturer":"MGK","category":"Aerosols & Pressurized Products","price":13.22,"priceUom":"EACH"},{"item":53,"name":"OneGuard Multi MoA","onHand":0,"unit":"1 Quart Bottle","minimum":0,"reorder":5,"manufacturer":"MGK","category":"Mosquito Control","price":null,"priceUom":""},{"item":54,"name":"Onslaught FastCap Spider & Scorpion","onHand":27,"unit":"Pint","minimum":10,"reorder":0,"manufacturer":"MGK","category":"General Pest Products","price":63.59,"priceUom":"EACH"},{"item":55,"name":"Optigard Ant Gel Bait","onHand":1,"unit":"Box of 4 x 30g tubes","minimum":10,"reorder":4,"manufacturer":"Syngenta","category":"Baits","price":27.76,"priceUom":"4/CS"},{"item":56,"name":"Precor 2000 Plus","onHand":2,"unit":"16 oz Can","minimum":0,"reorder":3,"manufacturer":"Zoecon / Wellmark","category":"Aerosols & Pressurized Products","price":null,"priceUom":""},{"item":57,"name":"Protecta Contour PC1212","onHand":24,"unit":"Case of 12","minimum":10,"reorder":0,"manufacturer":"Bell Laboratories","category":"Rodent Control","price":14.07,"priceUom":"EACH"},{"item":58,"name":"Provoke","onHand":5,"unit":"8 oz Bottle","minimum":10,"reorder":1,"manufacturer":"Bell Laboratories","category":"Rodent Control","price":17.17,"priceUom":"EACH"},{"item":59,"name":"PT 565 Plus XLO","onHand":3,"unit":"20 oz Can","minimum":10,"reorder":0,"manufacturer":"BASF","category":"Aerosols & Pressurized Products","price":18.92,"priceUom":"EACH"},{"item":60,"name":"PT Alpine Flea & Bed Bug","onHand":7,"unit":"20 oz Can","minimum":10,"reorder":0,"manufacturer":"BASF","category":"Aerosols & Pressurized Products","price":12.8,"priceUom":"EACH"},{"item":61,"name":"PT Alpine Pressurized","onHand":null,"unit":"14 oz Can","minimum":10,"reorder":null,"manufacturer":"BASF","category":"Aerosols & Pressurized Products","price":14.09,"priceUom":"Each"},{"item":62,"name":"PT Alpine Pressurized Fly Bait","onHand":12,"unit":"16 oz Can","minimum":10,"reorder":0,"manufacturer":"BASF","category":"Aerosols & Pressurized Products","price":21.8,"priceUom":"EACH"},{"item":63,"name":"PT Cy-Kick CS Pressurized","onHand":0,"unit":"Pint (16 oz)","minimum":0,"reorder":5,"manufacturer":"BASF","category":"Aerosols & Pressurized Products","price":52.63,"priceUom":"EACH"},{"item":64,"name":"PT Pro-Control Plus","onHand":3,"unit":"6 oz","minimum":0,"reorder":2,"manufacturer":"BASF","category":"Aerosols & Pressurized Products","price":null,"priceUom":""},{"item":65,"name":"PT Tri-Die Pressurized Dust","onHand":9,"unit":"8 oz can","minimum":0,"reorder":0,"manufacturer":"BASF","category":"Aerosols & Pressurized Products","price":null,"priceUom":""},{"item":66,"name":"PT Wasp-Freeze II","onHand":1,"unit":"14 oz Can","minimum":0,"reorder":4,"manufacturer":"BASF","category":"Aerosols & Pressurized Products","price":null,"priceUom":""},{"item":67,"name":"RoBan Barrier","onHand":11,"unit":"Case of 12 tubes; 12 oz / 340 g tube","minimum":10,"reorder":0,"manufacturer":"PelGar International Ltd. / PelGar USA","category":"Rodent Control","price":20.56,"priceUom":"EACH"},{"item":68,"name":"Sentricon AG Flex Stations","onHand":12,"unit":"Case of 12","minimum":10,"reorder":0,"manufacturer":"Sentricon / Corteva","category":"Baits","price":null,"priceUom":""},{"item":69,"name":"Sentricon IG RTI Station","onHand":8,"unit":"28 x 150 g RTI stations","minimum":15,"reorder":0,"manufacturer":"Corteva Agriscience","category":"Rodent Control","price":null,"priceUom":""},{"item":70,"name":"Sentricon IG Termiticide Rod","onHand":17,"unit":"28 x 150 g rods","minimum":10,"reorder":0,"manufacturer":"Corteva Agriscience","category":"Termite / WDI","price":null,"priceUom":""},{"item":71,"name":"ShuBee Boot Covers","onHand":8,"unit":"50 pair per case","minimum":10,"reorder":0,"manufacturer":"ShuBee","category":"General Pest Products","price":22.34,"priceUom":"BOX"},{"item":72,"name":"Smart Battery","onHand":8,"unit":"8 per case","minimum":10,"reorder":0,"manufacturer":"Anticimex","category":"Rodent Control","price":null,"priceUom":""},{"item":73,"name":"Smart Box","onHand":1,"unit":"Each","minimum":2,"reorder":4,"manufacturer":"Anticimex","category":"Rodent Control","price":null,"priceUom":""},{"item":74,"name":"Smart Connect 3","onHand":15,"unit":"7 per case","minimum":10,"reorder":0,"manufacturer":"Anticimex","category":"Rodent Control","price":null,"priceUom":""},{"item":75,"name":"Smart Eye Mini","onHand":59,"unit":"10 per case","minimum":10,"reorder":0,"manufacturer":"Anticimex","category":"Rodent Control","price":null,"priceUom":""},{"item":76,"name":"Smart Eye Mounting Bracket","onHand":1,"unit":"25 per bag","minimum":10,"reorder":4,"manufacturer":"Anticimex / American Pest","category":"General Pest Products","price":null,"priceUom":""},{"item":77,"name":"Snake-A-Way","onHand":10,"unit":"4 lb Bag","minimum":10,"reorder":1,"manufacturer":"Bonide / Dr. T's","category":"Granules","price":12.53,"priceUom":"EACH"},{"item":78,"name":"Soap in Seconds","onHand":7,"unit":"each","minimum":10,"reorder":0,"manufacturer":"N/A","category":"General Pest Products","price":4.83,"priceUom":"EACH"},{"item":79,"name":"Stryker 54","onHand":11,"unit":"15 oz Can","minimum":10,"reorder":0,"manufacturer":"Control Solutions","category":"Aerosols & Pressurized Products","price":null,"priceUom":"EACH"},{"item":80,"name":"Stryker Wasp & Hornet Killer","onHand":39,"unit":"15 oz Can","minimum":10,"reorder":0,"manufacturer":"Control Solutions","category":"Aerosols & Pressurized Products","price":6.85,"priceUom":"EACH"},{"item":81,"name":"Sumari Insecticide","onHand":1,"unit":"1 gal jug","minimum":0,"reorder":4,"manufacturer":"MGK","category":"General Pest Products","price":null,"priceUom":""},{"item":82,"name":"Suspend PolyZone","onHand":2,"unit":"16 oz bottle","minimum":10,"reorder":2,"manufacturer":"Envu","category":"General Pest Products","price":51.77,"priceUom":"EACH"},{"item":83,"name":"Suspend SC","onHand":0,"unit":"Pint (16 oz)","minimum":0,"reorder":5,"manufacturer":"Envu","category":"General Pest Products","price":null,"priceUom":""},{"item":84,"name":"T-Rex Mouse Trap","onHand":10,"unit":"24 per case","minimum":10,"reorder":0,"manufacturer":"Bell / Protecta","category":"Rodent Control","price":34.56,"priceUom":"24/PK"},{"item":85,"name":"Taurus SC","onHand":10,"unit":"78 oz Bottle","minimum":10,"reorder":2,"manufacturer":"Control Solutions","category":"Termite / WDI","price":88,"priceUom":"EACH"},{"item":86,"name":"Temprid FX","onHand":2,"unit":"Bottle (240 mL)","minimum":0,"reorder":3,"manufacturer":"Bayer / Envu","category":"General Pest Products","price":null,"priceUom":""},{"item":87,"name":"Temprid FX","onHand":0,"unit":"Bottle (400 mL)","minimum":0,"reorder":4,"manufacturer":"Bayer / Envu","category":"General Pest Products","price":87.74,"priceUom":"EACH"},{"item":88,"name":"Temprid FX","onHand":3,"unit":"Bottle (900 mL)","minimum":10,"reorder":2,"manufacturer":"Bayer / Envu","category":"General Pest Products","price":161.68,"priceUom":"EACH"},{"item":89,"name":"Termidor Foam","onHand":8,"unit":"20 oz Can","minimum":10,"reorder":0,"manufacturer":"BASF","category":"Termite / WDI","price":23.95,"priceUom":"EACH"},{"item":90,"name":"Tim-bor Professional","onHand":0,"unit":"25 lb Bag","minimum":0,"reorder":5,"manufacturer":"Nisus","category":"Dusts","price":null,"priceUom":""},{"item":91,"name":"Transport Mikron","onHand":3,"unit":"Bottle of 32 oz","minimum":10,"reorder":3,"manufacturer":"FMC","category":"General Pest Products","price":87.83,"priceUom":"EACH"},{"item":92,"name":"Trapper T-Rex Rat Snap Trap","onHand":7,"unit":"12 per case","minimum":10,"reorder":2,"manufacturer":"Bell Laboratories","category":"Rodent Control","price":68.71,"priceUom":"12/PK"},{"item":93,"name":"Trapper T-Rex Mouse Snap Trap","onHand":null,"unit":"24 per case","minimum":10,"reorder":null,"manufacturer":"Bell Laboratories","category":"Rodent Control","price":34.56,"priceUom":"24/pk"},{"item":94,"name":"ULD BP-100 Contact Insecticide II","onHand":0,"unit":"1 Gallon Jug","minimum":0,"reorder":5,"manufacturer":"MGK","category":"Aerosols & Pressurized Products","price":null,"priceUom":""},{"item":95,"name":"Vapor Barrier","onHand":7,"unit":"6 mil","minimum":5,"reorder":0,"manufacturer":"N/A","category":"Equipment & Supplies","price":null,"priceUom":""},{"item":96,"name":"Vector Bio-5","onHand":0,"unit":"32 oz Bottle","minimum":0,"reorder":5,"manufacturer":"BASF / Whitmire Micro-Gen","category":"Sanitation","price":null,"priceUom":""},{"item":97,"name":"Vendetta Nitro Cockroach Gel Bait","onHand":0,"unit":"Box of 4 x 30g tubes","minimum":10,"reorder":5,"manufacturer":"MGK","category":"Baits","price":29.24,"priceUom":"CASE"},{"item":98,"name":"Vendetta Plus Cockroach Gel Bait","onHand":0,"unit":"Box of 4 x 30g tubes","minimum":10,"reorder":5,"manufacturer":"MGK","category":"Baits","price":27.14,"priceUom":"CASE"},{"item":99,"name":"Victor Mouse Snap Trap","onHand":0,"unit":"Case of 72","minimum":10,"reorder":5,"manufacturer":"Victor","category":"Rodent Control","price":34.12,"priceUom":"72/PK"},{"item":100,"name":"Victor Tin Cat Solid","onHand":1,"unit":"Case of 12","minimum":0,"reorder":4,"manufacturer":"Victor","category":"Rodent Control","price":null,"priceUom":""},{"item":101,"name":"Xcluder Fabric","onHand":2,"unit":"4\" x 10' Roll","minimum":10,"reorder":2,"manufacturer":"Global Material Technologies","category":"General Pest Products","price":31.74,"priceUom":"EACH"},{"item":102,"name":"ZP Tracking Powder","onHand":4,"unit":"500 g bottle","minimum":4,"reorder":1,"manufacturer":"Bell Laboratories","category":"General Pest Products","price":null,"priceUom":""}];
+    const useRemainingItems = new Set([32,36,37,38,50,56,64,65,66,81,86,100]);
+    const inactiveItems = new Set([42,53,63,83,87,90,94,96]);
+    const savedProductStatuses = JSON.parse(localStorage.getItem("pmpProductStatuses_v3_37") || "{}");
+    const savedMinimumOverrides = JSON.parse(localStorage.getItem("pmpMinimumOverrides_v3_47") || "{}");
+    productData.forEach(product => {
+      const saved = savedProductStatuses[product.item];
+      product.status = ["active","use-remaining","inactive"].includes(saved)
+        ? saved
+        : (useRemainingItems.has(Number(product.item)) ? "use-remaining" : (inactiveItems.has(Number(product.item)) ? "inactive" : "active"));
+      if (Object.prototype.hasOwnProperty.call(savedMinimumOverrides, product.item)) {
+        product.minimum = savedMinimumOverrides[product.item];
+      }
+    });
+    function saveProductStatuses(){
+      const statuses={};
+      productData.forEach(product=>statuses[product.item]=product.status);
+      localStorage.setItem("pmpProductStatuses_v3_37",JSON.stringify(statuses));
+    }
+    function isAvailableProduct(product){return product && product.status !== "inactive";}
+    function isReorderableProduct(product){return product && product.status === "active";}
+    function updateUseRemainingAtZero(product){
+      if(product && product.status === "use-remaining" && Number(product.onHand) <= 0){
+        product.status = "inactive";
+        saveProductStatuses();
+      }
+    }
+    const reorderQuantities = {};
+    productData.forEach((product)=>{
+      const needed = Math.max(0, Number(product.minimum||0) - Number(product.onHand||0));
+      reorderQuantities[product.item] = Number.isFinite(needed) ? needed : 0;
+    });
+
+    let timer;
+
+    function showNotice(message) {
+      notice.textContent = message;
+      notice.classList.add("show");
+      clearTimeout(timer);
+      timer = setTimeout(() => notice.classList.remove("show"), 2200);
+    }
+
+    document.querySelectorAll(".dashboard-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        const section = card.dataset.section;
+        if (section === "Inventory") {
+          dashboardScreen.classList.remove("active");
+          inventoryScreen.classList.add("active");
+          return;
+        }
+        showNotice(section + " module is a placeholder for a future build.");
+      });
+    });
+
+    backButton.addEventListener("click", () => {
+      inventoryScreen.classList.remove("active");
+      dashboardScreen.classList.add("active");
+    });
+
+    let currentSort={key:'name',asc:true};
+    document.querySelector('.products-table thead').addEventListener('click',(event)=>{
+      const th=event.target.closest('th[data-sort]');
+      if(!th)return;
+      const k=th.dataset.sort;
+      currentSort=(currentSort.key===k)?{key:k,asc:!currentSort.asc}:{key:k,asc:true};
+      renderProducts();
+    });
+
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    exportReorderExcel.addEventListener("click", () => {
+      if (typeof XLSX === "undefined") {
+        showNotice("Excel export could not load. Check the internet connection and try again.");
+        return;
+      }
+
+      const rows = productData
+        .filter(product => isReorderableProduct(product) && product.onHand != null && product.minimum != null && Number(product.onHand) < Number(product.minimum))
+        .map(product => ({
+          ...product,
+          suggested: Math.max(0, Number(product.minimum||0) - Number(product.onHand||0)),
+          orderQty: Math.max(0, Number(reorderQuantities[product.item])||0)
+        }))
+        .filter(product => product.orderQty > 0)
+        .sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+
+      if (!rows.length) {
+        showNotice("No products have an order quantity greater than zero.");
+        return;
+      }
+
+      const reportDate = new Date();
+      const worksheetData = [
+        ["PMP OPERATIONS CENTER"],
+        ["REORDER REVIEW"],
+        [],
+        ["Report Date", reportDate.toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"})],
+        ["Products to Order", rows.length],
+        ["Total Units to Order", rows.reduce((sum,row)=>sum+row.orderQty,0)],
+        ["Reviewed Order Cost", rows.reduce((sum,row)=>sum+((row.price==null?0:Number(row.price))*Number(row.orderQty)),0)],
+        [],
+        ["Product","UOM","On Hand","Order Quantity","Item Cost","Total Cost"],
+        ...rows.map(row=>[
+          row.name,
+          row.unit,
+          Number(row.onHand),
+          Number(row.orderQty),
+          row.price == null ? "" : Number(row.price),
+          row.price == null ? "" : Number(row.price) * Number(row.orderQty)
+        ])
+      ];
+
+      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+      worksheet["!merges"] = [
+        XLSX.utils.decode_range("A1:F1"),
+        XLSX.utils.decode_range("A2:F2")
+      ];
+      worksheet["!cols"] = [
+        {wch:40},{wch:22},{wch:12},{wch:16},{wch:14},{wch:16}
+      ];
+      worksheet["!autofilter"] = {ref:`A9:F${worksheetData.length}`};
+
+      for(let row=10;row<=worksheetData.length;row+=1){
+        ["C","D"].forEach(col=>{
+          const cell=worksheet[`${col}${row}`];
+          if(cell) cell.z="0";
+        });
+        ["E","F"].forEach(col=>{
+          const cell=worksheet[`${col}${row}`];
+          if(cell && typeof cell.v==="number") cell.z="$0.00";
+        });
+      }
+      if(worksheet["B7"] && typeof worksheet["B7"].v==="number") worksheet["B7"].z="$0.00";
+
+      const workbook=XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook,worksheet,"Reorder Review");
+      const fileDate=reportDate.toISOString().slice(0,10);
+      XLSX.writeFile(workbook,`PMP_Reorder_Review_${fileDate}.xlsx`);
+      showNotice(`${rows.length} reorder items exported to Excel.`);
+    });
+
+    exportOnHandExcel.addEventListener("click", () => {
+      if (typeof XLSX === "undefined") {
+        showNotice("Excel export could not load. Check the internet connection and try again.");
+        return;
+      }
+
+      const reportDate = new Date();
+      const reportDateText = reportDate.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+
+      const productsInStock = productData
+        .filter((product) => Number(product.onHand) > 0)
+        .sort((a, b) => String(a.name).localeCompare(String(b.name)));
+
+      if (!productsInStock.length) {
+        showNotice("There are no on-hand products to export.");
+        return;
+      }
+
+      const worksheetData = [
+        ["PMP OPERATIONS CENTER"],
+        ["ON-HAND INVENTORY REPORT"],
+        [],
+        ["Report Date", reportDateText],
+        ["Products in Stock", productsInStock.length],
+        [],
+        ["Product", "Manufacturer", "Category", "On Hand", "Unit"],
+        ...productsInStock.map((product) => [
+          product.name,
+          product.manufacturer,
+          product.category,
+          Number(product.onHand),
+          product.unit
+        ])
+      ];
+
+      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+      const lastRow = worksheetData.length;
+
+      worksheet["!merges"] = [
+        XLSX.utils.decode_range("A1:E1"),
+        XLSX.utils.decode_range("A2:E2")
+      ];
+
+      worksheet["!cols"] = [
+        { wch: 38 },
+        { wch: 24 },
+        { wch: 24 },
+        { wch: 12 },
+        { wch: 18 }
+      ];
+
+      worksheet["!autofilter"] = { ref: `A7:E${lastRow}` };
+
+      for (let row = 8; row <= lastRow; row += 1) {
+        const quantityCell = worksheet[`D${row}`];
+        if (quantityCell) quantityCell.z = "0";
+      }
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "On-Hand Inventory");
+
+      workbook.Props = {
+        Title: "PMP On-Hand Inventory Report",
+        Subject: "Current inventory quantities greater than zero",
+        Author: "PMP Operations Center",
+        CreatedDate: reportDate
+      };
+
+      const fileDate = reportDate.toISOString().slice(0, 10);
+      XLSX.writeFile(workbook, `PMP_On_Hand_Inventory_${fileDate}.xlsx`);
+      showNotice(`${productsInStock.length} in-stock products exported to Excel.`);
+    });
+
+    function renderProducts() {
+      const search = productSearch.value.trim().toLowerCase();
+      const category = categoryFilter.value;
+      const selectedStatus = statusFilter.value;
+      const headerRow = document.getElementById("products-header-row");
+
+      const filtered = productData.filter((product) => {
+        const matchesSearch =
+          !search ||
+          String(product.name).toLowerCase().includes(search) ||
+          String(product.manufacturer).toLowerCase().includes(search);
+        const matchesCategory = !category || product.category === category;
+        const matchesStatus = selectedStatus === "all" || product.status === selectedStatus;
+        return matchesSearch && matchesCategory && matchesStatus;
+      });
+
+      filtered.sort((a,b)=>{
+        let av=currentSort.key==='inventoryValue'?(Number(a.onHand)||0)*(Number(a.price)||0):a[currentSort.key], bv=currentSort.key==='inventoryValue'?(Number(b.onHand)||0)*(Number(b.price)||0):b[currentSort.key];
+        if(typeof av==='number'&&typeof bv==='number') return currentSort.asc?av-bv:bv-av;
+        av=String(av).toLowerCase(); bv=String(bv).toLowerCase();
+        return currentSort.asc?av.localeCompare(bv):bv.localeCompare(av);
+      });
+
+      headerRow.innerHTML = `
+        <th data-sort="name">Product</th>
+        <th data-sort="manufacturer">Manufacturer</th>
+        <th data-sort="category">Category</th>
+        <th data-sort="onHand">On Hand</th>
+        <th data-sort="price">Unit Price</th>
+        <th data-sort="inventoryValue">Inventory Value</th>
+        <th data-sort="unit">Unit</th>`;
+
+      productsBody.innerHTML = filtered.map((product) => {
+        const isLow = product.onHand != null && product.minimum != null && Number(product.onHand) < Number(product.minimum);
+        return `
+          <tr>
+            <td><strong>${escapeHtml(product.name)}</strong></td>
+            <td>${escapeHtml(product.manufacturer)}</td>
+            <td>${escapeHtml(product.category)}</td>
+            <td class="number"><span class="stock-badge${isLow ? " low" : ""}">${product.onHand == null ? "—" : product.onHand}</span></td>
+            <td class="number">${isQuantityOnlyProduct(product) ? "Quantity only" : (product.price == null ? "—" : money(product.price))}</td>
+            <td class="number">${isQuantityOnlyProduct(product) ? "—" : (product.price == null ? "—" : money(Number(product.onHand) * Number(product.price)))}</td>
+            <td>${escapeHtml(product.unit)}</td>
+          </tr>`;
+      }).join("");
+
+      productsEmpty.style.display = filtered.length ? "none" : "block";
+      const onHandProducts = filtered.filter((product)=>Number(product.onHand)>0);
+      const filteredValue = filtered.reduce((sum,product)=>sum+(isQuantityOnlyProduct(product)?0:(Number(product.onHand)||0)*(Number(product.price)||0)),0);
+      productsOnHandCount.textContent = `Products on Hand: ${onHandProducts.length}`;
+      productsInventoryTotal.textContent = `Total Inventory Value: ${money(filteredValue)}`;
+      exportOnHandExcel.style.display='';
+    }
+
+    function getMasterReview(product) {
+      const issues = [];
+      if (product.onHand == null || product.onHand === "" || !Number.isFinite(Number(product.onHand))) {
+        issues.push({ code: "missing-count", level: "critical", label: "Missing on-hand count" });
+      }
+      if (product.minimum == null || product.minimum === "" || !Number.isFinite(Number(product.minimum))) {
+        issues.push({ code: "missing-minimum", level: "critical", label: "Missing minimum" });
+      } else if (Number(product.minimum) === 0) {
+        issues.push({ code: "zero-minimum", level: "review", label: "Zero minimum—confirm" });
+      }
+      if (product.price == null || product.price === "" || !Number.isFinite(Number(product.price))) {
+        issues.push({ code: "missing-price", level: "review", label: "Missing price" });
+      }
+      const sameName = productData.filter(other => String(other.name).trim().toLowerCase() === String(product.name).trim().toLowerCase());
+      if (sameName.length > 1) {
+        issues.push({ code: "duplicate-name", level: "review", label: "Repeated name—sizes differ" });
+      }
+      if (!String(product.name || "").trim()) issues.push({ code: "missing-name", level: "critical", label: "Missing product name" });
+      if (!String(product.manufacturer || "").trim()) issues.push({ code: "missing-manufacturer", level: "critical", label: "Missing manufacturer" });
+      if (!String(product.category || "").trim()) issues.push({ code: "missing-category", level: "critical", label: "Missing category" });
+      if (!String(product.unit || "").trim()) issues.push({ code: "missing-unit", level: "critical", label: "Missing unit" });
+      const critical = issues.some(issue => issue.level === "critical");
+      return { issues, status: critical ? "critical" : issues.length ? "review" : "ready" };
+    }
+
+    function renderMasterDataReview() {
+      const search = masterReviewSearch.value.trim().toLowerCase();
+      const filter = masterReviewFilter.value;
+      const reviewed = productData.map(product => ({ product, review: getMasterReview(product) }));
+      const readyCount = reviewed.filter(row => row.review.status === "ready").length;
+      const reviewCount = reviewed.filter(row => row.review.status !== "ready").length;
+      const criticalCount = reviewed.filter(row => row.review.status === "critical").length;
+      masterTotalProducts.textContent = productData.length;
+      masterReadyProducts.textContent = readyCount;
+      masterReviewProducts.textContent = reviewCount;
+      masterCriticalIssues.textContent = criticalCount;
+
+      const filtered = reviewed.filter(({product, review}) => {
+        const issueText = review.issues.map(issue => issue.label).join(" ").toLowerCase();
+        const matchesSearch = !search || [product.name, product.manufacturer, product.category, product.unit, issueText].some(value => String(value || "").toLowerCase().includes(search));
+        let matchesFilter = true;
+        if (filter === "critical" || filter === "review" || filter === "ready") matchesFilter = review.status === filter;
+        else if (filter !== "all") matchesFilter = review.issues.some(issue => issue.code === filter);
+        return matchesSearch && matchesFilter;
+      });
+
+      masterReviewBody.innerHTML = filtered.map(({product, review}) => {
+        const result = review.status === "ready"
+          ? '<span class="history-type receiving">Ready</span>'
+          : review.issues.map(issue => `<span class="history-type ${issue.level === "critical" ? "physical-count" : "minimum-change"}">${escapeHtml(issue.label)}</span>`).join(" ");
+        return `<tr>
+          <td class="number">${product.item}</td>
+          <td><strong>${escapeHtml(product.name)}</strong><br><small>${escapeHtml(product.category)}</small></td>
+          <td>${escapeHtml(product.manufacturer)}</td>
+          <td>${escapeHtml(product.unit)}</td>
+          <td class="number">${product.onHand == null ? "—" : product.onHand}</td>
+          <td class="number">${product.minimum == null ? "—" : product.minimum}</td>
+          <td class="number">${product.price == null ? "—" : formatMoney(product.price)}</td>
+          <td>${result}</td>
+        </tr>`;
+      }).join("");
+      masterReviewEmpty.style.display = filtered.length ? "none" : "block";
+    }
+
+    masterReviewSearch.addEventListener("input", renderMasterDataReview);
+    masterReviewFilter.addEventListener("change", renderMasterDataReview);
+    backFromMasterDataReview.addEventListener("click", () => {
+      masterDataReviewScreen.classList.remove("active");
+      productManagerMenuScreen.classList.add("active");
+    });
+
+    function renderProductManager(){
+      const search=(managerSearch.value||"").trim().toLowerCase();
+      const status=managerStatusFilter.value;
+
+      const rows=productData.filter(product=>{
+        const matchesSearch=!search ||
+          String(product.name).toLowerCase().includes(search) ||
+          String(product.manufacturer).toLowerCase().includes(search) ||
+          String(product.category).toLowerCase().includes(search) ||
+          String(product.item).includes(search);
+        const matchesStatus=status==="all" || product.status===status;
+        return matchesSearch && matchesStatus;
+      }).sort((a,b)=>Number(a.item)-Number(b.item));
+
+      managerHeaderRow.innerHTML=`
+        <th>Item #</th>
+        <th>Product</th>
+        <th>Manufacturer</th>
+        <th>Category</th>
+        <th>On Hand</th>
+        <th>Minimum</th>
+        <th>Status</th>`;
+
+      managerBody.innerHTML=rows.map(product=>`
+        <tr>
+          <td class="number">${product.item}</td>
+          <td><strong>${escapeHtml(product.name)}</strong><div style="font-size:.82rem;color:var(--muted);margin-top:3px">${escapeHtml(product.unit||"")}</div></td>
+          <td>${escapeHtml(product.manufacturer||"")}</td>
+          <td>${escapeHtml(product.category||"")}</td>
+          <td class="number">${product.onHand==null?"—":product.onHand}</td>
+          <td class="number"><input class="manager-number" type="number" min="0" step="1" value="${product.minimum==null?"":product.minimum}" data-manager-min="${product.item}" aria-label="Minimum for ${escapeHtml(product.name)}"></td>
+          <td>
+            <select class="manager-status" data-manager-status="${product.item}" aria-label="Status for ${escapeHtml(product.name)}">
+              <option value="active"${product.status==="active"?" selected":""}>Active</option>
+              <option value="use-remaining"${product.status==="use-remaining"?" selected":""}>Use Remaining Stock</option>
+              <option value="inactive"${product.status==="inactive"?" selected":""}>Inactive</option>
+            </select>
+          </td>
+        </tr>`).join("");
+
+      managerBody.querySelectorAll("[data-manager-status]").forEach(select=>{
+        select.onchange=()=>{
+          const product=productData.find(item=>String(item.item)===String(select.dataset.managerStatus));
+          if(!product)return;
+          product.status=select.value;
+          saveProductStatuses();
+          renderProducts();
+          renderPhysicalCount();
+          renderOrderInventory();
+          renderReceiveInventory();
+          showNotice(`${product.name} status updated.`);
+        };
+      });
+
+      managerBody.querySelectorAll("[data-manager-min]").forEach(input=>{
+        input.oninput=()=>{
+          input.dataset.changed="true";
+          input.style.borderColor="var(--red)";
+        };
+      });
+
+      managerEmpty.style.display=rows.length?"none":"block";
+    }
+
+    updateMinimums.addEventListener("click",()=>{
+      let changed=0;
+      const changes=[];
+      const overrides={};
+      managerBody.querySelectorAll("[data-manager-min]").forEach(input=>{
+        const product=productData.find(item=>String(item.item)===String(input.dataset.managerMin));
+        if(!product)return;
+        const previous=product.minimum;
+        const next=input.value===""?null:Math.max(0,Number(input.value));
+        if(previous!==next){
+          product.minimum=next;
+          changes.push({item:product.item,product:product.name,previous,next});
+          changed++;
+        }
+        input.style.borderColor="";
+      });
+      productData.forEach(product=>{overrides[product.item]=product.minimum;});
+      localStorage.setItem("pmpMinimumOverrides_v3_47",JSON.stringify(overrides));
+      renderProducts();
+      renderOrderInventory();
+      renderProductManager();
+      showNotice(changed ? `${changed} minimum ${changed===1?"value":"values"} updated.` : "Minimums are already up to date.");
+    });
+
+    function renderOrderInventory(){
+      const search=(orderSearch.value||"").trim().toLowerCase();
+      const status=orderStatusFilter.value;
+      const rows=productData.filter(product=>{
+        const matchesSearch=!search ||
+          String(product.name).toLowerCase().includes(search) ||
+          String(product.manufacturer).toLowerCase().includes(search) ||
+          String(product.item).includes(search);
+        const matchesStatus=status==="all" || product.status==="active";
+        return matchesSearch && matchesStatus &&
+          product.onHand!=null && product.minimum!=null &&
+          Number(product.onHand)<Number(product.minimum) &&
+          isReorderableProduct(product);
+      }).sort((a,b)=>Number(a.item)-Number(b.item));
+
+      orderBody.innerHTML=rows.map(product=>{
+        const suggested=Math.max(0,Number(product.minimum||0)-Number(product.onHand||0));
+        if(reorderQuantities[product.item]==null) reorderQuantities[product.item]=suggested;
+        const qty=Number(reorderQuantities[product.item])||0;
+        return `<tr>
+          <td class="number">${product.item}</td>
+          <td><strong>${escapeHtml(product.name)}</strong><div style="font-size:.82rem;color:var(--muted);margin-top:3px">${escapeHtml(product.unit||"")}</div></td>
+          <td>${escapeHtml(product.manufacturer||"")}</td>
+          <td class="number">${product.onHand==null?"—":product.onHand}</td>
+          <td class="number">${product.minimum==null?"—":product.minimum}</td>
+          <td class="number">${suggested}</td>
+          <td class="number">${product.price==null?"—":money(product.price)}</td>
+          <td class="number"><div class="reorder-qty-control">
+            <button type="button" data-order-minus="${product.item}">−</button>
+            <input type="number" min="0" step="1" value="${qty}" data-order-input="${product.item}">
+            <button type="button" data-order-plus="${product.item}">+</button>
+          </div></td>
+          <td class="number">${product.price==null?"—":money(qty*Number(product.price))}</td>
+        </tr>`;
+      }).join("");
+
+      orderBody.querySelectorAll("[data-order-minus]").forEach(btn=>btn.onclick=()=>{
+        const item=btn.dataset.orderMinus;
+        reorderQuantities[item]=Math.max(0,(Number(reorderQuantities[item])||0)-1);
+        renderOrderInventory();
+      });
+      orderBody.querySelectorAll("[data-order-plus]").forEach(btn=>btn.onclick=()=>{
+        const item=btn.dataset.orderPlus;
+        reorderQuantities[item]=(Number(reorderQuantities[item])||0)+1;
+        renderOrderInventory();
+      });
+      orderBody.querySelectorAll("[data-order-input]").forEach(input=>input.onchange=()=>{
+        reorderQuantities[input.dataset.orderInput]=Math.max(0,Math.floor(Number(input.value)||0));
+        renderOrderInventory();
+      });
+
+      const totalQty=rows.reduce((sum,p)=>sum+(Number(reorderQuantities[p.item])||0),0);
+      const totalCost=rows.reduce((sum,p)=>{
+        const price=Number(p.price);
+        return sum+(Number.isFinite(price)?(Number(reorderQuantities[p.item])||0)*price:0);
+      },0);
+      orderProductCount.textContent=`Products to Order: ${rows.length}`;
+      orderQuantityTotal.textContent=`Reviewed Order Quantity: ${totalQty}`;
+      orderCostTotal.textContent=`Reviewed Cost: ${money(totalCost)}`;
+      orderEmpty.style.display=rows.length?"none":"block";
+    }
+
+    function renderReceiveInventory(){
+      const search=(receiveSearch.value||"").trim().toLowerCase();
+      const rows=productData.filter(product=>{
+        const matchesSearch=!search ||
+          String(product.name).toLowerCase().includes(search) ||
+          String(product.manufacturer).toLowerCase().includes(search) ||
+          String(product.item).includes(search);
+        return matchesSearch && product.status==="active";
+      }).sort((a,b)=>Number(a.item)-Number(b.item));
+
+      receiveBody.innerHTML=rows.map(product=>{
+        const qty=Number(receiveQuantitiesDedicated[product.item])||0;
+        const newOnHand=(Number(product.onHand)||0)+qty;
+        return `<tr>
+          <td class="number">${product.item}</td>
+          <td><strong>${escapeHtml(product.name)}</strong></td>
+          <td>${escapeHtml(product.manufacturer||"")}</td>
+          <td class="number">${product.onHand==null?"—":product.onHand}</td>
+          <td>${escapeHtml(product.unit||"")}</td>
+          <td class="number">${product.price==null?"—":money(product.price)}</td>
+          <td class="number"><input class="receiving-qty" type="number" min="0" step="1" value="${qty||""}" data-receive-qty="${product.item}"></td>
+          <td class="number"><strong>${newOnHand}</strong></td>
+        </tr>`;
+      }).join("");
+
+      receiveBody.querySelectorAll("[data-receive-qty]").forEach(input=>input.oninput=()=>{
+        receiveQuantitiesDedicated[input.dataset.receiveQty]=Math.max(0,Math.floor(Number(input.value)||0));
+        renderReceiveInventory();
+      });
+
+      const selected=rows.filter(p=>(Number(receiveQuantitiesDedicated[p.item])||0)>0);
+      const totalQty=selected.reduce((sum,p)=>sum+(Number(receiveQuantitiesDedicated[p.item])||0),0);
+      const totalValue=selected.reduce((sum,p)=>{
+        const price=Number(p.price);
+        return sum+(Number.isFinite(price)?(Number(receiveQuantitiesDedicated[p.item])||0)*price:0);
+      },0);
+      receiveProductCount.textContent=`Products Selected: ${selected.length}`;
+      receiveQuantityTotal.textContent=`Total Quantity Received: ${totalQty}`;
+      receiveValueTotal.textContent=`Shipment Value: ${money(totalValue)}`;
+      receiveEmpty.style.display=rows.length?"none":"block";
+    }
+
+    orderSearch.addEventListener("input",renderOrderInventory);
+    orderStatusFilter.addEventListener("change",renderOrderInventory);
+    receiveSearch.addEventListener("input",renderReceiveInventory);
+    receiveDate.value=new Date().toISOString().slice(0,10);
+
+    orderExportExcel.addEventListener("click",()=>exportReorderExcel.click());
+
+    receivePost.addEventListener("click",()=>{
+      const lines=productData.filter(product=>(Number(receiveQuantitiesDedicated[product.item])||0)>0).map(product=>({
+        item:product.item,
+        product:product.name,
+        quantity:Number(receiveQuantitiesDedicated[product.item]),
+        unitPrice:Number(product.price)||0,
+        previousOnHand:Number(product.onHand)||0,
+        newOnHand:(Number(product.onHand)||0)+Number(receiveQuantitiesDedicated[product.item])
+      }));
+      if(!lines.length){showNotice("Enter at least one received quantity before posting.");return;}
+      lines.forEach(line=>{
+        const product=productData.find(p=>String(p.item)===String(line.item));
+        product.onHand=line.newOnHand;
+        receiveQuantitiesDedicated[line.item]=0;
+      });
+      const overrides={};productData.forEach(product=>overrides[product.item]=product.onHand);
+      localStorage.setItem("pmpInventoryOverrides_v3_2",JSON.stringify(overrides));
+      const history=JSON.parse(localStorage.getItem("pmpReceivingHistory_v3_41")||"[]");
+      history.unshift({
+        id:"RCV-"+Date.now(),
+        date:receiveDate.value||new Date().toISOString().slice(0,10),
+        vendor:receiveVendor.value.trim(),
+        reference:receiveReference.value.trim(),
+        lines,
+        totalQuantity:lines.reduce((sum,line)=>sum+line.quantity,0),
+        totalValue:lines.reduce((sum,line)=>sum+(line.quantity*line.unitPrice),0),
+        postedAt:new Date().toISOString()
+      });
+      localStorage.setItem("pmpReceivingHistory_v3_41",JSON.stringify(history));
+      receiveReference.value="";
+      renderReceiveInventory();renderProducts();renderPhysicalCount();renderOrderInventory();
+      showNotice(`${lines.length} product${lines.length===1?"":"s"} received and inventory updated.`);
+    });
+
+    managerSearch.addEventListener("input",renderProductManager);
+    managerStatusFilter.addEventListener("change",renderProductManager);
+
+    [...new Set(productData.map((product) => product.category).filter(Boolean))]
+      .sort((a, b) => a.localeCompare(b))
+      .forEach((category) => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        categoryFilter.appendChild(option);
+      });
+
+    productSearch.addEventListener("input", renderProducts);
+    categoryFilter.addEventListener("change", renderProducts);
+    statusFilter.addEventListener("change", renderProducts);
+    // Legacy Product Manager order/receiving controls were removed from the HTML.
+    // Guard their old handlers so a missing control cannot stop the entire app.
+    if (managerOrderList && managerReceiving) {
+      managerOrderList.addEventListener("click", () => {
+        const active = managerOrderList.getAttribute("aria-pressed") === "true";
+        managerReceiving.setAttribute("aria-pressed","false");
+        managerReceiving.classList.remove("active");
+        managerReceiving.textContent="Receive Inventory";
+        managerOrderList.setAttribute("aria-pressed", String(!active));
+        managerOrderList.classList.toggle("active", !active);
+        managerOrderList.textContent = !active ? "Back to Product Manager" : "Order List";
+        managerStatusFilter.value = !active ? "active" : "all";
+        renderProductManager();
+      });
+
+      managerReceiving.addEventListener("click", () => {
+        const active = managerReceiving.getAttribute("aria-pressed") === "true";
+        managerOrderList.setAttribute("aria-pressed","false");
+        managerOrderList.classList.remove("active");
+        managerOrderList.textContent="Order List";
+        managerReceiving.setAttribute("aria-pressed", String(!active));
+        managerReceiving.classList.toggle("active", !active);
+        managerReceiving.textContent = !active ? "Back to Product Manager" : "Receive Inventory";
+        managerStatusFilter.value = !active ? "active" : "all";
+        renderProductManager();
+      });
+    }
+
+    if (postReceiving) postReceiving.addEventListener("click",()=>{
+      const lines=productData
+        .filter(product=>(Number(receivingQuantities[product.item])||0)>0)
+        .map(product=>({
+          item:product.item,
+          product:product.name,
+          quantity:Number(receivingQuantities[product.item]),
+          unitPrice:Number(product.price)||0,
+          previousOnHand:Number(product.onHand)||0,
+          newOnHand:(Number(product.onHand)||0)+Number(receivingQuantities[product.item])
+        }));
+
+      if(!lines.length){
+        showNotice("Enter at least one received quantity before posting.");
+        return;
+      }
+
+      lines.forEach(line=>{
+        const product=productData.find(p=>String(p.item)===String(line.item));
+        product.onHand=line.newOnHand;
+        receivingQuantities[line.item]=0;
+      });
+
+      const overrides={};
+      productData.forEach(product=>overrides[product.item]=product.onHand);
+      localStorage.setItem("pmpInventoryOverrides_v3_2",JSON.stringify(overrides));
+
+      const receivingHistory=JSON.parse(localStorage.getItem("pmpReceivingHistory_v3_39")||"[]");
+      receivingHistory.unshift({
+        id:"RCV-"+Date.now(),
+        date:receivingDate.value||new Date().toISOString().slice(0,10),
+        vendor:receivingVendor.value.trim(),
+        reference:receivingReference.value.trim(),
+        lines,
+        totalQuantity:lines.reduce((sum,line)=>sum+line.quantity,0),
+        totalValue:lines.reduce((sum,line)=>sum+(line.quantity*line.unitPrice),0),
+        postedAt:new Date().toISOString()
+      });
+      localStorage.setItem("pmpReceivingHistory_v3_39",JSON.stringify(receivingHistory));
+
+      receivingReference.value="";
+      renderProductManager();
+      renderProducts();
+      renderPhysicalCount();
+      showNotice(`${lines.length} product${lines.length===1?"":"s"} received and inventory updated.`);
+    });
+
+
+    const savedInventory = JSON.parse(localStorage.getItem("pmpInventoryOverrides_v3_2") || "{}");
+    productData.forEach((product)=>{if(Object.prototype.hasOwnProperty.call(savedInventory,product.item)){product.onHand=savedInventory[product.item];}});
+    const savedPriceOverrides = JSON.parse(localStorage.getItem("pmpPriceOverrides_v3_23") || "{}");
+    productData.forEach((product)=>{if(Object.prototype.hasOwnProperty.call(savedPriceOverrides,product.item)){product.price=Number(savedPriceOverrides[product.item]);}});
+
+    function renderPhysicalCount(){
+      if(!countDate.value) countDate.value=new Date().toISOString().slice(0,10);
+      countBody.innerHTML=productData.filter(isAvailableProduct).map((product)=>`<tr data-item="${product.item}"><td><strong>${product.name}</strong><br><span style="color:var(--muted)">${product.unit}</span></td><td class="number">${product.onHand == null ? "—" : product.onHand}</td><td><input class="counted-qty" type="number" min="0" step="0.01" aria-label="Counted quantity for ${product.name}" /></td><td class="difference">—</td><td><input class="count-note" type="text" placeholder="Optional note" aria-label="Note for ${product.name}" /></td></tr>`).join('');
+      countBody.querySelectorAll('.counted-qty').forEach((input)=>input.addEventListener('input',()=>{const row=input.closest('tr');const product=productData.find((item)=>String(item.item)===row.dataset.item);const cell=row.querySelector('.difference');if(input.value===''){cell.textContent='—';cell.className='difference';return;}const diff=Number(input.value)-Number(product.onHand);cell.textContent=diff>0?`+${diff}`:String(diff);cell.className='difference '+(diff===0?'match':'mismatch');}));
+    }
+    clearCount.addEventListener('click',()=>{countBody.querySelectorAll('input').forEach((input)=>input.value='');countBody.querySelectorAll('.difference').forEach((cell)=>{cell.textContent='—';cell.className='difference';});showNotice('Physical count cleared.');});
+    applyCount.addEventListener('click',()=>{const changed=[];countBody.querySelectorAll('tr[data-item]').forEach((row)=>{const input=row.querySelector('.counted-qty');if(input.value==='')return;const product=productData.find((item)=>String(item.item)===row.dataset.item);const previous=Number(product.onHand),counted=Number(input.value);if(counted!==previous){changed.push({item:product.item,product:product.name,previous,counted,difference:counted-previous,note:row.querySelector('.count-note').value.trim()});product.onHand=counted;updateUseRemainingAtZero(product);}});if(!changed.length){showNotice('No inventory differences were entered.');return;}const overrides={};productData.forEach((product)=>overrides[product.item]=product.onHand);localStorage.setItem('pmpInventoryOverrides_v3_2',JSON.stringify(overrides));const history=JSON.parse(localStorage.getItem('pmpPhysicalCountHistory_v3_2')||'[]');history.push({date:countDate.value,countedBy:countedBy.value.trim(),location:countLocation.value.trim(),reason:countReason.value,changes:changed,savedAt:new Date().toISOString()});localStorage.setItem('pmpPhysicalCountHistory_v3_2',JSON.stringify(history));renderProducts();renderPhysicalCount();showNotice(`${changed.length} inventory ${changed.length===1?'quantity':'quantities'} updated.`);});
+    backFromCount.addEventListener('click',()=>{countScreen.classList.remove('active');productManagerMenuScreen.classList.add('active');});
+
+
+    let stagedCheckouts=[];
+    let stagedUsageRows=[];
+    let stagedCheckoutMeta={date:"",technician:"",technicianId:"",orderNumber:"",pdfTotal:null,pdfFile:""};
+    function money(v){return new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(Number(v)||0)}
+    function isQuantityOnlyProduct(product){
+      if(!product)return false;
+      const text=`${product.name||''} ${product.manufacturer||''}`.toLowerCase();
+      return text.includes('sentricon') || /(^|\s)smart(\s|$)/.test(text);
+    }
+    const technicianRoster=["Dustin Murry","Cory Black","Isaiah Berry","Jamal Harvey","Mark Smith","Terrance Jones","Jalen Fleming","Keith McCormick"];
+    const defaultCheckoutSkuMap={
+      "SYN07200":3,"SYN07261":5,"BAS05680":9,"SYN10550":11,"BEL16930":26,
+      "NIS11495":44,"AMER0084":47,"AMER0086":49,"NON01242":23,"SHU55070":71,"AMER0092":69,
+      "FOR98418":22,"NON00018":22,"NON01756":57,"GLO70610":101,"CON35990":85,
+      "BAS04300":62,"WEL05200":10,"CON09400":15,"WEL10730":40,"NIS10400":46,
+      "WOO06980":77,"MGK14550":50,"MGK14520":14
+    };
+    function skuMap(){return Object.assign({},defaultCheckoutSkuMap,JSON.parse(localStorage.getItem('pmpCheckoutSkuMap_v3_7')||'{}'))}
+    function saveSkuMatch(sku,item){const saved=JSON.parse(localStorage.getItem('pmpCheckoutSkuMap_v3_7')||'{}');saved[sku]=item;localStorage.setItem('pmpCheckoutSkuMap_v3_7',JSON.stringify(saved))}
+    function checkoutHistory(){return JSON.parse(localStorage.getItem("pmpTechnicianCheckoutHistory_v3_2")||"[]")}
+    function technicianEntries(name){return checkoutHistory().filter(entry=>(entry.technician||"").trim()===name).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")))}
+    function showTechnicianProfile(name){
+      const entries=technicianEntries(name);
+      const itemCount=entries.reduce((sum,e)=>sum+(e.lines||[]).reduce((n,l)=>n+(Number(l.quantity)||0),0),0);
+      const total=entries.reduce((sum,e)=>sum+(e.lines||[]).reduce((lineSum,line)=>{
+        const p=productData.find(x=>String(x.item)===String(line.item));
+        return lineSum+(isQuantityOnlyProduct(p)?0:(Number(line.extendedCost)||0));
+      },0),0);
+
+      techProfileName.textContent=name;
+      techProfileSummary.textContent=`${entries.length} ${entries.length===1?'checkout':'checkouts'} • ${itemCount} items • ${money(total)}`;
+
+      if(!entries.length){
+        techHistoryBody.innerHTML='<tr><td colspan="5" class="empty-tech">No checkouts have been posted for this technician.</td></tr>';
+      }else{
+        techHistoryBody.innerHTML=entries.map((entry,index)=>{
+          const lines=entry.lines||[];
+          const checkoutItems=lines.reduce((sum,line)=>sum+(Number(line.quantity)||0),0);
+          const checkoutTotal=lines.reduce((sum,line)=>{
+            const product=productData.find(p=>String(p.item)===String(line.item));
+            return sum+(isQuantityOnlyProduct(product)?0:(Number(line.extendedCost)||0));
+          },0);
+
+          const detailRows=lines.map(line=>{
+            const product=productData.find(p=>String(p.item)===String(line.item))||{};
+            const qty=Number(line.quantity)||0;
+            const quantityOnly=isQuantityOnlyProduct(product);
+            const unitPrice=quantityOnly?0:(Number(line.unitPrice)||0);
+            const extended=quantityOnly?0:(('extendedCost' in line)?Number(line.extendedCost)||0:qty*unitPrice);
+            return `<tr>
+              <td><strong>${escapeHtml(line.product||product.name||'—')}</strong></td>
+              <td>${escapeHtml(product.manufacturer||'—')}</td>
+              <td>${escapeHtml(product.category||'—')}</td>
+              <td class="number">${qty}</td>
+              <td class="number">${quantityOnly?'Quantity only':money(unitPrice)}</td>
+              <td class="number">${quantityOnly?'—':money(extended)}</td>
+              <td>${escapeHtml(product.unit||line.priceUom||'—')}</td>
+            </tr>`;
+          }).join('');
+
+          return `
+            <tr class="checkout-summary-row" data-checkout-index="${index}" tabindex="0">
+              <td class="checkout-date">${escapeHtml(entry.date||'—')}</td>
+              <td class="checkout-order">${escapeHtml(entry.orderNumber||'—')}</td>
+              <td>${checkoutItems}</td>
+              <td class="number">${money(checkoutTotal)}</td>
+              <td><button class="checkout-toggle" type="button" aria-expanded="false">View Products</button></td>
+            </tr>
+            <tr class="checkout-detail-row" id="checkout-detail-${index}">
+              <td colspan="5" class="checkout-detail-cell">
+                <div class="checkout-detail-card">
+                  <table class="checkout-detail-table">
+                    <thead><tr><th>Product</th><th>Manufacturer</th><th>Category</th><th>Quantity</th><th>Unit Price</th><th>Extended Cost</th><th>Unit</th></tr></thead>
+                    <tbody>${detailRows || '<tr><td colspan="7" class="empty-tech">No products recorded for this checkout.</td></tr>'}</tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>`;
+        }).join('');
+
+        techHistoryBody.querySelectorAll('.checkout-summary-row').forEach(row=>{
+          const toggle=()=>{
+            const detail=row.nextElementSibling;
+            const button=row.querySelector('.checkout-toggle');
+            const isOpen=detail.classList.toggle('open');
+            button.textContent=isOpen?'Hide Products':'View Products';
+            button.setAttribute('aria-expanded',String(isOpen));
+          };
+          row.addEventListener('click',(event)=>{
+            if(event.target.closest('button')) return;
+            toggle();
+          });
+          row.addEventListener('keydown',(event)=>{
+            if(event.key==='Enter'||event.key===' '){
+              event.preventDefault();
+              toggle();
+            }
+          });
+          row.querySelector('.checkout-toggle').addEventListener('click',toggle);
+        });
+      }
+
+      document.getElementById('tech-directory').classList.add('hidden');
+      usageScreen.classList.add('profile-mode');
+      techProfile.classList.add('active');
+      techProfile.scrollIntoView({behavior:'auto',block:'start'});
+    }
+        function getPriceReviewRows(){
+      const history=JSON.parse(localStorage.getItem('pmpTechnicianCheckoutHistory_v3_2')||'[]');
+      const latest=new Map();
+      history.forEach(entry=>{
+        (entry.lines||[]).forEach(line=>{
+          if(line.item==null||line.unitPrice==null)return;
+          const key=String(line.item);
+          const stamp=String(entry.postedAt||entry.date||'');
+          const existing=latest.get(key);
+          if(!existing||stamp>=existing.stamp){latest.set(key,{item:line.item,sku:line.sku||'',pdfPrice:Number(line.unitPrice),date:entry.date||'',orderNumber:entry.orderNumber||'',stamp});}
+        });
+      });
+      return Array.from(latest.values()).map(row=>{
+        const product=productData.find(p=>String(p.item)===String(row.item));
+        if(!product||isQuantityOnlyProduct(product))return null;
+        const masterPrice=product.price==null?null:Number(product.price);
+        const difference=masterPrice==null?null:row.pdfPrice-masterPrice;
+        return {...row,product,masterPrice,difference,needsReview:masterPrice==null||Math.abs(difference)>=0.01};
+      }).filter(Boolean).sort((a,b)=>{
+        if(a.needsReview!==b.needsReview)return a.needsReview?-1:1;
+        return a.product.name.localeCompare(b.product.name);
+      });
+    }
+
+    function saveMasterPrice(item,newPrice){
+      const product=productData.find(p=>String(p.item)===String(item));
+      if(!product)return;
+      product.price=Number(newPrice);
+      const overrides=JSON.parse(localStorage.getItem('pmpPriceOverrides_v3_23')||'{}');
+      overrides[product.item]=product.price;
+      localStorage.setItem('pmpPriceOverrides_v3_23',JSON.stringify(overrides));
+      renderProducts();
+      renderPriceReview();
+      showNotice(`${product.name} master price updated to ${money(product.price)}.`);
+    }
+
+
+    function exportPriceDifferenceExcel(){
+      if(typeof XLSX==='undefined'){
+        showNotice('Excel export could not load. Check the internet connection and try again.');
+        return;
+      }
+      const rows=getPriceReviewRows().filter(r=>r.needsReview);
+      if(!rows.length){
+        showNotice('There are no price differences to report.');
+        return;
+      }
+      const reportDate=new Date();
+      const reportDateText=reportDate.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+      const increases=rows.filter(r=>r.masterPrice!=null&&r.difference>0);
+      const decreases=rows.filter(r=>r.masterPrice!=null&&r.difference<0);
+      const newPrices=rows.filter(r=>r.masterPrice==null);
+      const netUnitChange=rows.reduce((sum,r)=>sum+(Number(r.difference)||0),0);
+      const worksheetData=[
+        ['PMP OPERATIONS CENTER'],
+        ['PRICE DIFFERENCE REPORT'],
+        [],
+        ['Report Date',reportDateText],
+        ['Products Requiring Review',rows.length],
+        ['Price Increases',increases.length],
+        ['Price Decreases',decreases.length],
+        ['Products Without Master Price',newPrices.length],
+        ['Net Unit Price Change',netUnitChange],
+        [],
+        ['SKU','Product','Manufacturer','Master Price','Checkout PDF Price','Difference','Percent Change','Direction','Checkout Date','Order Number'],
+        ...rows.map(r=>{
+          const pct=r.masterPrice!=null&&Number(r.masterPrice)!==0?r.difference/r.masterPrice:null;
+          const direction=r.masterPrice==null?'New Price':r.difference>0?'Increase':'Decrease';
+          return [r.sku||'',r.product.name,r.product.manufacturer||'',r.masterPrice==null?'':r.masterPrice,r.pdfPrice,r.difference==null?'':r.difference,pct==null?'':pct,direction,r.date||'',r.orderNumber||''];
+        })
+      ];
+      const worksheet=XLSX.utils.aoa_to_sheet(worksheetData);
+      const lastRow=worksheetData.length;
+      worksheet['!merges']=[XLSX.utils.decode_range('A1:J1'),XLSX.utils.decode_range('A2:J2')];
+      worksheet['!cols']=[{wch:14},{wch:38},{wch:24},{wch:14},{wch:19},{wch:14},{wch:15},{wch:12},{wch:16},{wch:16}];
+      worksheet['!autofilter']={ref:`A11:J${lastRow}`};
+      if(worksheet['B9'])worksheet['B9'].z='$0.00';
+      for(let row=12;row<=lastRow;row+=1){
+        ['D','E','F'].forEach(col=>{const cell=worksheet[`${col}${row}`];if(cell&&typeof cell.v==='number')cell.z='$0.00';});
+        const pctCell=worksheet[`G${row}`];if(pctCell&&typeof pctCell.v==='number')pctCell.z='0.0%';
+      }
+      const workbook=XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook,worksheet,'Price Differences');
+      workbook.Props={Title:'PMP Price Difference Report',Subject:'Checkout PDF prices compared with master inventory prices',Author:'PMP Operations Center',CreatedDate:reportDate};
+      const fileDate=reportDate.toISOString().slice(0,10);
+      XLSX.writeFile(workbook,`PMP_Price_Difference_Report_${fileDate}.xlsx`);
+      showNotice(`${rows.length} price differences exported for management review.`);
+    }
+
+    exportPriceDifferenceReport.addEventListener('click',exportPriceDifferenceExcel);
+
+    function renderPriceReview(){
+      const rows=getPriceReviewRows();
+      const reviewRows=rows.filter(r=>r.needsReview);
+      updateAllMasterPrices.disabled = reviewRows.length === 0;
+      priceReviewCount.textContent=reviewRows.length;
+      priceIncreaseCount.textContent=reviewRows.filter(r=>r.masterPrice!=null&&r.difference>0).length;
+      priceDecreaseCount.textContent=reviewRows.filter(r=>r.masterPrice!=null&&r.difference<0).length;
+      const filter=priceReviewFilter.value;
+      const visible=reviewRows.filter(r=>filter==='review'||(filter==='increase'&&r.difference>0)||(filter==='decrease'&&r.difference<0));
+      if(!visible.length){priceReviewBody.innerHTML=`<tr><td colspan="8" class="price-review-empty">${rows.length?'No price changes match this filter.':'No price changes need review.'}</td></tr>`;return;}
+      priceReviewBody.innerHTML=visible.map(r=>{
+        const diff=r.difference;
+        const diffClass=diff==null?'price-current':diff>0?'price-up':diff<0?'price-down':'price-current';
+        const diffText=diff==null?'New price':`${diff>0?'+':''}${money(diff)}`;
+        return `<tr><td><strong>${escapeHtml(r.sku||'—')}</strong></td><td><strong>${escapeHtml(r.product.name)}</strong></td><td>${escapeHtml(r.product.manufacturer||'—')}</td><td class="number">${r.masterPrice==null?'—':money(r.masterPrice)}</td><td class="number"><strong>${money(r.pdfPrice)}</strong></td><td class="number ${diffClass}">${diffText}</td><td>${escapeHtml(r.date||'—')}</td><td>${escapeHtml(r.orderNumber||'—')}</td></tr>`;
+      }).join('');
+    }
+
+    function updateAllReviewedMasterPrices(){
+      const rows=getPriceReviewRows().filter(r=>r.needsReview);
+      if(!rows.length){
+        showNotice('There are no master prices to update.');
+        return;
+      }
+      const overrides=JSON.parse(localStorage.getItem('pmpPriceOverrides_v3_23')||'{}');
+      const changes=rows.map(row=>({item:row.product.item,product:row.product.name,previous:row.masterPrice,next:Number(row.pdfPrice),date:row.date||new Date().toISOString().slice(0,10),orderNumber:row.orderNumber||'',sku:row.sku||''}));
+      rows.forEach(row=>{
+        row.product.price=Number(row.pdfPrice);
+        overrides[row.product.item]=row.product.price;
+      });
+      localStorage.setItem('pmpPriceOverrides_v3_23',JSON.stringify(overrides));
+      const priceHistory=JSON.parse(localStorage.getItem('pmpPriceHistory_v3_48')||'[]');
+      priceHistory.push({date:new Date().toISOString().slice(0,10),changes,savedAt:new Date().toISOString()});
+      localStorage.setItem('pmpPriceHistory_v3_48',JSON.stringify(priceHistory));
+      renderProducts();
+      renderOrderInventory();
+      renderReceiveInventory();
+      renderPriceReview();
+      showNotice(`${rows.length} master prices updated from the latest checkout prices.`);
+    }
+
+    updateAllMasterPrices.addEventListener('click',updateAllReviewedMasterPrices);
+    priceReviewFilter.addEventListener('change',renderPriceReview);
+    backFromPriceReview.addEventListener('click',()=>{priceReviewScreen.classList.remove('active');productManagerMenuScreen.classList.add('active');});
+
+    function safeHistory(key){try{const value=JSON.parse(localStorage.getItem(key)||"[]");return Array.isArray(value)?value:[]}catch(error){return []}}
+    function historyDate(value){return String(value||"").slice(0,10)}
+    function formatHistoryDate(value){const date=historyDate(value);if(!date)return "—";const parsed=new Date(date+"T00:00:00");return Number.isNaN(parsed.getTime())?date:parsed.toLocaleDateString("en-US")}
+    function historyNumber(value){return value==null||value===""?null:Number(value)}
+    function inventoryHistoryEntries(){
+      const entries=[];
+      const receiving=[...safeHistory("pmpReceivingHistory_v3_39"),...safeHistory("pmpReceivingHistory_v3_41")];
+      const seenReceiving=new Set();
+      receiving.forEach(record=>{
+        const recordKey=record.id||`${record.date}|${record.vendor}|${record.reference}|${record.postedAt}`;
+        if(seenReceiving.has(recordKey))return;seenReceiving.add(recordKey);
+        (record.lines||[]).forEach(line=>entries.push({date:record.date||record.postedAt,type:"Receiving",product:line.product||line.name||"Unknown product",change:Number(line.quantity)||0,before:historyNumber(line.previous),after:historyNumber(line.newOnHand),source:record.vendor||"Receiving",reference:record.reference||record.id||"",details:`Received ${Number(line.quantity)||0}${line.unit?` ${line.unit}`:""}${line.unitPrice!=null?` at ${money(line.unitPrice)} each`:""}`,stamp:record.postedAt||record.date||""}));
+      });
+      safeHistory("pmpTechnicianCheckoutHistory_v3_2").forEach(record=>{
+        (record.lines||[]).forEach(line=>{
+          const product=productData.find(item=>String(item.item)===String(line.item));
+          const qty=Number(line.quantity)||0;
+          entries.push({date:record.date||record.postedAt,type:"Technician Usage",product:line.product||line.description||(product&&product.name)||"Unknown product",change:-qty,before:null,after:null,source:record.technician||"Technician",reference:record.orderNumber||record.pdfFile||"",details:`Issued ${qty}${line.unit?` ${line.unit}`:""}${line.extendedCost!=null?` • ${money(line.extendedCost)}`:""}`,stamp:record.postedAt||record.date||""});
+        });
+      });
+      safeHistory("pmpPhysicalCountHistory_v3_2").forEach(record=>{
+        (record.changes||[]).forEach(change=>entries.push({date:record.date||record.savedAt,type:"Physical Count",product:change.product||"Unknown product",change:Number(change.difference)||0,before:historyNumber(change.previous),after:historyNumber(change.counted),source:record.countedBy||"Physical Count",reference:record.location||record.reason||"",details:[record.reason,change.note].filter(Boolean).join(" • "),stamp:record.savedAt||record.date||""}));
+      });
+      safeHistory("pmpPriceHistory_v3_48").forEach(record=>{
+        (record.changes||[]).forEach(change=>entries.push({date:change.date||record.date||record.savedAt,type:"Price Change",product:change.product||"Unknown product",change:(historyNumber(change.next)||0)-(historyNumber(change.previous)||0),before:historyNumber(change.previous),after:historyNumber(change.next),source:"Price Review",reference:change.orderNumber||change.sku||"",details:"Master price updated from checkout PDF",stamp:record.savedAt||record.date||"",moneyValues:true}));
+      });
+      safeHistory("pmpMinimumHistory_v3_48").forEach(record=>{
+        (record.changes||[]).forEach(change=>entries.push({date:record.date||record.savedAt,type:"Minimum Change",product:change.product||"Unknown product",change:(historyNumber(change.next)||0)-(historyNumber(change.previous)||0),before:historyNumber(change.previous),after:historyNumber(change.next),source:"Product Manager",reference:"Minimums",details:"Minimum stock level updated",stamp:record.savedAt||record.date||""}));
+      });
+      return entries.sort((a,b)=>String(b.stamp||b.date).localeCompare(String(a.stamp||a.date)));
+    }
+    function renderInventoryHistory(){
+      const query=(historySearch.value||"").trim().toLowerCase();
+      const type=historyTypeFilter.value;
+      const start=historyStartDate.value;
+      const end=historyEndDate.value;
+      const all=inventoryHistoryEntries();
+      const rows=all.filter(entry=>{
+        const haystack=`${entry.product} ${entry.source} ${entry.reference} ${entry.details} ${entry.type}`.toLowerCase();
+        const date=historyDate(entry.date);
+        return (!query||haystack.includes(query))&&(type==="all"||entry.type===type)&&(!start||date>=start)&&(!end||date<=end);
+      });
+      historyVisibleCount.textContent=rows.length;
+      const quantityRows=rows.filter(entry=>!entry.moneyValues);
+      historyAddedTotal.textContent=quantityRows.reduce((sum,entry)=>sum+(entry.change>0?entry.change:0),0).toLocaleString("en-US",{maximumFractionDigits:2});
+      historyRemovedTotal.textContent=Math.abs(quantityRows.reduce((sum,entry)=>sum+(entry.change<0?entry.change:0),0)).toLocaleString("en-US",{maximumFractionDigits:2});
+      historyLatestDate.textContent=rows.length?formatHistoryDate(rows[0].date):"—";
+      if(!rows.length){inventoryHistoryBody.innerHTML='<tr><td colspan="9" class="history-empty">No inventory activity matches the current filters.</td></tr>';return;}
+      inventoryHistoryBody.innerHTML=rows.map(entry=>{
+        const slug=entry.type.toLowerCase().replace(/\s+/g,"-");
+        const changeClass=entry.change>0?"history-positive":entry.change<0?"history-negative":"history-neutral";
+        const formatValue=value=>value==null?"—":entry.moneyValues?money(value):Number(value).toLocaleString("en-US",{maximumFractionDigits:2});
+        const changeText=entry.moneyValues?(entry.change>0?"+":"")+money(entry.change):`${entry.change>0?"+":""}${Number(entry.change).toLocaleString("en-US",{maximumFractionDigits:2})}`;
+        return `<tr><td>${formatHistoryDate(entry.date)}</td><td><span class="history-type ${slug}">${escapeHtml(entry.type)}</span></td><td><strong>${escapeHtml(entry.product)}</strong></td><td class="number ${changeClass}">${changeText}</td><td class="number">${formatValue(entry.before)}</td><td class="number">${formatValue(entry.after)}</td><td>${escapeHtml(entry.source||"—")}</td><td>${escapeHtml(entry.reference||"—")}</td><td>${escapeHtml(entry.details||"—")}</td></tr>`;
+      }).join("");
+    }
+    [historySearch,historyTypeFilter,historyStartDate,historyEndDate].forEach(control=>control.addEventListener(control.tagName==="INPUT"&&control.type==="search"?"input":"change",renderInventoryHistory));
+    historyClearFilters.addEventListener("click",()=>{historySearch.value="";historyTypeFilter.value="all";historyStartDate.value="";historyEndDate.value="";renderInventoryHistory();historySearch.focus();});
+    backFromInventoryHistory.addEventListener("click",()=>{inventoryHistoryScreen.classList.remove("active");inventoryScreen.classList.add("active");});
+
+    function renderTechnicianSpend(){techSpendBody.innerHTML=technicianRoster.map(tech=>`<button class="technician-button" type="button" data-tech="${escapeHtml(tech)}"><span class="technician-button-name">${escapeHtml(tech)}</span></button>`).join('');techSpendBody.querySelectorAll('.technician-button[data-tech]').forEach(button=>button.onclick=()=>showTechnicianProfile(button.dataset.tech));}
+    function syncLegacyStage(){stagedUsageRows=stagedCheckouts.flatMap(c=>c.rows);stagedCheckoutMeta=stagedCheckouts[0]?stagedCheckouts[0].meta:{date:'',technician:'',technicianId:'',orderNumber:'',pdfTotal:null,pdfFile:''};}
+    function refreshMoneyCards(){checkoutValue.textContent=money(stagedCheckouts.reduce((sum,c)=>sum+c.rows.reduce((s,r)=>{const p=productData.find(x=>String(x.item)===String(r.item));return s+(r.use&&!isQuantityOnlyProduct(p)?(Number(r.extended)||0):0);},0),0));issuedValue.textContent=money(checkoutHistory().reduce((s,e)=>s+(e.lines||[]).reduce((ls,line)=>{const p=productData.find(x=>String(x.item)===String(line.item));return ls+(isQuantityOnlyProduct(p)?0:(Number(line.extendedCost)||0));},0),0));renderTechnicianSpend()}
+    function norm(v){return String(v||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim()}
+    function bestMatch(d){const c=norm(d);let best=null,score=0;productData.forEach(p=>{const n=norm(p.name);let s=(c.includes(n)||n.includes(c))?100:0;if(!s){const a=new Set(c.split(" ").filter(x=>x.length>2)),b=new Set(n.split(" ").filter(x=>x.length>2));s=[...a].filter(x=>b.has(x)).length/Math.max(1,b.size)*80}if(s>score){score=s;best=p}});return score>=45?best:null}
+    function formatPdfDate(mmddyyyy){const m=String(mmddyyyy||'').match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);return m?`${m[3]}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`:''}
+    function parseCheckout(text,fileName){
+      const raw=String(text||'').replace(/\r/g,'');
+      const flat=raw.replace(/\s+/g,' ').trim();
+      const order=(flat.match(/\b(CO-\d+)\b/i)||[])[1]||'';
+      const dateRaw=(flat.match(/DATE:\s*(\d{1,2}\/\d{1,2}\/\d{4})/i)||[])[1]||'';
+      const consumer=flat.match(/CONSUMER:\s*([^()]+?)\s*\((\d+)\)/i);
+      let lines=raw.split(/\n+/).map(v=>v.replace(/\s+/g,' ').trim()).filter(Boolean);
+      const exactTotalLines=lines.map(v=>v.match(/^Total\s*[:$]?\s*\$?([\d,]+(?:\.\d{1,2})?)\s*$/i)).filter(Boolean);
+      const totalMatch=exactTotalLines.length?exactTotalLines[exactTotalLines.length-1]:null;
+      const meta={date:formatPdfDate(dateRaw),technician:consumer?consumer[1].trim():'',technicianId:consumer?consumer[2]:'',orderNumber:order,pdfTotal:totalMatch?Number(totalMatch[1].replace(/,/g,'')):null,pdfFile:fileName||'',parseError:''};
+      const headerIndex=lines.findIndex(v=>/SKU\s+PRODUCT NAME\s+UNIT\s+PRICE\s+QTY\s*SUBTOTAL/i.test(v));
+      if(headerIndex>=0)lines=lines.slice(headerIndex+1);
+      const totalIndex=lines.findIndex(v=>/^Total\s+\$?[\d,]/i.test(v));
+      if(totalIndex>=0)lines=lines.slice(0,totalIndex);
+
+      const knownUnits='ONE\\s+ROLL|BOX|PACK|PK|CASE|CS|EACH|EA|BAG|BTL|BOTTLE|JUG|TUBE|CAN|PAIL|GAL|GALLON|QT|QUART|PT|PINT|OZ|LB|ROLL|SET|KIT|PAIR|DOZEN|DZ|CARTON|CTN|SLEEVE|TRAY|BUCKET';
+      const skuPattern='([A-Z]{3,5}\\d{4,6})';
+      const rowPattern=new RegExp('^'+skuPattern+'\\s*(.*?)\\s+('+knownUnits+')\\s+\\$?([\\d,]+(?:\\.\\d{1,2})?)\\s+(\\d+(?:\\.\\d+)?)\\s+\\$?([\\d,]+(?:\\.\\d{1,2})?)$','i');
+      const tailPattern=new RegExp('(?:^|\\s+)('+knownUnits+')\\s+\\$?([\\d,]+(?:\\.\\d{1,2})?)\\s+(\\d+(?:\\.\\d+)?)\\s+\\$?([\\d,]+(?:\\.\\d{1,2})?)$','i');
+      const rows=[];const map=skuMap();let buffer=[];
+      function addRow(sku,description,unit,price,qty,extended){
+        description=String(description||'').replace(/\s+/g,' ').trim();
+        let p=productData.find(x=>String(x.item)===String(map[sku]));if(!p)p=bestMatch(description);
+        rows.push({use:true,sku:String(sku||'').toUpperCase(),description,unit:String(unit||'').toUpperCase(),price:Number(String(price).replace(/,/g,'')),qty:Number(qty),extended:Number(String(extended).replace(/,/g,'')),item:p?p.item:''});
+      }
+      for(let i=0;i<lines.length;i++){
+        const line=lines[i];
+        if(/^(Manager Signature|Tech Signature)/i.test(line))break;
+        if(/^(CO-\d+|DATE:|CONSUMER:|SKU\s+PRODUCT)/i.test(line))continue;
+        const direct=line.match(rowPattern);
+        if(direct){
+          const desc=[...buffer,direct[2]].filter(Boolean).join(' ');buffer=[];
+          addRow(direct[1],desc,direct[3],direct[4],direct[5],direct[6]);continue;
+        }
+        const tail=line.match(tailPattern);
+        if(tail){
+          const prefix=line.slice(0,tail.index).trim();
+          const combined=[...buffer,prefix].filter(Boolean).join(' ').trim();buffer=[];
+          const skuMatch=combined.match(/^([A-Z]{3,5}\d{4,6})\s*(.+)$/i);
+          if(skuMatch){addRow(skuMatch[1],skuMatch[2],tail[1],tail[2],tail[3],tail[4]);continue;}
+        }
+        buffer.push(line);
+      }
+      if(!rows.length)meta.parseError='No checkout lines were recognized. Keep this PDF in the batch and review it manually.';
+      return {meta,rows};
+    }
+    function removeCheckoutAt(index){
+      if(index<0||index>=stagedCheckouts.length)return;
+      stagedCheckouts.splice(index,1);
+      removePdfPreviewAt(index);
+      renderUsage();
+      showNotice('PDF removed from this batch.');
+    }
+    function renderDetected(){
+      if(!stagedCheckouts.length){checkoutDetected.style.display='none';checkoutDetected.innerHTML='';return}
+      checkoutDetected.style.display='block';
+      checkoutDetected.innerHTML=stagedCheckouts.map((c,i)=>{
+        const calc=c.rows.reduce((s,r)=>s+Number(r.extended||0),0);
+        const parseFailed=!!c.meta.parseError;
+        const ok=!parseFailed&&(c.meta.pdfTotal==null||Math.abs(calc-c.meta.pdfTotal)<0.02);
+        const detail=!ok&&!parseFailed&&c.meta.pdfTotal!=null?` <small style="font-weight:700">(PDF ${money(c.meta.pdfTotal)} • Difference ${money(calc-c.meta.pdfTotal)})</small>`:'';
+        const status=parseFailed?`⚠ Could not read lines`:ok?'✓ Verified':'⚠ Mismatch';
+        return `<div style="${i?'margin-top:8px;padding-top:8px;border-top:1px solid var(--border)':''};display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap"><div><strong>${escapeHtml(c.meta.technician||'Technician not found')}</strong> • ${escapeHtml(c.meta.date||'Date not found')} • ${escapeHtml(c.meta.orderNumber||'Order not found')} • ${c.rows.length} lines • ${money(calc)} <span style="color:${ok?'#177245':'#b42318'}">${status}${detail}</span>${parseFailed?`<br><small style="color:#b42318">${escapeHtml(c.meta.parseError)}</small>`:''}</div><button type="button" class="remove-batch-pdf" data-remove-checkout="${i}" style="border:1px solid #b42318;background:#fff;color:#b42318;border-radius:8px;padding:7px 11px;font-weight:800;cursor:pointer">Remove PDF</button></div>`
+      }).join('');
+      checkoutDetected.querySelectorAll('[data-remove-checkout]').forEach(btn=>btn.onclick=()=>removeCheckoutAt(Number(btn.dataset.removeCheckout)));
+    }
+    function renderUsage(){syncLegacyStage();if(!stagedCheckouts.length){usageBody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">Upload checkout PDFs to begin.</td></tr>';renderDetected();refreshMoneyCards();return}const html=[];stagedCheckouts.forEach((c,ci)=>{html.push(`<tr><td colspan="8" style="background:#eaf1f7;font-weight:800;padding:12px 14px"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><span>${escapeHtml(c.meta.technician||'Unknown technician')} — ${escapeHtml(c.meta.orderNumber||'No order number')}</span><button type="button" data-remove-group="${ci}" style="border:1px solid #b42318;background:#fff;color:#b42318;border-radius:8px;padding:6px 10px;font-weight:800;cursor:pointer">Remove PDF</button></div></td></tr>`);if(c.meta.parseError)html.push(`<tr><td colspan="8" style="color:#b42318;font-weight:700;padding:16px">${escapeHtml(c.meta.parseError)}</td></tr>`);c.rows.forEach((r,ri)=>{const p=productData.find(x=>String(x.item)===String(r.item));html.push(`<tr data-checkout="${ci}" data-row="${ri}"><td><input class="usage-use" type="checkbox" ${r.use?'checked':''}></td><td><strong>${escapeHtml(r.sku||'')}</strong><br>${escapeHtml(r.description)}</td><td><select class="usage-product"><option value="">Select product…</option>${productData.filter(isAvailableProduct).map(x=>`<option value="${x.item}" ${String(x.item)===String(r.item)?'selected':''}>${escapeHtml(x.name)}</option>`).join('')}</select></td><td>${r.qty}</td><td>${money(r.price)}</td><td>${escapeHtml(r.unit||'')}</td><td>${money(r.extended)}</td><td class="${p?'match-ok':'match-review'}">${p?'Matched':'Review'}</td></tr>`)});});usageBody.innerHTML=html.join('');usageBody.querySelectorAll('tr[data-checkout]').forEach(tr=>{const ci=Number(tr.dataset.checkout),ri=Number(tr.dataset.row);tr.querySelector('.usage-use').onchange=e=>{stagedCheckouts[ci].rows[ri].use=e.target.checked;renderUsage()};tr.querySelector('.usage-product').onchange=e=>{const p=productData.find(x=>String(x.item)===e.target.value);stagedCheckouts[ci].rows[ri].item=p?p.item:'';if(p&&stagedCheckouts[ci].rows[ri].sku)saveSkuMatch(stagedCheckouts[ci].rows[ri].sku,p.item);renderUsage()}});usageBody.querySelectorAll('[data-remove-group]').forEach(btn=>btn.onclick=()=>removeCheckoutAt(Number(btn.dataset.removeGroup)));renderDetected();refreshMoneyCards();}
+    let previewUrls=[];let previewFiles=[];
+    const openPdfPreview=document.getElementById('open-pdf-preview');
+    const pdfPreviewSelect=document.getElementById('pdf-preview-select');
+    function refreshPdfPreviewSelect(){
+      const prior=Number(pdfPreviewSelect.value);
+      pdfPreviewSelect.innerHTML=previewFiles.map((f,i)=>{const checkout=stagedCheckouts[i];const tech=checkout&&checkout.meta&&checkout.meta.technician?checkout.meta.technician:`PDF ${i+1}`;const order=checkout&&checkout.meta&&checkout.meta.orderNumber?` — ${checkout.meta.orderNumber}`:'';return `<option value="${i}">${escapeHtml(tech+order)}</option>`}).join('');
+      pdfPreviewSelect.disabled=!previewUrls.length;openPdfPreview.disabled=!previewUrls.length;
+      if(previewUrls.length)pdfPreviewSelect.value=String(Math.min(Number.isFinite(prior)?prior:0,previewUrls.length-1));
+    }
+    function clearPdfPreview(){previewUrls.forEach(u=>URL.revokeObjectURL(u));previewUrls=[];previewFiles=[];openPdfPreview.disabled=true;pdfPreviewSelect.disabled=true;pdfPreviewSelect.innerHTML='<option value="">Select PDF…</option>'}
+    function showPdfPreviews(files){clearPdfPreview();previewFiles=[...files];previewUrls=previewFiles.map(f=>URL.createObjectURL(f));refreshPdfPreviewSelect()}
+    function removePdfPreviewAt(index){if(previewUrls[index])URL.revokeObjectURL(previewUrls[index]);previewUrls.splice(index,1);previewFiles.splice(index,1);refreshPdfPreviewSelect()}
+    pdfPreviewSelect.onchange=()=>{openPdfPreview.disabled=!previewUrls.length||pdfPreviewSelect.value===''};
+    openPdfPreview.onclick=()=>{const i=Number(pdfPreviewSelect.value);if(!previewUrls.length||!Number.isInteger(i)||!previewUrls[i])return;const w=window.open(previewUrls[i],'_blank','noopener,noreferrer');if(!w)showNotice('Your browser blocked the PDF tab. Allow pop-ups for this file and try again.')};
+    async function extractPdf(file){if(typeof pdfjsLib==='undefined')throw new Error('PDF reader could not load. Check your internet connection and reopen the file.');pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';const pdf=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;const pages=[];for(let pageNumber=1;pageNumber<=pdf.numPages;pageNumber++){const page=await pdf.getPage(pageNumber);const content=await page.getTextContent();const items=content.items.map(item=>({text:item.str,x:item.transform[4],y:item.transform[5]}));items.sort((a,b)=>Math.abs(b.y-a.y)>2?b.y-a.y:a.x-b.x);const grouped=[];items.forEach(item=>{let line=grouped.find(row=>Math.abs(row.y-item.y)<=2);if(!line){line={y:item.y,items:[]};grouped.push(line)}line.items.push(item)});grouped.sort((a,b)=>b.y-a.y);pages.push(grouped.map(row=>row.items.sort((a,b)=>a.x-b.x).map(item=>item.text).join(' ').replace(/\s+/g,' ').trim()).filter(Boolean).join('\n'))}return pages.join('\n')}
+    async function processCheckoutFiles(fileList){
+      const files=[...fileList].filter(f=>f.type==='application/pdf'||/\.pdf$/i.test(f.name));
+      if(!files.length){showNotice('Please select or drop one or more PDF files.');return}
+      stagedCheckouts=[];showPdfPreviews(files);
+      let unreadable=0;
+      for(const f of files){
+        try{const parsed=parseCheckout(await extractPdf(f),f.name);if(parsed.meta.parseError)unreadable++;stagedCheckouts.push(parsed)}
+        catch(e){unreadable++;stagedCheckouts.push({meta:{date:'',technician:'',technicianId:'',orderNumber:'',pdfTotal:null,pdfFile:f.name,parseError:'This PDF could not be opened or read. Remove it or try a different copy.'},rows:[]})}
+      }
+      refreshPdfPreviewSelect();renderUsage();
+      const lineCount=stagedCheckouts.reduce((n,c)=>n+c.rows.length,0);
+      const unmatched=stagedCheckouts.reduce((n,c)=>n+c.rows.filter(r=>!r.item).length,0);
+      showNotice(`${stagedCheckouts.length} of ${files.length} PDFs are in the batch with ${lineCount} checkout lines${unmatched?`; ${unmatched} need product matches`:''}${unreadable?`; ${unreadable} need review or removal`:''}.`)
+    }
+    checkoutPdf.onchange=()=>processCheckoutFiles(checkoutPdf.files);
+    ['dragenter','dragover'].forEach(evt=>checkoutDropZone.addEventListener(evt,e=>{e.preventDefault();e.stopPropagation();checkoutDropZone.classList.add('drag-active')}));['dragleave','drop'].forEach(evt=>checkoutDropZone.addEventListener(evt,e=>{e.preventDefault();e.stopPropagation();checkoutDropZone.classList.remove('drag-active')}));checkoutDropZone.addEventListener('drop',e=>processCheckoutFiles(e.dataTransfer&&e.dataTransfer.files?e.dataTransfer.files:[]));
+    clearUsage.onclick=()=>{stagedCheckouts=[];syncLegacyStage();checkoutPdf.value='';clearPdfPreview();renderUsage();showNotice('Checkout review cleared.')};
+    postCheckout.onclick=()=>{
+      if(!stagedCheckouts.length){showNotice('No checkout PDFs are ready to post.');return}
+      const history=checkoutHistory();
+      const ready=[];const remaining=[];const skipped=[];const issues=[];
+      for(const c of stagedCheckouts){
+        const label=c.meta.technician||c.meta.orderNumber||'Checkout PDF';
+        if(c.meta.parseError){issues.push(`${label}: PDF lines could not be read`);remaining.push(c);continue}
+        const selected=c.rows.filter(r=>r.use);
+        const matched=selected.filter(r=>r.item&&Number(r.qty)>0);
+        const unmatched=selected.filter(r=>!r.item);
+        if(unmatched.length){issues.push(`${label}: ${unmatched.length} line(s) need a product match`);remaining.push(c);continue}
+        if(!matched.length){issues.push(`${label}: no matched lines`);remaining.push(c);continue}
+        if(!c.meta.technician||!technicianRoster.includes(c.meta.technician)){issues.push(`${label}: technician not recognized`);remaining.push(c);continue}
+        if(!c.meta.date){issues.push(`${label}: date not found`);remaining.push(c);continue}
+        if(history.some(e=>e.orderNumber&&e.orderNumber===c.meta.orderNumber)){skipped.push(`${label} (${c.meta.orderNumber})`);continue}
+        const calc=matched.reduce((sum,r)=>sum+Number(r.extended||0),0);
+        if(c.meta.pdfTotal!=null&&Math.abs(calc-c.meta.pdfTotal)>=0.02){issues.push(`${label}: total mismatch`);remaining.push(c);continue}
+        ready.push(c);
+      }
+      if(!ready.length){
+        stagedCheckouts=remaining;syncLegacyStage();renderUsage();
+        const parts=['Nothing new was posted.'];
+        if(skipped.length)parts.push(`Already posted and skipped: ${skipped.join(', ')}.`);
+        if(issues.length)parts.push(`Still needs review: ${issues.join(' • ')}.`);
+        showNotice(parts.join(' '));return;
+      }
+      let grandTotal=0;
+      for(const c of ready){
+        const matched=c.rows.filter(r=>r.use&&r.item&&Number(r.qty)>0);
+        const lines=matched.map(r=>{
+          const p=productData.find(x=>String(x.item)===String(r.item));
+          if(p.onHand!=null){p.onHand=Number(p.onHand)-Number(r.qty);updateUseRemainingAtZero(p);}
+          saveSkuMatch(r.sku,p.item);
+          const quantityOnly=isQuantityOnlyProduct(p);
+          return{item:p.item,sku:r.sku,product:p.name,checkoutDescription:r.description,quantity:Number(r.qty),unitPrice:quantityOnly?0:Number(r.price),priceUom:quantityOnly?'':(r.unit||''),extendedCost:quantityOnly?0:Number(r.extended),quantityOnly};
+        });
+        const total=lines.reduce((sum,line)=>sum+line.extendedCost,0);grandTotal+=total;
+        history.push({date:c.meta.date,technician:c.meta.technician,technicianId:c.meta.technicianId,orderNumber:c.meta.orderNumber,pdfFile:c.meta.pdfFile,lines,total,postedAt:new Date().toISOString(),pricingMethod:'checkout-pdf-locked',priceSnapshotVersion:2});
+      }
+      localStorage.setItem('pmpTechnicianCheckoutHistory_v3_2',JSON.stringify(history));
+      const overrides={};productData.forEach(p=>overrides[p.item]=p.onHand);localStorage.setItem('pmpInventoryOverrides_v3_2',JSON.stringify(overrides));
+      stagedCheckouts=remaining;syncLegacyStage();checkoutPdf.value='';
+      if(!remaining.length)clearPdfPreview();
+      renderUsage();renderProducts();renderPriceReview();
+      const parts=[`${ready.length} checkout PDF${ready.length===1?'':'s'} posted for ${money(grandTotal)}.`];
+      if(skipped.length)parts.push(`Skipped ${skipped.length} already-posted order${skipped.length===1?'':'s'}.`);
+      if(issues.length)parts.push(`${issues.length} PDF${issues.length===1?' remains':'s remain'} in review.`);
+      showNotice(parts.join(' '));
+    };
+    closeTechProfile.onclick=()=>{
+      techProfile.classList.remove('active');
+      usageScreen.classList.remove('profile-mode');
+      document.getElementById('tech-directory').classList.remove('hidden');
+      document.getElementById('tech-directory').scrollIntoView({behavior:'auto',block:'start'});
+    };
+    backFromUsage.onclick=()=>{
+      usageScreen.classList.remove('active','profile-mode');
+      inventoryScreen.classList.add('active');
+      techProfile.classList.remove('active');
+      document.getElementById('tech-directory').classList.remove('hidden');
+    };
+    refreshMoneyCards();
+
+    document.querySelectorAll(".module-tile").forEach((tile) => {
+      tile.addEventListener("click", () => {
+        if (tile.dataset.module === "Products") {
+          inventoryScreen.classList.remove("active");
+          productsScreen.classList.add("active");
+          renderProducts();
+          productSearch.focus();
+          return;
+        }
+        if (tile.dataset.module === "Order Inventory") {
+          inventoryScreen.classList.remove("active");
+          orderInventoryScreen.classList.add("active");
+          renderOrderInventory();
+          orderSearch.focus();
+          return;
+        }
+        if (tile.dataset.module === "Receive Inventory") {
+          inventoryScreen.classList.remove("active");
+          receiveInventoryScreen.classList.add("active");
+          renderReceiveInventory();
+          receiveSearch.focus();
+          return;
+        }
+        if (tile.dataset.module === "Product Manager Menu") {
+          inventoryScreen.classList.remove("active");
+          productManagerMenuScreen.classList.add("active");
+          return;
+        }
+        if (tile.dataset.module === "Technician Usage") {inventoryScreen.classList.remove("active");usageScreen.classList.add("active");refreshMoneyCards();return;}
+        if (tile.dataset.module === "Inventory History") {inventoryScreen.classList.remove("active");inventoryHistoryScreen.classList.add("active");renderInventoryHistory();historySearch.focus();return;}
+        if (tile.dataset.module === "Price Review") {inventoryScreen.classList.remove("active");priceReviewScreen.classList.add("active");renderPriceReview();return;}
+        if (tile.dataset.module === "Physical Count") {
+          inventoryScreen.classList.remove("active");
+          countScreen.classList.add("active");
+          renderPhysicalCount();
+          return;
+        }
+        showNotice(tile.dataset.module + " is waiting until Products is complete.");
+      });
+    });
+
+    document.querySelectorAll(".manager-menu-tile").forEach((tile) => {
+      tile.addEventListener("click", () => {
+        productManagerMenuScreen.classList.remove("active");
+        if (tile.dataset.managerModule === "Minimums") {
+          productManagerScreen.classList.add("active");
+          renderProductManager();
+          managerSearch.focus();
+          return;
+        }
+        if (tile.dataset.managerModule === "Order") {
+          orderInventoryScreen.classList.add("active");
+          renderOrderInventory();
+          orderSearch.focus();
+          return;
+        }
+        if (tile.dataset.managerModule === "Receive") {
+          receiveInventoryScreen.classList.add("active");
+          renderReceiveInventory();
+          receiveSearch.focus();
+          return;
+        }
+        if (tile.dataset.managerModule === "Physical Count") {
+          countScreen.classList.add("active");
+          renderPhysicalCount();
+          return;
+        }
+        if (tile.dataset.managerModule === "Master Data Review") {
+          masterDataReviewScreen.classList.add("active");
+          renderMasterDataReview();
+          masterReviewSearch.focus();
+          return;
+        }
+        if (tile.dataset.managerModule === "Price Review") {
+          priceReviewScreen.classList.add("active");
+          renderPriceReview();
+        }
+      });
+    });
+
+    backFromProductManagerMenu.addEventListener("click", () => {
+      productManagerMenuScreen.classList.remove("active");
+      inventoryScreen.classList.add("active");
+    });
+
+    backToInventory.addEventListener("click", () => {
+      productsScreen.classList.remove("active");
+      inventoryScreen.classList.add("active");
+    });
+
+    backFromOrderInventory.addEventListener("click", () => {
+      orderInventoryScreen.classList.remove("active");
+      productManagerMenuScreen.classList.add("active");
+    });
+
+    backFromReceiveInventory.addEventListener("click", () => {
+      receiveInventoryScreen.classList.remove("active");
+      productManagerMenuScreen.classList.add("active");
+    });
+
+    backFromProductManager.addEventListener("click", () => {
+      productManagerScreen.classList.remove("active");
+      productManagerMenuScreen.classList.add("active");
+    });
+
+    renderProducts();
+    renderProductManager();
+  </script>
+
+  <script>
+    if ("serviceWorker" in navigator && location.protocol !== "file:") {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js").catch((error) => {
+          console.warn("PMP service worker registration failed:", error);
+        });
+      });
+    }
+  </script>
+
+</body>
+</html>
