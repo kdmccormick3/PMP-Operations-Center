@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.52</title>
+  <title>PMP Operations Center v3.53</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -1048,6 +1048,86 @@
       }
     }
 
+
+    /* v3.53 — Order Inventory iPad portrait fit and alignment */
+    .order-product-meta {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: .78rem;
+      line-height: 1.25;
+    }
+
+    @media (max-width: 900px) and (orientation: portrait) {
+      #order-inventory-screen .products-table-wrap {
+        overflow-x: hidden;
+      }
+
+      #order-inventory-screen .products-table {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+        font-size: .78rem;
+      }
+
+      #order-inventory-screen .products-table th,
+      #order-inventory-screen .products-table td {
+        padding: 9px 5px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+
+      #order-inventory-screen .products-table th:nth-child(3),
+      #order-inventory-screen .products-table th:nth-child(7),
+      #order-inventory-screen .products-table th:nth-child(9),
+      #order-inventory-screen .order-col-manufacturer,
+      #order-inventory-screen .order-col-price,
+      #order-inventory-screen .order-col-total {
+        display: none;
+      }
+
+      #order-inventory-screen .products-table th:nth-child(1) { width: 8%; text-align: center; }
+      #order-inventory-screen .products-table th:nth-child(2) { width: 32%; }
+      #order-inventory-screen .products-table th:nth-child(4) { width: 11%; text-align: center; }
+      #order-inventory-screen .products-table th:nth-child(5) { width: 11%; text-align: center; }
+      #order-inventory-screen .products-table th:nth-child(6) { width: 12%; text-align: center; }
+      #order-inventory-screen .products-table th:nth-child(8) { width: 26%; text-align: center; }
+
+      #order-inventory-screen .order-col-item,
+      #order-inventory-screen .order-col-onhand,
+      #order-inventory-screen .order-col-minimum,
+      #order-inventory-screen .order-col-suggested,
+      #order-inventory-screen .order-col-quantity {
+        text-align: center;
+      }
+
+      #order-inventory-screen .reorder-qty-control {
+        width: 100%;
+        justify-content: center;
+        gap: 3px;
+      }
+
+      #order-inventory-screen .reorder-qty-control button {
+        width: 27px;
+        height: 30px;
+        flex: 0 0 27px;
+      }
+
+      #order-inventory-screen .reorder-qty-control input {
+        width: 42px;
+        min-width: 0;
+        padding: 6px 2px;
+      }
+
+      #order-inventory-screen .products-total-bar {
+        flex-wrap: wrap;
+      }
+
+      #order-inventory-screen .products-total-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
 </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -1059,7 +1139,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.52</div>
+      <div class="status-badge">INVENTORY BUILD • v3.53</div>
     </header>
 
     <main>
@@ -1541,7 +1621,7 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.52</footer>
+    <footer>PMP Operations Center • Inventory build • v3.53</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -2112,19 +2192,19 @@
         if(reorderQuantities[product.item]==null) reorderQuantities[product.item]=suggested;
         const qty=Number(reorderQuantities[product.item])||0;
         return `<tr>
-          <td class="number">${product.item}</td>
-          <td><strong>${escapeHtml(product.name)}</strong><div style="font-size:.82rem;color:var(--muted);margin-top:3px">${escapeHtml(product.unit||"")}</div></td>
-          <td>${escapeHtml(product.manufacturer||"")}</td>
-          <td class="number">${product.onHand==null?"—":product.onHand}</td>
-          <td class="number">${product.minimum==null?"—":product.minimum}</td>
-          <td class="number">${suggested}</td>
-          <td class="number">${product.price==null?"—":money(product.price)}</td>
-          <td class="number"><div class="reorder-qty-control">
+          <td class="number order-col-item">${product.item}</td>
+          <td class="order-col-product"><strong>${escapeHtml(product.name)}</strong><div class="order-product-meta">${escapeHtml(product.manufacturer||"")} • ${escapeHtml(product.unit||"")}</div></td>
+          <td class="order-col-manufacturer">${escapeHtml(product.manufacturer||"")}</td>
+          <td class="number order-col-onhand">${product.onHand==null?"—":product.onHand}</td>
+          <td class="number order-col-minimum">${product.minimum==null?"—":product.minimum}</td>
+          <td class="number order-col-suggested">${suggested}</td>
+          <td class="number order-col-price">${product.price==null?"—":money(product.price)}</td>
+          <td class="number order-col-quantity"><div class="reorder-qty-control">
             <button type="button" data-order-minus="${product.item}">−</button>
             <input type="number" min="0" step="1" value="${qty}" data-order-input="${product.item}">
             <button type="button" data-order-plus="${product.item}">+</button>
           </div></td>
-          <td class="number">${product.price==null?"—":money(qty*Number(product.price))}</td>
+          <td class="number order-col-total">${product.price==null?"—":money(qty*Number(product.price))}</td>
         </tr>`;
       }).join("");
 
@@ -2826,7 +2906,7 @@
           inventoryScreen.classList.remove("active");
           orderInventoryScreen.classList.add("active");
           renderOrderInventory();
-          orderSearch.focus();
+          orderSearch.blur();
           return;
         }
         if (tile.dataset.module === "Receive Inventory") {
@@ -2866,7 +2946,7 @@
         if (tile.dataset.managerModule === "Order") {
           orderInventoryScreen.classList.add("active");
           renderOrderInventory();
-          orderSearch.focus();
+          orderSearch.blur();
           return;
         }
         if (tile.dataset.managerModule === "Receive") {

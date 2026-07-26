@@ -1,4 +1,4 @@
-PMP OPERATIONS CENTER — PWA v3.52
+PMP OPERATIONS CENTER — PWA v3.53
 
 This package is the current working PMP HTML converted into an installable
 Progressive Web App shell.
@@ -32,3 +32,8 @@ Stopped Products search from automatically opening the keyboard.
 V3.52 CHANGE
 Products table now fits iPad portrait without horizontal scrolling.
 Manufacturer, category, and unit appear beneath the product name in portrait.
+
+
+V3.53 CHANGE
+Order Inventory now fits iPad portrait with correctly aligned columns.
+Stopped the Order search field from automatically opening the iPad keyboard.
