@@ -1,4 +1,4 @@
-PMP OPERATIONS CENTER — PWA v3.55
+PMP OPERATIONS CENTER — PWA v3.56
 
 This package is the current working PMP HTML converted into an installable
 Progressive Web App shell.
@@ -46,3 +46,7 @@ Stopped the Receive search field from automatically opening the keyboard.
 V3.55 CHANGE
 Price Review now fits iPad portrait without horizontal scrolling.
 Manufacturer, last-seen date, and order number appear beneath the product name in portrait.
+
+V3.56 CHANGE
+Physical Count table now fits iPad portrait without horizontal scrolling.
+Count columns align correctly and action buttons fit the screen.
