@@ -1,4 +1,4 @@
-PMP OPERATIONS CENTER — PWA v3.58
+PMP OPERATIONS CENTER — PWA v3.59
 
 This package is the current working PMP HTML converted into an installable
 Progressive Web App shell.
@@ -61,3 +61,8 @@ V3.58 CHANGE
 Technician Checkout now fits iPad portrait without horizontal scrolling.
 The PDF review controls, checkout table, technician cards, and action button fit the screen.
 Laptop/Desktop Technician Checkout functionality remains unchanged.
+
+
+V3.59 CHANGE
+Inventory History now fits iPad portrait without horizontal scrolling.
+Stopped the history search field from automatically opening the iPad keyboard.

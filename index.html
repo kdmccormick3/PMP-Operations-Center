@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.58</title>
+  <title>PMP Operations Center v3.59</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -1639,6 +1639,125 @@
       }
     }
 
+
+
+    /* v3.59 — Inventory History iPad portrait fit; no automatic keyboard */
+    .history-mobile-meta {
+      display: none;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: .70rem;
+      line-height: 1.25;
+      font-weight: 500;
+    }
+
+    @media (max-width: 900px) and (orientation: portrait) {
+      #inventory-history-screen,
+      #inventory-history-screen .history-shell {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+      }
+
+      #inventory-history-screen .inventory-header {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        margin-bottom: 0;
+        align-items: stretch;
+        flex-direction: column-reverse;
+      }
+
+      #inventory-history-screen .back-button {
+        width: 100%;
+        text-align: center;
+      }
+
+      #inventory-history-screen .history-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      #inventory-history-screen .history-summary-card {
+        min-width: 0;
+        padding: 9px 10px;
+      }
+
+      #inventory-history-screen .history-summary-card span { font-size: .67rem; }
+      #inventory-history-screen .history-summary-card strong { font-size: 1.05rem; }
+
+      #inventory-history-screen .history-toolbar {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      #inventory-history-screen #history-search,
+      #inventory-history-screen #history-clear-filters {
+        grid-column: 1 / -1;
+      }
+
+      #inventory-history-screen .history-toolbar input,
+      #inventory-history-screen .history-toolbar select,
+      #inventory-history-screen .history-toolbar button {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+      }
+
+      #inventory-history-screen .history-table-wrap {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+      }
+
+      #inventory-history-screen .history-table {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+        font-size: .74rem;
+      }
+
+      #inventory-history-screen .history-table th,
+      #inventory-history-screen .history-table td {
+        padding: 8px 5px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+
+      #inventory-history-screen .history-table th:nth-child(5),
+      #inventory-history-screen .history-table th:nth-child(6),
+      #inventory-history-screen .history-table th:nth-child(7),
+      #inventory-history-screen .history-table th:nth-child(8),
+      #inventory-history-screen .history-col-before,
+      #inventory-history-screen .history-col-after,
+      #inventory-history-screen .history-col-source,
+      #inventory-history-screen .history-col-reference {
+        display: none;
+      }
+
+      #inventory-history-screen .history-table th:nth-child(1) { width: 18%; }
+      #inventory-history-screen .history-table th:nth-child(2) { width: 21%; }
+      #inventory-history-screen .history-table th:nth-child(3) { width: 27%; }
+      #inventory-history-screen .history-table th:nth-child(4) { width: 14%; text-align: right; }
+      #inventory-history-screen .history-table th:nth-child(9) { width: 20%; }
+
+      #inventory-history-screen .history-col-change { text-align: right; }
+      #inventory-history-screen .history-type {
+        min-width: 0;
+        width: 100%;
+        padding: 4px 3px;
+        white-space: normal;
+        line-height: 1.15;
+      }
+
+      #inventory-history-screen .history-mobile-meta { display: block; }
+    }
+
 </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -1650,7 +1769,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.58</div>
+      <div class="status-badge">INVENTORY BUILD • v3.59</div>
     </header>
 
     <main>
@@ -3230,11 +3349,11 @@
         const changeClass=entry.change>0?"history-positive":entry.change<0?"history-negative":"history-neutral";
         const formatValue=value=>value==null?"—":entry.moneyValues?money(value):Number(value).toLocaleString("en-US",{maximumFractionDigits:2});
         const changeText=entry.moneyValues?(entry.change>0?"+":"")+money(entry.change):`${entry.change>0?"+":""}${Number(entry.change).toLocaleString("en-US",{maximumFractionDigits:2})}`;
-        return `<tr><td>${formatHistoryDate(entry.date)}</td><td><span class="history-type ${slug}">${escapeHtml(entry.type)}</span></td><td><strong>${escapeHtml(entry.product)}</strong></td><td class="number ${changeClass}">${changeText}</td><td class="number">${formatValue(entry.before)}</td><td class="number">${formatValue(entry.after)}</td><td>${escapeHtml(entry.source||"—")}</td><td>${escapeHtml(entry.reference||"—")}</td><td>${escapeHtml(entry.details||"—")}</td></tr>`;
+        return `<tr><td class="history-col-date">${formatHistoryDate(entry.date)}</td><td class="history-col-type"><span class="history-type ${slug}">${escapeHtml(entry.type)}</span></td><td class="history-col-product"><strong>${escapeHtml(entry.product)}</strong><span class="history-mobile-meta">${escapeHtml(entry.source||"—")} • ${escapeHtml(entry.reference||"—")}</span></td><td class="number ${changeClass} history-col-change">${changeText}</td><td class="number history-col-before">${formatValue(entry.before)}</td><td class="number history-col-after">${formatValue(entry.after)}</td><td class="history-col-source">${escapeHtml(entry.source||"—")}</td><td class="history-col-reference">${escapeHtml(entry.reference||"—")}</td><td class="history-col-details">${escapeHtml(entry.details||"—")}</td></tr>`;
       }).join("");
     }
     [historySearch,historyTypeFilter,historyStartDate,historyEndDate].forEach(control=>control.addEventListener(control.tagName==="INPUT"&&control.type==="search"?"input":"change",renderInventoryHistory));
-    historyClearFilters.addEventListener("click",()=>{historySearch.value="";historyTypeFilter.value="all";historyStartDate.value="";historyEndDate.value="";renderInventoryHistory();historySearch.focus();});
+    historyClearFilters.addEventListener("click",()=>{historySearch.value="";historyTypeFilter.value="all";historyStartDate.value="";historyEndDate.value="";renderInventoryHistory();});
     backFromInventoryHistory.addEventListener("click",()=>{inventoryHistoryScreen.classList.remove("active");inventoryScreen.classList.add("active");});
 
     function renderTechnicianSpend(){techSpendBody.innerHTML=technicianRoster.map(tech=>`<button class="technician-button" type="button" data-tech="${escapeHtml(tech)}"><span class="technician-button-name">${escapeHtml(tech)}</span></button>`).join('');techSpendBody.querySelectorAll('.technician-button[data-tech]').forEach(button=>button.onclick=()=>showTechnicianProfile(button.dataset.tech));}
@@ -3433,7 +3552,7 @@
           return;
         }
         if (tile.dataset.module === "Technician Usage") {inventoryScreen.classList.remove("active");usageScreen.classList.add("active");refreshMoneyCards();return;}
-        if (tile.dataset.module === "Inventory History") {inventoryScreen.classList.remove("active");inventoryHistoryScreen.classList.add("active");renderInventoryHistory();historySearch.focus();return;}
+        if (tile.dataset.module === "Inventory History") {inventoryScreen.classList.remove("active");inventoryHistoryScreen.classList.add("active");renderInventoryHistory();return;}
         if (tile.dataset.module === "Price Review") {inventoryScreen.classList.remove("active");priceReviewScreen.classList.add("active");renderPriceReview();return;}
         if (tile.dataset.module === "Physical Count") {
           inventoryScreen.classList.remove("active");
