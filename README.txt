@@ -50,3 +50,8 @@ Manufacturer, last-seen date, and order number appear beneath the product name i
 V3.56 CHANGE
 Physical Count table now fits iPad portrait without horizontal scrolling.
 Count columns align correctly and action buttons fit the screen.
+
+V3.57 CHANGE
+Minimums table now fits iPad portrait without horizontal scrolling.
+Manufacturer, category, and unit appear beneath the product name in portrait.
+Stopped the Minimums search field from automatically opening the keyboard.

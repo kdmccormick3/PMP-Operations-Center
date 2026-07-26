@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.56</title>
+  <title>PMP Operations Center v3.57</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -1417,6 +1417,74 @@
       }
     }
 
+
+
+    /* v3.57 — Minimums iPad portrait fit; no automatic keyboard */
+    .manager-product-meta {
+      display: none;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: .72rem;
+      line-height: 1.25;
+      font-weight: 500;
+    }
+
+    @media (max-width: 900px) and (orientation: portrait) {
+      #product-manager-screen .products-table-wrap {
+        overflow-x: hidden;
+      }
+
+      #product-manager-screen .products-table {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+        font-size: .78rem;
+      }
+
+      #product-manager-screen .products-table th,
+      #product-manager-screen .products-table td {
+        padding: 9px 5px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+
+      #product-manager-screen .products-table th:nth-child(3),
+      #product-manager-screen .products-table th:nth-child(4),
+      #product-manager-screen .manager-col-manufacturer,
+      #product-manager-screen .manager-col-category {
+        display: none;
+      }
+
+      #product-manager-screen .products-table th:nth-child(1) { width: 9%; text-align: center; }
+      #product-manager-screen .products-table th:nth-child(2) { width: 35%; }
+      #product-manager-screen .products-table th:nth-child(5) { width: 12%; text-align: center; }
+      #product-manager-screen .products-table th:nth-child(6) { width: 18%; text-align: center; }
+      #product-manager-screen .products-table th:nth-child(7) { width: 26%; text-align: center; }
+
+      #product-manager-screen .manager-col-item,
+      #product-manager-screen .manager-col-onhand,
+      #product-manager-screen .manager-col-minimum,
+      #product-manager-screen .manager-col-status {
+        text-align: center;
+      }
+
+      #product-manager-screen .manager-product-meta {
+        display: block;
+      }
+
+      #product-manager-screen .manager-number {
+        width: 58px;
+        max-width: 100%;
+        padding: 7px 4px;
+      }
+
+      #product-manager-screen .manager-status {
+        width: 100%;
+        min-width: 0;
+        padding: 7px 4px;
+        font-size: .72rem;
+      }
+    }
 </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -1428,7 +1496,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.56</div>
+      <div class="status-badge">INVENTORY BUILD • v3.57</div>
     </header>
 
     <main>
@@ -1910,7 +1978,7 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.56</footer>
+    <footer>PMP Operations Center • Inventory build • v3.57</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -2398,13 +2466,13 @@
 
       managerBody.innerHTML=rows.map(product=>`
         <tr>
-          <td class="number">${product.item}</td>
-          <td><strong>${escapeHtml(product.name)}</strong><div style="font-size:.82rem;color:var(--muted);margin-top:3px">${escapeHtml(product.unit||"")}</div></td>
-          <td>${escapeHtml(product.manufacturer||"")}</td>
-          <td>${escapeHtml(product.category||"")}</td>
-          <td class="number">${product.onHand==null?"—":product.onHand}</td>
-          <td class="number"><input class="manager-number" type="number" min="0" step="1" value="${product.minimum==null?"":product.minimum}" data-manager-min="${product.item}" aria-label="Minimum for ${escapeHtml(product.name)}"></td>
-          <td>
+          <td class="number manager-col-item">${product.item}</td>
+          <td class="manager-col-product"><strong>${escapeHtml(product.name)}</strong><div class="manager-product-meta">${escapeHtml(product.manufacturer||"")} • ${escapeHtml(product.category||"")} • ${escapeHtml(product.unit||"")}</div></td>
+          <td class="manager-col-manufacturer">${escapeHtml(product.manufacturer||"")}</td>
+          <td class="manager-col-category">${escapeHtml(product.category||"")}</td>
+          <td class="number manager-col-onhand">${product.onHand==null?"—":product.onHand}</td>
+          <td class="number manager-col-minimum"><input class="manager-number" type="number" min="0" step="1" value="${product.minimum==null?"":product.minimum}" data-manager-min="${product.item}" aria-label="Minimum for ${escapeHtml(product.name)}"></td>
+          <td class="manager-col-status">
             <select class="manager-status" data-manager-status="${product.item}" aria-label="Status for ${escapeHtml(product.name)}">
               <option value="active"${product.status==="active"?" selected":""}>Active</option>
               <option value="use-remaining"${product.status==="use-remaining"?" selected":""}>Use Remaining Stock</option>
@@ -3229,7 +3297,7 @@
         if (tile.dataset.managerModule === "Minimums") {
           productManagerScreen.classList.add("active");
           renderProductManager();
-          managerSearch.focus();
+          managerSearch.blur();
           return;
         }
         if (tile.dataset.managerModule === "Order") {
