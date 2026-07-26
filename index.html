@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.53</title>
+  <title>PMP Operations Center v3.54</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -1128,6 +1128,80 @@
       }
     }
 
+
+    /* v3.54 — Receive Inventory iPad portrait fit and alignment */
+    .receive-product-meta {
+      display: none;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: .72rem;
+      line-height: 1.25;
+      font-weight: 500;
+    }
+
+    @media (max-width: 900px) and (orientation: portrait) {
+      #receive-inventory-screen .products-table-wrap {
+        overflow-x: hidden;
+      }
+
+      #receive-inventory-screen .products-table {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+        font-size: .78rem;
+      }
+
+      #receive-inventory-screen .products-table th,
+      #receive-inventory-screen .products-table td {
+        padding: 9px 5px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+
+      #receive-inventory-screen .products-table th:nth-child(3),
+      #receive-inventory-screen .products-table th:nth-child(5),
+      #receive-inventory-screen .products-table th:nth-child(6),
+      #receive-inventory-screen .receive-col-manufacturer,
+      #receive-inventory-screen .receive-col-unit,
+      #receive-inventory-screen .receive-col-price {
+        display: none;
+      }
+
+      #receive-inventory-screen .products-table th:nth-child(1) { width: 9%; text-align: center; }
+      #receive-inventory-screen .products-table th:nth-child(2) { width: 35%; }
+      #receive-inventory-screen .products-table th:nth-child(4) { width: 14%; text-align: center; }
+      #receive-inventory-screen .products-table th:nth-child(7) { width: 25%; text-align: center; }
+      #receive-inventory-screen .products-table th:nth-child(8) { width: 17%; text-align: center; }
+
+      #receive-inventory-screen .receive-col-item,
+      #receive-inventory-screen .receive-col-current,
+      #receive-inventory-screen .receive-col-quantity,
+      #receive-inventory-screen .receive-col-new {
+        text-align: center;
+      }
+
+      #receive-inventory-screen .receive-product-meta {
+        display: block;
+      }
+
+      #receive-inventory-screen .receiving-qty {
+        width: 100%;
+        min-width: 0;
+        max-width: 76px;
+        padding: 7px 3px;
+        text-align: center;
+      }
+
+      #receive-inventory-screen .products-total-bar {
+        flex-wrap: wrap;
+      }
+
+      #receive-inventory-screen .products-total-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
 </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -1139,7 +1213,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.53</div>
+      <div class="status-badge">INVENTORY BUILD • v3.54</div>
     </header>
 
     <main>
@@ -1621,7 +1695,7 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.53</footer>
+    <footer>PMP Operations Center • Inventory build • v3.54</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -2248,14 +2322,14 @@
         const qty=Number(receiveQuantitiesDedicated[product.item])||0;
         const newOnHand=(Number(product.onHand)||0)+qty;
         return `<tr>
-          <td class="number">${product.item}</td>
-          <td><strong>${escapeHtml(product.name)}</strong></td>
-          <td>${escapeHtml(product.manufacturer||"")}</td>
-          <td class="number">${product.onHand==null?"—":product.onHand}</td>
-          <td>${escapeHtml(product.unit||"")}</td>
-          <td class="number">${product.price==null?"—":money(product.price)}</td>
-          <td class="number"><input class="receiving-qty" type="number" min="0" step="1" value="${qty||""}" data-receive-qty="${product.item}"></td>
-          <td class="number"><strong>${newOnHand}</strong></td>
+          <td class="number receive-col-item">${product.item}</td>
+          <td class="receive-col-product"><strong>${escapeHtml(product.name)}</strong><span class="receive-product-meta">${escapeHtml(product.manufacturer||"")}${product.unit?` • ${escapeHtml(product.unit)}`:""}</span></td>
+          <td class="receive-col-manufacturer">${escapeHtml(product.manufacturer||"")}</td>
+          <td class="number receive-col-current">${product.onHand==null?"—":product.onHand}</td>
+          <td class="receive-col-unit">${escapeHtml(product.unit||"")}</td>
+          <td class="number receive-col-price">${product.price==null?"—":money(product.price)}</td>
+          <td class="number receive-col-quantity"><input class="receiving-qty" type="number" min="0" step="1" value="${qty||""}" data-receive-qty="${product.item}"></td>
+          <td class="number receive-col-new"><strong>${newOnHand}</strong></td>
         </tr>`;
       }).join("");
 
@@ -2913,7 +2987,7 @@
           inventoryScreen.classList.remove("active");
           receiveInventoryScreen.classList.add("active");
           renderReceiveInventory();
-          receiveSearch.focus();
+          receiveSearch.blur();
           return;
         }
         if (tile.dataset.module === "Product Manager Menu") {
@@ -2952,7 +3026,7 @@
         if (tile.dataset.managerModule === "Receive") {
           receiveInventoryScreen.classList.add("active");
           renderReceiveInventory();
-          receiveSearch.focus();
+          receiveSearch.blur();
           return;
         }
         if (tile.dataset.managerModule === "Physical Count") {
