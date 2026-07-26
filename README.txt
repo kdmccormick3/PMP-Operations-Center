@@ -1,4 +1,4 @@
-PMP OPERATIONS CENTER — PWA v3.51
+PMP OPERATIONS CENTER — PWA v3.52
 
 This package is the current working PMP HTML converted into an installable
 Progressive Web App shell.
@@ -28,3 +28,7 @@ Fixed Count Date / Counted By overlap on iPad portrait Physical Count screen.
 V3.51 CHANGE
 Fixed Products screen layout overflow on iPad portrait.
 Stopped Products search from automatically opening the keyboard.
+
+V3.52 CHANGE
+Products table now fits iPad portrait without horizontal scrolling.
+Manufacturer, category, and unit appear beneath the product name in portrait.

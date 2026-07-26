@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.51</title>
+  <title>PMP Operations Center v3.52</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -885,7 +885,7 @@
     @media(max-width:620px){.history-summary,.history-toolbar{grid-template-columns:1fr}}
 
 
-    /* v3.51 — iPad portrait Physical Count form fix */
+    /* v3.52 — iPad portrait Physical Count form fix */
     .count-field {
       min-width: 0;
     }
@@ -903,7 +903,7 @@
     }
 
 
-    /* v3.51 — Products page iPad portrait layout */
+    /* v3.52 — Products page iPad portrait layout */
     @media (max-width: 900px) and (orientation: portrait) {
       html,
       body {
@@ -977,6 +977,77 @@
       }
     }
 
+
+    /* v3.52 — Products table fits iPad portrait without horizontal scrolling */
+    .product-mobile-meta {
+      display: none;
+    }
+
+    @media (max-width: 900px) and (orientation: portrait) {
+      .products-table-wrap {
+        overflow-x: hidden;
+      }
+
+      .products-table {
+        min-width: 0;
+        width: 100%;
+        table-layout: fixed;
+        font-size: 0.82rem;
+      }
+
+      .products-table th,
+      .products-table td {
+        padding: 9px 8px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+
+      .products-table th:nth-child(2),
+      .products-table th:nth-child(3),
+      .products-table th:nth-child(7),
+      .product-col-manufacturer,
+      .product-col-category,
+      .product-col-unit {
+        display: none;
+      }
+
+      .products-table th:nth-child(1) { width: 43%; }
+      .products-table th:nth-child(4) { width: 15%; text-align: center; }
+      .products-table th:nth-child(5) { width: 19%; text-align: right; }
+      .products-table th:nth-child(6) { width: 23%; text-align: right; }
+
+      .products-table td:nth-child(4),
+      .products-table td:nth-child(5),
+      .products-table td:nth-child(6) {
+        text-align: right;
+      }
+
+      .product-mobile-meta {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 0.72rem;
+        line-height: 1.25;
+        font-weight: 500;
+      }
+
+      .stock-badge {
+        min-width: 34px;
+        padding: 3px 6px;
+      }
+
+      .products-total-bar {
+        gap: 10px;
+        padding: 10px 12px;
+        font-size: 0.82rem;
+      }
+
+      .products-total-bar strong {
+        font-size: 0.86rem;
+        text-align: right;
+      }
+    }
+
 </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -988,7 +1059,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.51</div>
+      <div class="status-badge">INVENTORY BUILD • v3.52</div>
     </header>
 
     <main>
@@ -1470,7 +1541,7 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.51</footer>
+    <footer>PMP Operations Center • Inventory build • v3.52</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -1839,13 +1910,18 @@
         const isLow = product.onHand != null && product.minimum != null && Number(product.onHand) < Number(product.minimum);
         return `
           <tr>
-            <td><strong>${escapeHtml(product.name)}</strong></td>
-            <td>${escapeHtml(product.manufacturer)}</td>
-            <td>${escapeHtml(product.category)}</td>
+            <td>
+              <strong>${escapeHtml(product.name)}</strong>
+              <div class="product-mobile-meta">
+                ${escapeHtml(product.manufacturer)} • ${escapeHtml(product.category)} • ${escapeHtml(product.unit)}
+              </div>
+            </td>
+            <td class="product-col-manufacturer">${escapeHtml(product.manufacturer)}</td>
+            <td class="product-col-category">${escapeHtml(product.category)}</td>
             <td class="number"><span class="stock-badge${isLow ? " low" : ""}">${product.onHand == null ? "—" : product.onHand}</span></td>
             <td class="number">${isQuantityOnlyProduct(product) ? "Quantity only" : (product.price == null ? "—" : money(product.price))}</td>
             <td class="number">${isQuantityOnlyProduct(product) ? "—" : (product.price == null ? "—" : money(Number(product.onHand) * Number(product.price)))}</td>
-            <td>${escapeHtml(product.unit)}</td>
+            <td class="product-col-unit">${escapeHtml(product.unit)}</td>
           </tr>`;
       }).join("");
 
