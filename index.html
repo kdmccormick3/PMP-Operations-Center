@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.50</title>
+  <title>PMP Operations Center v3.51</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -885,7 +885,7 @@
     @media(max-width:620px){.history-summary,.history-toolbar{grid-template-columns:1fr}}
 
 
-    /* v3.50 — iPad portrait Physical Count form fix */
+    /* v3.51 — iPad portrait Physical Count form fix */
     .count-field {
       min-width: 0;
     }
@@ -902,6 +902,81 @@
       }
     }
 
+
+    /* v3.51 — Products page iPad portrait layout */
+    @media (max-width: 900px) and (orientation: portrait) {
+      html,
+      body {
+        overflow-x: hidden;
+      }
+
+      .products-screen,
+      .products-shell {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+      }
+
+      .products-screen .inventory-header {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        margin-bottom: 12px;
+        align-items: stretch;
+        flex-direction: column-reverse;
+      }
+
+      .products-screen .inventory-title,
+      .products-screen .inventory-title h2,
+      .products-screen .inventory-title p {
+        max-width: 100%;
+        min-width: 0;
+      }
+
+      .products-screen .back-button {
+        width: 100%;
+        max-width: 100%;
+        text-align: center;
+      }
+
+      .products-toolbar {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .products-toolbar input,
+      .products-toolbar select,
+      .products-toolbar button {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+      }
+
+      .products-table-wrap {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+      }
+
+      .products-table {
+        min-width: 920px;
+      }
+
+      .products-total-bar {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow: hidden;
+      }
+    }
+
 </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -913,7 +988,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.50</div>
+      <div class="status-badge">INVENTORY BUILD • v3.51</div>
     </header>
 
     <main>
@@ -1395,7 +1470,7 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.50</footer>
+    <footer>PMP Operations Center • Inventory build • v3.51</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -2669,7 +2744,6 @@
           inventoryScreen.classList.remove("active");
           productsScreen.classList.add("active");
           renderProducts();
-          productSearch.focus();
           return;
         }
         if (tile.dataset.module === "Order Inventory") {
