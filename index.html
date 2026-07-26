@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.54</title>
+  <title>PMP Operations Center v3.55</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -1202,6 +1202,132 @@
       }
     }
 
+
+    /* v3.55 — Price Review iPad portrait fit and alignment */
+    .price-review-mobile-meta {
+      display: none;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: .71rem;
+      line-height: 1.25;
+      font-weight: 500;
+    }
+
+    @media (max-width: 900px) and (orientation: portrait) {
+      #price-review-screen,
+      #price-review-screen .price-review-shell {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+      }
+
+      #price-review-screen .inventory-header {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        margin-bottom: 0;
+        align-items: stretch;
+        flex-direction: column-reverse;
+      }
+
+      #price-review-screen .back-button {
+        width: 100%;
+        text-align: center;
+      }
+
+      #price-review-screen .price-review-summary {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      #price-review-screen .price-review-card {
+        min-width: 0;
+        padding: 9px 7px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+
+      #price-review-screen .price-review-card span {
+        font-size: .68rem;
+        line-height: 1.15;
+      }
+
+      #price-review-screen .price-review-card strong {
+        font-size: 1.1rem;
+      }
+
+      #price-review-screen .price-review-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      #price-review-screen .price-review-toolbar > div:last-child {
+        width: 100%;
+        display: grid !important;
+        grid-template-columns: 1fr;
+      }
+
+      #price-review-screen .price-review-toolbar select,
+      #price-review-screen .price-review-toolbar button {
+        width: 100%;
+        min-width: 0;
+      }
+
+      #price-review-screen .price-review-table-wrap {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+      }
+
+      #price-review-screen .price-review-table {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+        font-size: .76rem;
+      }
+
+      #price-review-screen .price-review-table th,
+      #price-review-screen .price-review-table td {
+        position: static;
+        padding: 9px 5px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        box-shadow: none;
+      }
+
+      #price-review-screen .price-review-table th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      #price-review-screen .price-review-table th:nth-child(3),
+      #price-review-screen .price-review-table th:nth-child(7),
+      #price-review-screen .price-review-table th:nth-child(8),
+      #price-review-screen .price-review-col-manufacturer,
+      #price-review-screen .price-review-col-date,
+      #price-review-screen .price-review-col-order {
+        display: none;
+      }
+
+      #price-review-screen .price-review-table th:nth-child(1) { width: 12%; text-align: center; }
+      #price-review-screen .price-review-table th:nth-child(2) { width: 31%; }
+      #price-review-screen .price-review-table th:nth-child(4) { width: 18%; text-align: right; }
+      #price-review-screen .price-review-table th:nth-child(5) { width: 20%; text-align: right; }
+      #price-review-screen .price-review-table th:nth-child(6) { width: 19%; text-align: right; }
+
+      #price-review-screen .price-review-col-sku {
+        text-align: center;
+      }
+
+      #price-review-screen .price-review-mobile-meta {
+        display: block;
+      }
+    }
+
 </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -1213,7 +1339,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.54</div>
+      <div class="status-badge">INVENTORY BUILD • v3.55</div>
     </header>
 
     <main>
@@ -1695,7 +1821,7 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.54</footer>
+    <footer>PMP Operations Center • Inventory build • v3.55</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -2709,7 +2835,7 @@
         const diff=r.difference;
         const diffClass=diff==null?'price-current':diff>0?'price-up':diff<0?'price-down':'price-current';
         const diffText=diff==null?'New price':`${diff>0?'+':''}${money(diff)}`;
-        return `<tr><td><strong>${escapeHtml(r.sku||'—')}</strong></td><td><strong>${escapeHtml(r.product.name)}</strong></td><td>${escapeHtml(r.product.manufacturer||'—')}</td><td class="number">${r.masterPrice==null?'—':money(r.masterPrice)}</td><td class="number"><strong>${money(r.pdfPrice)}</strong></td><td class="number ${diffClass}">${diffText}</td><td>${escapeHtml(r.date||'—')}</td><td>${escapeHtml(r.orderNumber||'—')}</td></tr>`;
+        return `<tr><td class="price-review-col-sku"><strong>${escapeHtml(r.sku||'—')}</strong></td><td><strong>${escapeHtml(r.product.name)}</strong><span class="price-review-mobile-meta">${escapeHtml(r.product.manufacturer||'—')}<br>${escapeHtml(r.date||'—')} • Order ${escapeHtml(r.orderNumber||'—')}</span></td><td class="price-review-col-manufacturer">${escapeHtml(r.product.manufacturer||'—')}</td><td class="number">${r.masterPrice==null?'—':money(r.masterPrice)}</td><td class="number"><strong>${money(r.pdfPrice)}</strong></td><td class="number ${diffClass}">${diffText}</td><td class="price-review-col-date">${escapeHtml(r.date||'—')}</td><td class="price-review-col-order">${escapeHtml(r.orderNumber||'—')}</td></tr>`;
       }).join('');
     }
 
