@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.57</title>
+  <title>PMP Operations Center v3.58</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -1485,6 +1485,160 @@
         font-size: .72rem;
       }
     }
+
+
+    /* v3.58 — Technician Checkout iPad portrait fit */
+    @media (max-width: 900px) and (orientation: portrait) {
+      #usage-screen,
+      #usage-screen .usage-shell {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+      }
+
+      #usage-screen .inventory-header {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        margin-bottom: 0;
+        align-items: stretch;
+        flex-direction: column-reverse;
+      }
+
+      #usage-screen .back-button {
+        width: 100%;
+        text-align: center;
+      }
+
+      #usage-screen .usage-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      #usage-screen .money-card {
+        min-width: 0;
+        padding: 11px 10px;
+      }
+
+      #usage-screen .money-card span {
+        font-size: .68rem;
+        line-height: 1.15;
+      }
+
+      #usage-screen .money-card strong {
+        font-size: 1.08rem;
+      }
+
+      #usage-screen .usage-tools {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      #usage-screen .usage-tools button,
+      #usage-screen .upload-label {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+      }
+
+      #usage-screen .review-toolbar {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      #usage-screen .review-toolbar > div:last-child {
+        width: 100%;
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      #usage-screen #pdf-preview-select,
+      #usage-screen #open-pdf-preview {
+        width: 100%;
+        min-width: 0 !important;
+        max-width: 100%;
+      }
+
+      #usage-screen .usage-table-wrap {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+      }
+
+      #usage-screen .usage-table {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+        font-size: .75rem;
+      }
+
+      #usage-screen .usage-table th,
+      #usage-screen .usage-table td {
+        padding: 8px 4px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+
+      #usage-screen .usage-table th:nth-child(2),
+      #usage-screen .usage-table td:nth-child(2),
+      #usage-screen .usage-table th:nth-child(5),
+      #usage-screen .usage-table td:nth-child(5),
+      #usage-screen .usage-table th:nth-child(6),
+      #usage-screen .usage-table td:nth-child(6) {
+        display: none;
+      }
+
+      #usage-screen .usage-table th:nth-child(1) { width: 10%; text-align: center; }
+      #usage-screen .usage-table th:nth-child(3) { width: 42%; }
+      #usage-screen .usage-table th:nth-child(4) { width: 13%; text-align: center; }
+      #usage-screen .usage-table th:nth-child(7) { width: 18%; text-align: right; }
+      #usage-screen .usage-table th:nth-child(8) { width: 17%; text-align: center; }
+
+      #usage-screen .usage-table td:nth-child(1),
+      #usage-screen .usage-table td:nth-child(4),
+      #usage-screen .usage-table td:nth-child(8) {
+        text-align: center;
+      }
+
+      #usage-screen .usage-table td:nth-child(7) {
+        text-align: right;
+      }
+
+      #usage-screen .usage-table input,
+      #usage-screen .usage-table select {
+        min-width: 0;
+        padding: 6px 3px;
+        font-size: .72rem;
+      }
+
+      #usage-screen .technician-card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 12px;
+        gap: 10px;
+      }
+
+      #usage-screen .tech-spend-title {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      #usage-screen .usage-actions {
+        width: 100%;
+      }
+
+      #usage-screen .usage-actions button {
+        width: 100%;
+      }
+    }
+
 </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -1496,7 +1650,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.57</div>
+      <div class="status-badge">INVENTORY BUILD • v3.58</div>
     </header>
 
     <main>
