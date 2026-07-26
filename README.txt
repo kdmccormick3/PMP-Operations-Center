@@ -1,4 +1,4 @@
-PMP OPERATIONS CENTER — PWA v3.49
+PMP OPERATIONS CENTER — PWA v3.50
 
 This package is the current working PMP HTML converted into an installable
 Progressive Web App shell.
@@ -21,3 +21,6 @@ will be added in the cloud-data phase after the hosted PWA is confirmed working.
 NEXT STEP
 Upload this folder to a web host and publish it. Then open the HTTPS address on
 the laptop, iPad, and phone.
+
+V3.50 CHANGE
+Fixed Count Date / Counted By overlap on iPad portrait Physical Count screen.
