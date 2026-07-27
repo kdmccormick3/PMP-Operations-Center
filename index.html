@@ -2579,26 +2579,40 @@
       <section id="truck-inventory-screen" class="screen usage-screen" aria-label="Truck Inventory">
         <div class="usage-shell">
           <div class="inventory-header">
-            <div class="inventory-title"><h2>Truck Inventory</h2><p>Upload one or more truck inventory PDFs, review the counted products, and post an inventory snapshot for each technician.</p></div>
+            <div class="inventory-title"><h2>Truck Inventory</h2><p>Select a technician to open their truck inventory workspace.</p></div>
             <button id="back-from-truck-inventory" class="back-button" type="button">← Back to Technician Inventory</button>
           </div>
-          <div class="usage-summary">
-            <div class="money-card truck-current-card"><span>This Truck Count</span><strong id="truck-current-value">$0.00</strong></div>
-            <div class="money-card"><span>Total Truck Inventory Value</span><strong id="truck-total-value">$0.00</strong></div>
+
+          <div id="truck-directory" class="tech-spend-panel">
+            <div class="tech-spend-title"><h3>Technicians</h3><p>Select a technician to upload, review, and view their truck inventory.</p></div>
+            <div id="truck-directory-body" class="technician-card-grid"></div>
           </div>
-          <div class="usage-tools">
-            <label id="truck-drop-zone" class="upload-label"><strong>Drag & Drop Truck Inventory PDFs Here</strong><span>Drop multiple PDFs at once, or click to choose them</span><input id="truck-inventory-pdf" type="file" accept="application/pdf" multiple></label>
-            <button id="clear-truck-review" class="action-button" type="button">Clear Review</button>
+
+          <div id="truck-profile" class="tech-profile" style="display:none">
+            <div class="tech-profile-header">
+              <div><h3 id="truck-profile-name">Technician</h3><p id="truck-profile-summary">Truck inventory workspace</p></div>
+              <button id="close-truck-profile" class="tech-profile-close" type="button">← Back to Technicians</button>
+            </div>
+
+            <div class="usage-summary">
+              <div class="money-card truck-current-card"><span>This Truck Count</span><strong id="truck-current-value">$0.00</strong></div>
+              <div class="money-card"><span>Current Truck Inventory Value</span><strong id="truck-total-value">$0.00</strong></div>
+            </div>
+
+            <div class="usage-tools">
+              <label id="truck-drop-zone" class="upload-label"><strong>Drag & Drop Truck Inventory PDFs Here</strong><span>Drop multiple PDFs at once, or click to choose them</span><input id="truck-inventory-pdf" type="file" accept="application/pdf" multiple></label>
+              <button id="clear-truck-review" class="action-button" type="button">Clear Review</button>
+            </div>
+            <div id="truck-detected" style="display:none;margin:0 0 16px;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:#f7fafc;font-weight:600"></div>
+            <div class="review-toolbar">
+              <div class="review-toolbar-copy"><strong>Truck Inventory Review</strong><span>Compare the parsed items with the original truck inventory documents before posting.</span></div>
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><select id="truck-pdf-preview-select" class="usage-product" aria-label="Select truck inventory PDF to preview" disabled style="min-width:240px"><option value="">Select PDF…</option></select><button id="open-truck-pdf-preview" class="preview-button" type="button" disabled>View Selected PDF ↗</button></div>
+            </div>
+            <div class="usage-table-wrap"><table class="usage-table"><thead><tr><th>Use</th><th>PDF Description</th><th>Matched Product</th><th>Qty</th><th>Unit Price</th><th>Extended Value</th><th>Status</th></tr></thead><tbody id="truck-review-body"><tr><td colspan="7" style="text-align:center;color:var(--muted);padding:28px">Upload a truck inventory PDF to begin.</td></tr></tbody></table></div>
+            <div class="usage-actions"><button id="post-truck-inventory" class="action-button primary" type="button">Post Approved Truck Inventory</button></div>
+
+            <div class="tech-history-wrap" style="margin-top:20px"><table class="tech-history-table checkout-history-table"><thead><tr><th>Inventory Date</th><th>Truck</th><th>Products</th><th>Inventory Value</th><th></th></tr></thead><tbody id="truck-history-body"></tbody></table></div>
           </div>
-          <div id="truck-detected" style="display:none;margin:0 0 16px;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:#f7fafc;font-weight:600"></div>
-          <div class="review-toolbar">
-            <div class="review-toolbar-copy"><strong>Truck Inventory Review</strong><span>Compare the parsed items with the original truck inventory documents before posting.</span></div>
-            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><select id="truck-pdf-preview-select" class="usage-product" aria-label="Select truck inventory PDF to preview" disabled style="min-width:240px"><option value="">Select PDF…</option></select><button id="open-truck-pdf-preview" class="preview-button" type="button" disabled>View Selected PDF ↗</button></div>
-          </div>
-          <div class="usage-table-wrap"><table class="usage-table"><thead><tr><th>Use</th><th>PDF Description</th><th>Matched Product</th><th>Qty</th><th>Unit Price</th><th>Extended Value</th><th>Status</th></tr></thead><tbody id="truck-review-body"><tr><td colspan="7" style="text-align:center;color:var(--muted);padding:28px">Upload a truck inventory PDF to begin.</td></tr></tbody></table></div>
-          <div id="truck-directory" class="tech-spend-panel"><div class="tech-spend-title"><h3>Truck Inventory</h3><p>Select a technician to open their truck inventory history.</p></div><div id="truck-directory-body" class="technician-card-grid"></div></div>
-          <div id="truck-profile" class="tech-profile"><div class="tech-profile-header"><div><h3 id="truck-profile-name">Technician</h3><p id="truck-profile-summary">Truck inventory history</p></div><button id="close-truck-profile" class="tech-profile-close" type="button">← Back to Technicians</button></div><div class="tech-history-wrap"><table class="tech-history-table checkout-history-table"><thead><tr><th>Inventory Date</th><th>Truck</th><th>Products</th><th>Inventory Value</th><th></th></tr></thead><tbody id="truck-history-body"></tbody></table></div></div>
-          <div class="usage-actions"><button id="post-truck-inventory" class="action-button primary" type="button">Post Approved Truck Inventory</button></div>
         </div>
       </section>
 
@@ -2621,7 +2635,7 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.68</footer>
+    <footer>PMP Operations Center • Inventory build • v3.69</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -4049,7 +4063,7 @@
     }
   
 
-    // Truck Inventory workflow (v3.68)
+    // Truck Inventory workflow (v3.69)
     const truckPdfInput=document.getElementById('truck-inventory-pdf');
     const truckDropZone=document.getElementById('truck-drop-zone');
     const truckReviewBody=document.getElementById('truck-review-body');
@@ -4069,6 +4083,7 @@
     const closeTruckProfile=document.getElementById('close-truck-profile');
     let stagedTruckInventories=[];
     let truckPreviewUrls=[];
+    let selectedTruckTechnician="";
 
     function getTruckHistory(){try{return JSON.parse(localStorage.getItem('pmpTruckInventoryHistory_v3_67')||'[]')}catch(e){return[]}}
     function saveTruckHistory(rows){localStorage.setItem('pmpTruckInventoryHistory_v3_67',JSON.stringify(rows))}
@@ -4095,6 +4110,7 @@
       return found;
     }
     async function processTruckFiles(fileList){
+      if(!selectedTruckTechnician){showNotice('Select a technician first.');return}
       const files=[...fileList].filter(f=>f.type==='application/pdf'||/\.pdf$/i.test(f.name));
       if(!files.length){showNotice('Choose a truck inventory PDF.');return}
       truckDetected.style.display='block'; truckDetected.textContent='Reading truck inventory PDF'+(files.length>1?'s':'')+'…';
@@ -4102,6 +4118,7 @@
         try{
           const text=await extractPdf(file);
           const meta=parseTruckMeta(text,file.name);
+          meta.technician=selectedTruckTechnician||meta.technician;
           let lines=findTruckLines(text);
           if(!lines.length) lines=[{use:true,description:'No product lines were matched automatically',productItem:'',qty:1}];
           stagedTruckInventories.push({meta,lines,file});
@@ -4134,6 +4151,7 @@
     truckDropZone.addEventListener('drop',e=>processTruckFiles(e.dataTransfer.files));
     clearTruckReview.onclick=()=>{stagedTruckInventories=[];truckPdfInput.value='';truckDetected.style.display='none';renderTruckReview();renderTruckPreviewOptions();showNotice('Truck inventory review cleared.')};
     postTruckInventory.onclick=()=>{
+      if(!selectedTruckTechnician){showNotice('Select a technician first.');return}
       if(!stagedTruckInventories.length){showNotice('Upload a truck inventory PDF first.');return}
       const history=getTruckHistory();let posted=0;
       stagedTruckInventories.forEach(doc=>{
@@ -4141,7 +4159,7 @@
         const total=lines.reduce((sum,l)=>sum+l.value,0);
         history.push({...doc.meta,lines,total,postedAt:new Date().toISOString(),countPolicy:'Count new containers and containers more than half full'});posted++;
       });
-      saveTruckHistory(history);stagedTruckInventories=[];truckPdfInput.value='';truckDetected.style.display='none';renderTruckReview();renderTruckPreviewOptions();renderTruckDirectory();showNotice(`${posted} truck inventory snapshot${posted===1?'':'s'} posted.`)
+      saveTruckHistory(history);stagedTruckInventories=[];truckPdfInput.value='';truckDetected.style.display='none';renderTruckReview();renderTruckPreviewOptions();renderTruckDirectory();openTruckTechnician(selectedTruckTechnician);showNotice(`${posted} truck inventory snapshot${posted===1?'':'s'} posted.`)
     };
     function renderTruckDirectory(){
       const history=getTruckHistory();const latest={};history.forEach(r=>{const key=r.technician||'Unknown Technician';if(!latest[key]||String(r.postedAt)>String(latest[key].postedAt))latest[key]=r});
@@ -4151,12 +4169,15 @@
       truckDirectoryBody.querySelectorAll('[data-truck-tech]').forEach(btn=>btn.onclick=()=>openTruckTechnician(decodeURIComponent(btn.dataset.truckTech)));
     }
     function openTruckTechnician(name){
+      selectedTruckTechnician=name;
       const rows=getTruckHistory().filter(r=>(r.technician||'Unknown Technician')===name).sort((a,b)=>String(b.postedAt).localeCompare(String(a.postedAt)));
-      truckDirectory.style.display='none';truckProfile.classList.add('active');truckProfile.style.display='block';truckProfileName.textContent=name;truckProfileSummary.textContent=`${rows.length} truck inventory snapshot${rows.length===1?'':'s'}`;
+      truckDirectory.style.display='none';truckProfile.classList.add('active');truckProfile.style.display='block';truckProfileName.textContent=name;truckProfileSummary.textContent=`${rows.length} truck inventory snapshot${rows.length===1?'':'s'} • Uploads on this page are assigned to ${name}`;
+      truckTotalValue.textContent=truckMoney(rows.length?rows[0].total:0);
       truckHistoryBody.innerHTML=rows.length?rows.map((r,i)=>`<tr><td>${r.date||''}</td><td>${r.truck||'Not listed'}</td><td>${r.lines.length}</td><td>${truckMoney(r.total)}</td><td><button class="preview-button" type="button" data-truck-detail="${i}">View</button></td></tr>`).join(''):'<tr><td colspan="5" class="empty-tech">No truck inventory snapshots have been posted for this technician.</td></tr>';
       truckHistoryBody.querySelectorAll('[data-truck-detail]').forEach(btn=>btn.onclick=()=>{const r=rows[Number(btn.dataset.truckDetail)];alert(`${r.technician}\nTruck ${r.truck}\n${r.date}\n\n`+r.lines.map(l=>`${l.product}: ${l.qty} — ${truckMoney(l.value)}`).join('\n')+`\n\nTotal: ${truckMoney(r.total)}`)});
+      window.scrollTo({top:0,behavior:'smooth'});
     }
-    closeTruckProfile.onclick=()=>{truckProfile.classList.remove('active');truckProfile.style.display='none';truckDirectory.style.display='block'};
+    closeTruckProfile.onclick=()=>{selectedTruckTechnician='';stagedTruckInventories=[];truckPdfInput.value='';truckDetected.style.display='none';renderTruckReview();renderTruckPreviewOptions();truckProfile.classList.remove('active');truckProfile.style.display='none';truckDirectory.style.display='block';renderTruckDirectory();window.scrollTo({top:0,behavior:'smooth'})};
     renderTruckDirectory();
 </script>
 

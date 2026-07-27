@@ -97,3 +97,6 @@ Laptop and desktop retain 100% of the existing functionality.
 
 V3.68 CHANGE
 Truck Inventory now displays a dedicated button for every technician, matching the Technician Usage directory. Each technician button opens that technician's truck inventory history, including an empty-state message when no snapshots have been posted.
+
+
+v3.69: Truck Inventory now opens with technician buttons first. Each technician has a dedicated upload, review, posting, value, and history workspace.
