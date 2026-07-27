@@ -88,3 +88,9 @@ This removes Safari date-field overflow and keeps Clear Filters separate from En
 V3.64 CHANGE
 Inventory History now scrolls vertically on iPad so the data table remains reachable.
 Date fields keep rounded contained styling, and landscape filters fit without overlap.
+
+V3.65 CHANGE
+Added automatic iPad Warehouse Mode while preserving the full laptop/desktop application.
+On iPad, Technician Usage is read-only (totals, technician directory, and checkout history); PDF upload, checkout review, and posting are hidden.
+Price Review and Master Data Review are hidden on iPad because they are office workflows. Products, Order, Receive, Physical Count, Minimums, Technician Usage history, and Inventory History remain available.
+Laptop and desktop retain 100% of the existing functionality.

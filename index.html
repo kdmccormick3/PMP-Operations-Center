@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.64</title>
+  <title>PMP Operations Center v3.65</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -1921,7 +1921,7 @@
     }
 
 
-    /* v3.64 — Inventory History iPad filters use dedicated rows */
+    /* v3.65 — Inventory History iPad filters use dedicated rows */
     @media (max-width: 1180px) {
       #inventory-history-screen .history-toolbar {
         display: grid !important;
@@ -1984,7 +1984,7 @@
 
 
 
-    /* v3.64 — Inventory History remains scrollable on iPad and date fields stay contained */
+    /* v3.65 — Inventory History remains scrollable on iPad and date fields stay contained */
     @media (max-width: 1180px) {
       #inventory-history-screen {
         overflow-x: hidden !important;
@@ -2036,6 +2036,40 @@
       }
     }
 
+
+
+    /* v3.65 — Device-aware iPad Warehouse Mode */
+    .warehouse-mode-indicator {
+      display: none;
+      align-items: center;
+      gap: 7px;
+      margin-top: 8px;
+      color: rgba(255,255,255,.92);
+      font-size: .82rem;
+      font-weight: 800;
+      letter-spacing: .035em;
+      text-transform: uppercase;
+    }
+    body.warehouse-mode .warehouse-mode-indicator { display: flex; }
+    body.warehouse-mode .office-only-tile { display: none !important; }
+    body.warehouse-mode #usage-screen .usage-tools,
+    body.warehouse-mode #usage-screen #checkout-detected,
+    body.warehouse-mode #usage-screen .review-toolbar,
+    body.warehouse-mode #usage-screen .usage-table-wrap,
+    body.warehouse-mode #usage-screen .usage-actions {
+      display: none !important;
+    }
+    body.warehouse-mode #usage-screen .usage-summary {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    body.warehouse-mode #usage-screen .checkout-current-card { display: none !important; }
+    body.warehouse-mode #usage-screen .usage-shell { height: 100%; min-height: 0; }
+    body.warehouse-mode #usage-screen #tech-directory { flex: 1 1 auto; min-height: 0; }
+    body.warehouse-mode #usage-screen .technician-card-grid { overflow-y: auto; }
+    @media (max-width: 900px) and (orientation: portrait) {
+      body.warehouse-mode #usage-screen .usage-summary { grid-template-columns: 1fr; }
+    }
+
 </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -2045,9 +2079,9 @@
     <header class="topbar">
       <div class="brand-block">
         <h1>PMP OPERATIONS CENTER</h1>
-        <p>Virginia Pest Management Professional Dashboard</p>
+        <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.64</div>
+      <div class="status-badge">INVENTORY BUILD • v3.65</div>
     </header>
 
     <main>
@@ -2140,8 +2174,8 @@
 
           <button class="module-tile" type="button" data-module="Technician Usage">
             <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><path d="M4 21v-3a5 5 0 0 1 10 0v3"/><path d="M16 8h5"/><path d="m19 5 3 3-3 3"/></svg></div>
-            <h3>Technician Usage</h3>
-            <p>Upload checkout PDFs, review product matches, and track technician spend.</p>
+            <h3 id="technician-usage-card-title">Technician Usage</h3>
+            <p id="technician-usage-card-copy">Upload checkout PDFs, review product matches, and track technician spend.</p>
           </button>
 
           <button class="module-tile" type="button" data-module="Inventory History">
@@ -2172,7 +2206,7 @@
             <h3>Receive</h3>
             <p>Post incoming shipments and update on-hand inventory.</p>
           </button>
-          <button class="module-tile manager-menu-tile" type="button" data-manager-module="Price Review">
+          <button class="module-tile manager-menu-tile office-only-tile" type="button" data-manager-module="Price Review">
             <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 6.5c0-1.9-2.2-3.5-5-3.5S7 4.6 7 6.5 9.2 10 12 10s5 1.6 5 3.5S14.8 17 12 17s-5-1.6-5-3.5"/><path d="M4 21h16"/></svg></div>
             <h3>Price Review</h3>
             <p>Compare checkout prices with the master price and approve updates.</p>
@@ -2187,7 +2221,7 @@
             <h3>Minimums</h3>
             <p>Set product minimums and active status.</p>
           </button>
-          <button class="module-tile manager-menu-tile" type="button" data-manager-module="Master Data Review">
+          <button class="module-tile manager-menu-tile office-only-tile" type="button" data-manager-module="Master Data Review">
             <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
             <h3>Master Data Review</h3>
             <p>Check products, counts, minimums, pricing, and required fields before go-live.</p>
@@ -2510,7 +2544,7 @@
         </div>
       </section>
 
-      <section id="usage-screen" class="screen usage-screen" aria-label="Technician checkout"><div class="usage-shell"><div class="inventory-header"><div class="inventory-title"><h2>Technician Checkout</h2><p>Upload one or more technician checkout PDFs. The technician, checkout date, order number, quantities, and historical prices are read directly from each document.</p></div><button id="back-from-usage" class="back-button" type="button">← Back to Inventory</button></div><div class="usage-summary"><div class="money-card"><span>This Checkout</span><strong id="checkout-value">$0.00</strong></div><div class="money-card"><span>Total Product Value Issued</span><strong id="issued-value">$0.00</strong></div></div><div class="usage-tools"><label id="checkout-drop-zone" class="upload-label"><strong>Drag & Drop Checkout PDFs Here</strong><span>Drop multiple PDFs at once, or click to choose them</span><input id="checkout-pdf" type="file" accept="application/pdf" multiple></label><button id="clear-usage" class="action-button" type="button">Clear Review</button></div><div id="checkout-detected" style="display:none;margin:0 0 16px;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:#f7fafc;font-weight:600"></div><div class="review-toolbar"><div class="review-toolbar-copy"><strong>Checkout Review</strong><span>Compare the parsed items with the original checkout documents before posting.</span></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><select id="pdf-preview-select" class="usage-product" aria-label="Select PDF to preview" disabled style="min-width:240px"><option value="">Select PDF…</option></select><button id="open-pdf-preview" class="preview-button" type="button" disabled>View Selected PDF ↗</button></div></div><div class="usage-table-wrap"><table class="usage-table"><thead><tr><th>Use</th><th>PDF Description</th><th>Matched Product</th><th>Qty</th><th>Unit Price</th><th>Price UOM</th><th>Extended Cost</th><th>Status</th></tr></thead><tbody id="usage-body"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">Upload a checkout PDF to begin.</td></tr></tbody></table></div><div id="tech-directory" class="tech-spend-panel"><div class="tech-spend-title"><h3>Technician Usage</h3><p>Select a technician to open their checkout history.</p></div><div id="tech-spend-body" class="technician-card-grid"></div></div><div id="tech-profile" class="tech-profile"><div class="tech-profile-header"><div><h3 id="tech-profile-name">Technician</h3><p id="tech-profile-summary">Checkout history</p></div><button id="close-tech-profile" class="tech-profile-close" type="button">← Back to Technicians</button></div><div class="tech-history-wrap"><table class="tech-history-table checkout-history-table"><thead><tr><th>Checkout Date</th><th>Order #</th><th>Items</th><th>Total Value</th><th></th></tr></thead><tbody id="tech-history-body"></tbody></table></div></div><div class="usage-actions"><button id="post-checkout" class="action-button primary" type="button">Post Approved Checkout</button></div></div></section>
+      <section id="usage-screen" class="screen usage-screen" aria-label="Technician checkout"><div class="usage-shell"><div class="inventory-header"><div class="inventory-title"><h2 id="usage-screen-title">Technician Checkout</h2><p id="usage-screen-copy">Upload one or more technician checkout PDFs. The technician, checkout date, order number, quantities, and historical prices are read directly from each document.</p></div><button id="back-from-usage" class="back-button" type="button">← Back to Inventory</button></div><div class="usage-summary"><div class="money-card checkout-current-card"><span>This Checkout</span><strong id="checkout-value">$0.00</strong></div><div class="money-card"><span>Total Product Value Issued</span><strong id="issued-value">$0.00</strong></div></div><div class="usage-tools"><label id="checkout-drop-zone" class="upload-label"><strong>Drag & Drop Checkout PDFs Here</strong><span>Drop multiple PDFs at once, or click to choose them</span><input id="checkout-pdf" type="file" accept="application/pdf" multiple></label><button id="clear-usage" class="action-button" type="button">Clear Review</button></div><div id="checkout-detected" style="display:none;margin:0 0 16px;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:#f7fafc;font-weight:600"></div><div class="review-toolbar"><div class="review-toolbar-copy"><strong>Checkout Review</strong><span>Compare the parsed items with the original checkout documents before posting.</span></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><select id="pdf-preview-select" class="usage-product" aria-label="Select PDF to preview" disabled style="min-width:240px"><option value="">Select PDF…</option></select><button id="open-pdf-preview" class="preview-button" type="button" disabled>View Selected PDF ↗</button></div></div><div class="usage-table-wrap"><table class="usage-table"><thead><tr><th>Use</th><th>PDF Description</th><th>Matched Product</th><th>Qty</th><th>Unit Price</th><th>Price UOM</th><th>Extended Cost</th><th>Status</th></tr></thead><tbody id="usage-body"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">Upload a checkout PDF to begin.</td></tr></tbody></table></div><div id="tech-directory" class="tech-spend-panel"><div class="tech-spend-title"><h3>Technician Usage</h3><p>Select a technician to open their checkout history.</p></div><div id="tech-spend-body" class="technician-card-grid"></div></div><div id="tech-profile" class="tech-profile"><div class="tech-profile-header"><div><h3 id="tech-profile-name">Technician</h3><p id="tech-profile-summary">Checkout history</p></div><button id="close-tech-profile" class="tech-profile-close" type="button">← Back to Technicians</button></div><div class="tech-history-wrap"><table class="tech-history-table checkout-history-table"><thead><tr><th>Checkout Date</th><th>Order #</th><th>Items</th><th>Total Value</th><th></th></tr></thead><tbody id="tech-history-body"></tbody></table></div></div><div class="usage-actions"><button id="post-checkout" class="action-button primary" type="button">Post Approved Checkout</button></div></div></section>
       <section id="count-screen" class="screen count-screen" aria-label="Physical inventory count">
         <div class="count-shell">
           <div class="inventory-header">
@@ -2529,13 +2563,24 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.64</footer>
+    <footer>PMP Operations Center • Inventory build • v3.65</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
 
   <script>
     const notice = document.getElementById("notice");
+    const isIPadWarehouse = /iPad/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    if (isIPadWarehouse) {
+      document.body.classList.add("warehouse-mode");
+      const usageCardCopy = document.getElementById("technician-usage-card-copy");
+      const usageTitle = document.getElementById("usage-screen-title");
+      const usageCopy = document.getElementById("usage-screen-copy");
+      if (usageCardCopy) usageCardCopy.textContent = "View technician checkout history and issued-product totals.";
+      if (usageTitle) usageTitle.textContent = "Technician Usage";
+      if (usageCopy) usageCopy.textContent = "Warehouse read-only view of technician checkout history and product value issued.";
+    }
+
     const dashboardScreen = document.getElementById("dashboard-screen");
     const inventoryScreen = document.getElementById("inventory-screen");
     const productManagerMenuScreen = document.getElementById("product-manager-menu-screen");
