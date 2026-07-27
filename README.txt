@@ -1,3 +1,10 @@
+PMP Operations Center v3.73
+
+Changes:
+- Orders terminology restored and retained throughout Technician Inventory.
+- Orders and Truck Inventory technician pages now fit iPad portrait without horizontal cutoff.
+- Service-worker cache updated so GitHub Pages/PWA loads the new version.
+
 PMP OPERATIONS CENTER — PWA v3.63
 
 This package is the current working PMP HTML converted into an installable
