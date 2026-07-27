@@ -102,4 +102,4 @@ Truck Inventory now displays a dedicated button for every technician, matching t
 v3.69: Truck Inventory now opens with technician buttons first. Each technician has a dedicated upload, review, posting, value, and history workspace.
 
 
-v3.70: Renamed the Technician Inventory “Technician Usage” module to “Orders” for clearer navigation. Functionality is unchanged.
+v3.71: Renamed the Technician Inventory “Technician Usage” module to “Orders” for clearer navigation. Functionality is unchanged.
