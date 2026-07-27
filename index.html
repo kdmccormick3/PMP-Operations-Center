@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.66</title>
+  <title>PMP Operations Center v3.78</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -829,6 +829,7 @@
     .usage-screen.directory-mode .usage-table-wrap,
     .usage-screen.directory-mode .tech-profile,
     .usage-screen.directory-mode .usage-actions{display:none!important}
+    .usage-screen.directory-mode #tech-directory{display:block!important}
     .usage-screen.profile-mode #tech-directory{display:none!important}
     .usage-screen.profile-mode .tech-profile{
       display:block;
@@ -2091,7 +2092,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.66</div>
+      <div class="status-badge">INVENTORY BUILD • v3.78</div>
     </header>
 
     <main>
@@ -2185,7 +2186,7 @@
           <button class="module-tile" type="button" data-module="Technician Inventory">
             <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="7" r="3"/><path d="M3 21v-3a5 5 0 0 1 10 0v3"/><path d="M15 8h6v7h-6z"/><path d="M17 15v3h4v-3"/></svg></div>
             <h3 id="technician-inventory-card-title">Technician Inventory</h3>
-            <p id="technician-inventory-card-copy">Manage technician usage and truck inventory in one place.</p>
+            <p id="technician-inventory-card-copy">Manage orders and truck inventory in one place.</p>
           </button>
 
           <button class="module-tile" type="button" data-module="Inventory History">
@@ -2558,14 +2559,14 @@
         <div class="inventory-header">
           <div class="inventory-title">
             <h2>Technician Inventory</h2>
-            <p>Choose technician usage or truck inventory.</p>
+            <p>Choose orders or truck inventory.</p>
           </div>
           <button id="back-from-technician-inventory" class="back-button" type="button">← Back to Inventory</button>
         </div>
         <section class="module-grid" aria-label="Technician Inventory tools">
           <button class="module-tile technician-inventory-tile" type="button" data-technician-module="Usage">
             <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><path d="M4 21v-3a5 5 0 0 1 10 0v3"/><path d="M16 8h5"/><path d="m19 5 3 3-3 3"/></svg></div>
-            <h3>Technician Usage</h3>
+            <h3>Orders</h3>
             <p>Upload Forsite checkout PDFs, review product usage, and track technician spend.</p>
           </button>
           <button class="module-tile technician-inventory-tile" type="button" data-technician-module="Truck">
@@ -2635,7 +2636,7 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.69</footer>
+    <footer>PMP Operations Center • Inventory build • v3.78</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -2648,9 +2649,9 @@
       const usageCardCopy = document.getElementById("technician-inventory-card-copy");
       const usageTitle = document.getElementById("usage-screen-title");
       const usageCopy = document.getElementById("usage-screen-copy");
-      if (usageCardCopy) usageCardCopy.textContent = "Open technician usage history or truck inventory.";
-      if (usageTitle) usageTitle.textContent = "Technician Usage";
-      if (usageCopy) usageCopy.textContent = "Warehouse read-only view of technician checkout history and product value issued.";
+      if (usageCardCopy) usageCardCopy.textContent = "Open order history or truck inventory.";
+      if (usageTitle) usageTitle.textContent = "Orders";
+      if (usageCopy) usageCopy.textContent = "Select a technician to review order history and product value issued.";
     }
 
     const dashboardScreen = document.getElementById("dashboard-screen");
@@ -3914,12 +3915,15 @@
       showNotice(parts.join(' '));
     };
     closeTechProfile.onclick=()=>{
+      const techDirectory = document.getElementById('tech-directory');
       techProfile.classList.remove('active');
       usageScreen.classList.remove('profile-mode');
       usageScreen.classList.add('directory-mode');
       usageTitle.textContent='Orders';
       usageCopy.textContent='Select a technician to review orders, upload checkout PDFs, and view order history.';
-      document.getElementById('tech-directory').classList.remove('hidden');
+      techDirectory.classList.remove('hidden');
+      techDirectory.style.display='block';
+      renderTechnicianSpend();
       refreshMoneyCards();
       window.scrollTo({top:0,behavior:'auto'});
     };
@@ -3987,7 +3991,10 @@
           usageScreen.classList.remove("profile-mode");
           usageScreen.classList.add("active","directory-mode");
           techProfile.classList.remove("active");
-          document.getElementById('tech-directory').classList.remove('hidden');
+          const techDirectory = document.getElementById('tech-directory');
+          techDirectory.classList.remove('hidden');
+          techDirectory.style.display='block';
+          renderTechnicianSpend();
           usageTitle.textContent='Orders';
           usageCopy.textContent='Select a technician to review orders, upload checkout PDFs, and view order history.';
           refreshMoneyCards();

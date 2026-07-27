@@ -105,3 +105,6 @@ v3.77: Truck Inventory now opens with technician buttons first. Each technician 
 v3.71: Renamed the Technician Inventory “Technician Usage” module to “Orders” for clearer navigation. Functionality is unchanged.
 
 v3.77: Truck Inventory now resets to the technician list whenever you leave and reopen the module, matching the Orders navigation behavior.
+
+
+v3.78: Corrected iPad Orders navigation so Back to Technicians reliably restores the technician directory. Replaced remaining Technician Usage labels with Orders and refreshed the PWA cache/version.
