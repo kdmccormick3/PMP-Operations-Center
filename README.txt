@@ -1,4 +1,4 @@
-PMP OPERATIONS CENTER — PWA v3.62
+PMP OPERATIONS CENTER — PWA v3.63
 
 This package is the current working PMP HTML converted into an installable
 Progressive Web App shell.
@@ -79,3 +79,8 @@ Inventory History date filters now use a stable two-row iPad landscape layout an
 V3.62 CHANGE
 Constrained Inventory History date controls to their grid columns on iPad.
 Clear Filters now occupies its own full-width row in landscape and portrait.
+
+
+V3.63 CHANGE
+Inventory History filters now use dedicated full-width rows on iPad portrait and landscape.
+This removes Safari date-field overflow and keeps Clear Filters separate from End Date.
