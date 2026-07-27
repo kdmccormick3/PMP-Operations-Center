@@ -84,3 +84,7 @@ Clear Filters now occupies its own full-width row in landscape and portrait.
 V3.63 CHANGE
 Inventory History filters now use dedicated full-width rows on iPad portrait and landscape.
 This removes Safari date-field overflow and keeps Clear Filters separate from End Date.
+
+V3.64 CHANGE
+Inventory History now scrolls vertically on iPad so the data table remains reachable.
+Date fields keep rounded contained styling, and landscape filters fit without overlap.
