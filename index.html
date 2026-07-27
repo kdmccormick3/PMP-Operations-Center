@@ -2558,15 +2558,15 @@
         <div class="inventory-header">
           <div class="inventory-title">
             <h2>Technician Inventory</h2>
-            <p>Choose orders or truck inventory.</p>
+            <p>Choose technician usage or truck inventory.</p>
           </div>
           <button id="back-from-technician-inventory" class="back-button" type="button">← Back to Inventory</button>
         </div>
         <section class="module-grid" aria-label="Technician Inventory tools">
           <button class="module-tile technician-inventory-tile" type="button" data-technician-module="Usage">
             <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><path d="M4 21v-3a5 5 0 0 1 10 0v3"/><path d="M16 8h5"/><path d="m19 5 3 3-3 3"/></svg></div>
-            <h3>Orders</h3>
-            <p>Upload Forsite order PDFs, review products issued, and track order history by technician.</p>
+            <h3>Technician Usage</h3>
+            <p>Upload Forsite checkout PDFs, review product usage, and track technician spend.</p>
           </button>
           <button class="module-tile technician-inventory-tile" type="button" data-technician-module="Truck">
             <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 6h11v10H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg></div>
@@ -2616,45 +2616,8 @@
         </div>
       </section>
 
-      <section id="usage-screen" class="screen usage-screen" aria-label="Orders">
-        <div class="usage-shell">
-          <div class="inventory-header">
-            <div class="inventory-title"><h2 id="usage-screen-title">Orders</h2><p id="usage-screen-copy">Select a technician to open their order workspace.</p></div>
-            <button id="back-from-usage" class="back-button" type="button">← Back to Technician Inventory</button>
-          </div>
-
-          <div id="tech-directory" class="tech-spend-panel">
-            <div class="tech-spend-title"><h3>Technicians</h3><p>Select a technician to upload, review, and view their orders.</p></div>
-            <div id="tech-spend-body" class="technician-card-grid"></div>
-          </div>
-
-          <div id="tech-profile" class="tech-profile" style="display:none">
-            <div class="tech-profile-header">
-              <div><h3 id="tech-profile-name">Technician</h3><p id="tech-profile-summary">Order workspace</p></div>
-              <button id="close-tech-profile" class="tech-profile-close" type="button">← Back to Technicians</button>
-            </div>
-
-            <div class="usage-summary">
-              <div class="money-card checkout-current-card"><span>This Order</span><strong id="checkout-value">$0.00</strong></div>
-              <div class="money-card"><span>Total Product Value Issued</span><strong id="issued-value">$0.00</strong></div>
-            </div>
-
-            <div class="usage-tools">
-              <label id="checkout-drop-zone" class="upload-label"><strong>Drag & Drop Order PDFs Here</strong><span>Drop multiple PDFs at once, or click to choose them</span><input id="checkout-pdf" type="file" accept="application/pdf" multiple></label>
-              <button id="clear-usage" class="action-button" type="button">Clear Review</button>
-            </div>
-            <div id="checkout-detected" style="display:none;margin:0 0 16px;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:#f7fafc;font-weight:600"></div>
-            <div class="review-toolbar">
-              <div class="review-toolbar-copy"><strong>Order Review</strong><span>Compare the parsed items with the original order documents before posting.</span></div>
-              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><select id="pdf-preview-select" class="usage-product" aria-label="Select order PDF to preview" disabled style="min-width:240px"><option value="">Select PDF…</option></select><button id="open-pdf-preview" class="preview-button" type="button" disabled>View Selected PDF ↗</button></div>
-            </div>
-            <div class="usage-table-wrap"><table class="usage-table"><thead><tr><th>Use</th><th>PDF Description</th><th>Matched Product</th><th>Qty</th><th>Unit Price</th><th>Price UOM</th><th>Extended Cost</th><th>Status</th></tr></thead><tbody id="usage-body"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">Upload an order PDF to begin.</td></tr></tbody></table></div>
-            <div class="usage-actions"><button id="post-checkout" class="action-button primary" type="button">Post Approved Order</button></div>
-
-            <div class="tech-history-wrap" style="margin-top:20px"><table class="tech-history-table checkout-history-table"><thead><tr><th>Order Date</th><th>Order #</th><th>Items</th><th>Total Value</th><th></th></tr></thead><tbody id="tech-history-body"></tbody></table></div>
-          </div>
-        </div>
-      </section>      <section id="count-screen" class="screen count-screen" aria-label="Physical inventory count">
+      <section id="usage-screen" class="screen usage-screen" aria-label="Technician checkout"><div class="usage-shell"><div class="inventory-header"><div class="inventory-title"><h2 id="usage-screen-title">Technician Checkout</h2><p id="usage-screen-copy">Upload one or more technician checkout PDFs. The technician, checkout date, order number, quantities, and historical prices are read directly from each document.</p></div><button id="back-from-usage" class="back-button" type="button">← Back to Technician Inventory</button></div><div class="usage-summary"><div class="money-card checkout-current-card"><span>This Checkout</span><strong id="checkout-value">$0.00</strong></div><div class="money-card"><span>Total Product Value Issued</span><strong id="issued-value">$0.00</strong></div></div><div class="usage-tools"><label id="checkout-drop-zone" class="upload-label"><strong>Drag & Drop Checkout PDFs Here</strong><span>Drop multiple PDFs at once, or click to choose them</span><input id="checkout-pdf" type="file" accept="application/pdf" multiple></label><button id="clear-usage" class="action-button" type="button">Clear Review</button></div><div id="checkout-detected" style="display:none;margin:0 0 16px;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:#f7fafc;font-weight:600"></div><div class="review-toolbar"><div class="review-toolbar-copy"><strong>Checkout Review</strong><span>Compare the parsed items with the original checkout documents before posting.</span></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><select id="pdf-preview-select" class="usage-product" aria-label="Select PDF to preview" disabled style="min-width:240px"><option value="">Select PDF…</option></select><button id="open-pdf-preview" class="preview-button" type="button" disabled>View Selected PDF ↗</button></div></div><div class="usage-table-wrap"><table class="usage-table"><thead><tr><th>Use</th><th>PDF Description</th><th>Matched Product</th><th>Qty</th><th>Unit Price</th><th>Price UOM</th><th>Extended Cost</th><th>Status</th></tr></thead><tbody id="usage-body"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">Upload a checkout PDF to begin.</td></tr></tbody></table></div><div id="tech-directory" class="tech-spend-panel"><div class="tech-spend-title"><h3>Technician Usage</h3><p>Select a technician to open their checkout history.</p></div><div id="tech-spend-body" class="technician-card-grid"></div></div><div id="tech-profile" class="tech-profile"><div class="tech-profile-header"><div><h3 id="tech-profile-name">Technician</h3><p id="tech-profile-summary">Checkout history</p></div><button id="close-tech-profile" class="tech-profile-close" type="button">← Back to Technicians</button></div><div class="tech-history-wrap"><table class="tech-history-table checkout-history-table"><thead><tr><th>Checkout Date</th><th>Order #</th><th>Items</th><th>Total Value</th><th></th></tr></thead><tbody id="tech-history-body"></tbody></table></div></div><div class="usage-actions"><button id="post-checkout" class="action-button primary" type="button">Post Approved Checkout</button></div></div></section>
+      <section id="count-screen" class="screen count-screen" aria-label="Physical inventory count">
         <div class="count-shell">
           <div class="inventory-header">
             <div class="inventory-title"><h2>Physical Count</h2><p>Compare the manual count with the quantity currently on record.</p></div>
@@ -3490,7 +3453,6 @@
 
 
     let stagedCheckouts=[];
-    let selectedOrderTechnician="";
     let stagedUsageRows=[];
     let stagedCheckoutMeta={date:"",technician:"",technicianId:"",orderNumber:"",pdfTotal:null,pdfFile:""};
     function money(v){return new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(Number(v)||0)}
@@ -3520,10 +3482,10 @@
       },0),0);
 
       techProfileName.textContent=name;
-      techProfileSummary.textContent=`${entries.length} ${entries.length===1?'order':'orders'} • ${itemCount} items • ${money(total)} • Uploads on this page are assigned to ${name}`;
+      techProfileSummary.textContent=`${entries.length} ${entries.length===1?'checkout':'checkouts'} • ${itemCount} items • ${money(total)}`;
 
       if(!entries.length){
-        techHistoryBody.innerHTML='<tr><td colspan="5" class="empty-tech">No orders have been posted for this technician.</td></tr>';
+        techHistoryBody.innerHTML='<tr><td colspan="5" class="empty-tech">No checkouts have been posted for this technician.</td></tr>';
       }else{
         techHistoryBody.innerHTML=entries.map((entry,index)=>{
           const lines=entry.lines||[];
@@ -3592,12 +3554,10 @@
         });
       }
 
-      selectedOrderTechnician=name;
-      document.getElementById('tech-directory').style.display='none';
+      document.getElementById('tech-directory').classList.add('hidden');
+      usageScreen.classList.add('profile-mode');
       techProfile.classList.add('active');
-      techProfile.style.display='block';
-      refreshMoneyCards();
-      window.scrollTo({top:0,behavior:'smooth'});
+      techProfile.scrollIntoView({behavior:'auto',block:'start'});
     }
         function getPriceReviewRows(){
       const history=JSON.parse(localStorage.getItem('pmpTechnicianCheckoutHistory_v3_2')||'[]');
@@ -3884,13 +3844,12 @@
     openPdfPreview.onclick=()=>{const i=Number(pdfPreviewSelect.value);if(!previewUrls.length||!Number.isInteger(i)||!previewUrls[i])return;const w=window.open(previewUrls[i],'_blank','noopener,noreferrer');if(!w)showNotice('Your browser blocked the PDF tab. Allow pop-ups for this file and try again.')};
     async function extractPdf(file){if(typeof pdfjsLib==='undefined')throw new Error('PDF reader could not load. Check your internet connection and reopen the file.');pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';const pdf=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;const pages=[];for(let pageNumber=1;pageNumber<=pdf.numPages;pageNumber++){const page=await pdf.getPage(pageNumber);const content=await page.getTextContent();const items=content.items.map(item=>({text:item.str,x:item.transform[4],y:item.transform[5]}));items.sort((a,b)=>Math.abs(b.y-a.y)>2?b.y-a.y:a.x-b.x);const grouped=[];items.forEach(item=>{let line=grouped.find(row=>Math.abs(row.y-item.y)<=2);if(!line){line={y:item.y,items:[]};grouped.push(line)}line.items.push(item)});grouped.sort((a,b)=>b.y-a.y);pages.push(grouped.map(row=>row.items.sort((a,b)=>a.x-b.x).map(item=>item.text).join(' ').replace(/\s+/g,' ').trim()).filter(Boolean).join('\n'))}return pages.join('\n')}
     async function processCheckoutFiles(fileList){
-      if(!selectedOrderTechnician){showNotice('Select a technician first.');return}
       const files=[...fileList].filter(f=>f.type==='application/pdf'||/\.pdf$/i.test(f.name));
       if(!files.length){showNotice('Please select or drop one or more PDF files.');return}
       stagedCheckouts=[];showPdfPreviews(files);
       let unreadable=0;
       for(const f of files){
-        try{const parsed=parseCheckout(await extractPdf(f),f.name);parsed.meta.technician=selectedOrderTechnician;if(parsed.meta.parseError)unreadable++;stagedCheckouts.push(parsed)}
+        try{const parsed=parseCheckout(await extractPdf(f),f.name);if(parsed.meta.parseError)unreadable++;stagedCheckouts.push(parsed)}
         catch(e){unreadable++;stagedCheckouts.push({meta:{date:'',technician:'',technicianId:'',orderNumber:'',pdfTotal:null,pdfFile:f.name,parseError:'This PDF could not be opened or read. Remove it or try a different copy.'},rows:[]})}
       }
       refreshPdfPreviewSelect();renderUsage();
@@ -3945,25 +3904,22 @@
       stagedCheckouts=remaining;syncLegacyStage();checkoutPdf.value='';
       if(!remaining.length)clearPdfPreview();
       renderUsage();renderProducts();renderPriceReview();
-      if(selectedOrderTechnician)showTechnicianProfile(selectedOrderTechnician);
       const parts=[`${ready.length} checkout PDF${ready.length===1?'':'s'} posted for ${money(grandTotal)}.`];
       if(skipped.length)parts.push(`Skipped ${skipped.length} already-posted order${skipped.length===1?'':'s'}.`);
       if(issues.length)parts.push(`${issues.length} PDF${issues.length===1?' remains':'s remain'} in review.`);
       showNotice(parts.join(' '));
     };
     closeTechProfile.onclick=()=>{
-      selectedOrderTechnician='';
-      stagedCheckouts=[];syncLegacyStage();checkoutPdf.value='';clearPdfPreview();renderUsage();
-      techProfile.classList.remove('active');techProfile.style.display='none';
-      document.getElementById('tech-directory').style.display='block';
-      renderTechnicianSpend();window.scrollTo({top:0,behavior:'smooth'});
+      techProfile.classList.remove('active');
+      usageScreen.classList.remove('profile-mode');
+      document.getElementById('tech-directory').classList.remove('hidden');
+      document.getElementById('tech-directory').scrollIntoView({behavior:'auto',block:'start'});
     };
     backFromUsage.onclick=()=>{
-      selectedOrderTechnician='';
-      stagedCheckouts=[];syncLegacyStage();checkoutPdf.value='';clearPdfPreview();renderUsage();
-      usageScreen.classList.remove('active');technicianInventoryScreen.classList.add('active');
-      techProfile.classList.remove('active');techProfile.style.display='none';
-      document.getElementById('tech-directory').style.display='block';
+      usageScreen.classList.remove('active','profile-mode');
+      technicianInventoryScreen.classList.add('active');
+      techProfile.classList.remove('active');
+      document.getElementById('tech-directory').classList.remove('hidden');
     };
     refreshMoneyCards();
 
@@ -4012,6 +3968,7 @@
       inventoryScreen.classList.add("active");
     };
     backFromTruckInventory.onclick = () => {
+      resetTruckInventoryToDirectory();
       truckInventoryScreen.classList.remove("active");
       technicianInventoryScreen.classList.add("active");
     };
@@ -4024,6 +3981,7 @@
           return;
         }
         if (tile.dataset.technicianModule === "Truck") {
+          resetTruckInventoryToDirectory();
           truckInventoryScreen.classList.add("active");
         }
       });
@@ -4212,6 +4170,19 @@
       truckDirectoryBody.innerHTML=names.map(name=>`<button class="technician-button" type="button" data-truck-tech="${encodeURIComponent(name)}"><span class="technician-button-name">${escapeHtml(name)}</span></button>`).join('');
       truckDirectoryBody.querySelectorAll('[data-truck-tech]').forEach(btn=>btn.onclick=()=>openTruckTechnician(decodeURIComponent(btn.dataset.truckTech)));
     }
+    function resetTruckInventoryToDirectory(){
+      selectedTruckTechnician='';
+      stagedTruckInventories=[];
+      if(truckPdfInput) truckPdfInput.value='';
+      if(truckDetected) truckDetected.style.display='none';
+      renderTruckReview();
+      renderTruckPreviewOptions();
+      truckProfile.classList.remove('active');
+      truckProfile.style.display='none';
+      truckDirectory.style.display='block';
+      renderTruckDirectory();
+      window.scrollTo({top:0,behavior:'auto'});
+    }
     function openTruckTechnician(name){
       selectedTruckTechnician=name;
       const rows=getTruckHistory().filter(r=>(r.technician||'Unknown Technician')===name).sort((a,b)=>String(b.postedAt).localeCompare(String(a.postedAt)));
@@ -4221,7 +4192,7 @@
       truckHistoryBody.querySelectorAll('[data-truck-detail]').forEach(btn=>btn.onclick=()=>{const r=rows[Number(btn.dataset.truckDetail)];alert(`${r.technician}\nTruck ${r.truck}\n${r.date}\n\n`+r.lines.map(l=>`${l.product}: ${l.qty} — ${truckMoney(l.value)}`).join('\n')+`\n\nTotal: ${truckMoney(r.total)}`)});
       window.scrollTo({top:0,behavior:'smooth'});
     }
-    closeTruckProfile.onclick=()=>{selectedTruckTechnician='';stagedTruckInventories=[];truckPdfInput.value='';truckDetected.style.display='none';renderTruckReview();renderTruckPreviewOptions();truckProfile.classList.remove('active');truckProfile.style.display='none';truckDirectory.style.display='block';renderTruckDirectory();window.scrollTo({top:0,behavior:'smooth'})};
+    closeTruckProfile.onclick=()=>{resetTruckInventoryToDirectory()};
     renderTruckDirectory();
 </script>
 
