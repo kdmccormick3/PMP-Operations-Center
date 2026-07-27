@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.61</title>
+  <title>PMP Operations Center v3.62</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -1807,7 +1807,7 @@
     }
 
 
-    /* v3.61 — Inventory History date filters: no overlap on iPad */
+    /* v3.62 — Inventory History date filters: no overlap on iPad */
     @media (max-width: 1100px) {
       #inventory-history-screen .history-toolbar {
         width: 100%;
@@ -1862,6 +1862,64 @@
       }
     }
 
+
+    /* v3.62 — iPad Inventory History date controls constrained inside grid */
+    @media (max-width: 1100px) {
+      #inventory-history-screen .history-toolbar {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-areas:
+          "search search"
+          "type type"
+          "start end"
+          "clear clear";
+        gap: 10px;
+      }
+
+      #inventory-history-screen .history-date-field {
+        overflow: visible;
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      #inventory-history-screen .history-date-field input[type="date"] {
+        display: block;
+        width: calc(100% - 2px) !important;
+        max-width: calc(100% - 2px) !important;
+        min-width: 0 !important;
+        min-inline-size: 0 !important;
+        inline-size: calc(100% - 2px) !important;
+        box-sizing: border-box;
+        border-radius: 10px !important;
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+      }
+
+      #inventory-history-screen #history-clear-filters {
+        grid-column: 1 / -1;
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 900px) and (orientation: portrait) {
+      #inventory-history-screen .history-toolbar {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+          "search"
+          "type"
+          "start"
+          "end"
+          "clear";
+      }
+
+      #inventory-history-screen .history-date-field input[type="date"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        inline-size: 100% !important;
+      }
+    }
+
 </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -1873,7 +1931,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.61</div>
+      <div class="status-badge">INVENTORY BUILD • v3.62</div>
     </header>
 
     <main>
@@ -2355,7 +2413,7 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.61</footer>
+    <footer>PMP Operations Center • Inventory build • v3.62</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
