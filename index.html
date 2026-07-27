@@ -2066,6 +2066,16 @@
     body.warehouse-mode #usage-screen .usage-shell { height: 100%; min-height: 0; }
     body.warehouse-mode #usage-screen #tech-directory { flex: 1 1 auto; min-height: 0; }
     body.warehouse-mode #usage-screen .technician-card-grid { overflow-y: auto; }
+    body.warehouse-mode #truck-inventory-screen .usage-tools,
+    body.warehouse-mode #truck-inventory-screen #truck-detected,
+    body.warehouse-mode #truck-inventory-screen .review-toolbar,
+    body.warehouse-mode #truck-inventory-screen .usage-table-wrap,
+    body.warehouse-mode #truck-inventory-screen .usage-actions { display:none !important; }
+    body.warehouse-mode #truck-inventory-screen .usage-summary { grid-template-columns:1fr; }
+    body.warehouse-mode #truck-inventory-screen .truck-current-card { display:none !important; }
+    body.warehouse-mode #truck-inventory-screen .usage-shell { height:100%; min-height:0; }
+    body.warehouse-mode #truck-inventory-screen #truck-directory { flex:1 1 auto; min-height:0; }
+    body.warehouse-mode #truck-inventory-screen .technician-card-grid { overflow-y:auto; }
     @media (max-width: 900px) and (orientation: portrait) {
       body.warehouse-mode #usage-screen .usage-summary { grid-template-columns: 1fr; }
     }
@@ -2561,26 +2571,35 @@
           <button class="module-tile technician-inventory-tile" type="button" data-technician-module="Truck">
             <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 6h11v10H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg></div>
             <h3>Truck Inventory</h3>
-            <p>Upload Cognito truck counts, review field inventory, and track inventory value by technician.</p>
+            <p>Upload truck inventory PDFs, review counted products, and track inventory value by technician.</p>
           </button>
         </section>
       </section>
 
-      <section id="truck-inventory-screen" class="screen" aria-label="Truck Inventory">
-        <div class="inventory-header">
-          <div class="inventory-title">
-            <h2>Truck Inventory</h2>
-            <p>Technician truck counts and on-truck inventory value.</p>
+      <section id="truck-inventory-screen" class="screen usage-screen" aria-label="Truck Inventory">
+        <div class="usage-shell">
+          <div class="inventory-header">
+            <div class="inventory-title"><h2>Truck Inventory</h2><p>Upload one or more truck inventory PDFs, review the counted products, and post an inventory snapshot for each technician.</p></div>
+            <button id="back-from-truck-inventory" class="back-button" type="button">← Back to Technician Inventory</button>
           </div>
-          <button id="back-from-truck-inventory" class="back-button" type="button">← Back to Technician Inventory</button>
+          <div class="usage-summary">
+            <div class="money-card truck-current-card"><span>This Truck Count</span><strong id="truck-current-value">$0.00</strong></div>
+            <div class="money-card"><span>Total Truck Inventory Value</span><strong id="truck-total-value">$0.00</strong></div>
+          </div>
+          <div class="usage-tools">
+            <label id="truck-drop-zone" class="upload-label"><strong>Drag & Drop Truck Inventory PDFs Here</strong><span>Drop multiple PDFs at once, or click to choose them</span><input id="truck-inventory-pdf" type="file" accept="application/pdf" multiple></label>
+            <button id="clear-truck-review" class="action-button" type="button">Clear Review</button>
+          </div>
+          <div id="truck-detected" style="display:none;margin:0 0 16px;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:#f7fafc;font-weight:600"></div>
+          <div class="review-toolbar">
+            <div class="review-toolbar-copy"><strong>Truck Inventory Review</strong><span>Compare the parsed items with the original truck inventory documents before posting.</span></div>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><select id="truck-pdf-preview-select" class="usage-product" aria-label="Select truck inventory PDF to preview" disabled style="min-width:240px"><option value="">Select PDF…</option></select><button id="open-truck-pdf-preview" class="preview-button" type="button" disabled>View Selected PDF ↗</button></div>
+          </div>
+          <div class="usage-table-wrap"><table class="usage-table"><thead><tr><th>Use</th><th>PDF Description</th><th>Matched Product</th><th>Qty</th><th>Unit Price</th><th>Extended Value</th><th>Status</th></tr></thead><tbody id="truck-review-body"><tr><td colspan="7" style="text-align:center;color:var(--muted);padding:28px">Upload a truck inventory PDF to begin.</td></tr></tbody></table></div>
+          <div id="truck-directory" class="tech-spend-panel"><div class="tech-spend-title"><h3>Truck Inventory</h3><p>Select a technician to open their truck inventory history.</p></div><div id="truck-directory-body" class="technician-card-grid"></div></div>
+          <div id="truck-profile" class="tech-profile"><div class="tech-profile-header"><div><h3 id="truck-profile-name">Technician</h3><p id="truck-profile-summary">Truck inventory history</p></div><button id="close-truck-profile" class="tech-profile-close" type="button">← Back to Technicians</button></div><div class="tech-history-wrap"><table class="tech-history-table checkout-history-table"><thead><tr><th>Inventory Date</th><th>Truck</th><th>Products</th><th>Inventory Value</th><th></th></tr></thead><tbody id="truck-history-body"></tbody></table></div></div>
+          <div class="usage-actions"><button id="post-truck-inventory" class="action-button primary" type="button">Post Approved Truck Inventory</button></div>
         </div>
-        <section class="module-grid" aria-label="Truck Inventory setup">
-          <div class="module-tile" style="cursor:default">
-            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 6h11v10H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg></div>
-            <h3>Cognito Truck Inventory</h3>
-            <p>This is the new home for truck inventory uploads, technician truck counts, and inventory value. We will build this workflow one step at a time.</p>
-          </div>
-        </section>
       </section>
 
       <section id="usage-screen" class="screen usage-screen" aria-label="Technician checkout"><div class="usage-shell"><div class="inventory-header"><div class="inventory-title"><h2 id="usage-screen-title">Technician Checkout</h2><p id="usage-screen-copy">Upload one or more technician checkout PDFs. The technician, checkout date, order number, quantities, and historical prices are read directly from each document.</p></div><button id="back-from-usage" class="back-button" type="button">← Back to Technician Inventory</button></div><div class="usage-summary"><div class="money-card checkout-current-card"><span>This Checkout</span><strong id="checkout-value">$0.00</strong></div><div class="money-card"><span>Total Product Value Issued</span><strong id="issued-value">$0.00</strong></div></div><div class="usage-tools"><label id="checkout-drop-zone" class="upload-label"><strong>Drag & Drop Checkout PDFs Here</strong><span>Drop multiple PDFs at once, or click to choose them</span><input id="checkout-pdf" type="file" accept="application/pdf" multiple></label><button id="clear-usage" class="action-button" type="button">Clear Review</button></div><div id="checkout-detected" style="display:none;margin:0 0 16px;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:#f7fafc;font-weight:600"></div><div class="review-toolbar"><div class="review-toolbar-copy"><strong>Checkout Review</strong><span>Compare the parsed items with the original checkout documents before posting.</span></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><select id="pdf-preview-select" class="usage-product" aria-label="Select PDF to preview" disabled style="min-width:240px"><option value="">Select PDF…</option></select><button id="open-pdf-preview" class="preview-button" type="button" disabled>View Selected PDF ↗</button></div></div><div class="usage-table-wrap"><table class="usage-table"><thead><tr><th>Use</th><th>PDF Description</th><th>Matched Product</th><th>Qty</th><th>Unit Price</th><th>Price UOM</th><th>Extended Cost</th><th>Status</th></tr></thead><tbody id="usage-body"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">Upload a checkout PDF to begin.</td></tr></tbody></table></div><div id="tech-directory" class="tech-spend-panel"><div class="tech-spend-title"><h3>Technician Usage</h3><p>Select a technician to open their checkout history.</p></div><div id="tech-spend-body" class="technician-card-grid"></div></div><div id="tech-profile" class="tech-profile"><div class="tech-profile-header"><div><h3 id="tech-profile-name">Technician</h3><p id="tech-profile-summary">Checkout history</p></div><button id="close-tech-profile" class="tech-profile-close" type="button">← Back to Technicians</button></div><div class="tech-history-wrap"><table class="tech-history-table checkout-history-table"><thead><tr><th>Checkout Date</th><th>Order #</th><th>Items</th><th>Total Value</th><th></th></tr></thead><tbody id="tech-history-body"></tbody></table></div></div><div class="usage-actions"><button id="post-checkout" class="action-button primary" type="button">Post Approved Checkout</button></div></div></section>
@@ -2602,7 +2621,7 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.66</footer>
+    <footer>PMP Operations Center • Inventory build • v3.67</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -4028,7 +4047,119 @@
         });
       });
     }
-  </script>
+  
+
+    // Truck Inventory workflow (v3.67)
+    const truckPdfInput=document.getElementById('truck-inventory-pdf');
+    const truckDropZone=document.getElementById('truck-drop-zone');
+    const truckReviewBody=document.getElementById('truck-review-body');
+    const clearTruckReview=document.getElementById('clear-truck-review');
+    const postTruckInventory=document.getElementById('post-truck-inventory');
+    const truckCurrentValue=document.getElementById('truck-current-value');
+    const truckTotalValue=document.getElementById('truck-total-value');
+    const truckDetected=document.getElementById('truck-detected');
+    const truckPreviewSelect=document.getElementById('truck-pdf-preview-select');
+    const openTruckPreview=document.getElementById('open-truck-pdf-preview');
+    const truckDirectory=document.getElementById('truck-directory');
+    const truckDirectoryBody=document.getElementById('truck-directory-body');
+    const truckProfile=document.getElementById('truck-profile');
+    const truckProfileName=document.getElementById('truck-profile-name');
+    const truckProfileSummary=document.getElementById('truck-profile-summary');
+    const truckHistoryBody=document.getElementById('truck-history-body');
+    const closeTruckProfile=document.getElementById('close-truck-profile');
+    let stagedTruckInventories=[];
+    let truckPreviewUrls=[];
+
+    function getTruckHistory(){try{return JSON.parse(localStorage.getItem('pmpTruckInventoryHistory_v3_67')||'[]')}catch(e){return[]}}
+    function saveTruckHistory(rows){localStorage.setItem('pmpTruckInventoryHistory_v3_67',JSON.stringify(rows))}
+    function truckMoney(value){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(value)||0)}
+    function truckProductOptions(selected){return '<option value="">Select product…</option>'+productData.map(p=>`<option value="${p.item}" ${Number(selected)===Number(p.item)?'selected':''}>${p.name}</option>`).join('')}
+    function parseTruckMeta(text,fileName){
+      const clean=String(text||'');
+      const tech=(clean.match(/(?:technician|employee|service\s*professional|name)\s*[:#-]?\s*([^\n]{2,45})/i)||[])[1];
+      const truck=(clean.match(/(?:truck|vehicle|unit)\s*(?:number|no\.?|#)?\s*[:#-]?\s*([A-Z0-9-]{1,15})/i)||[])[1];
+      const date=(clean.match(/(?:inventory\s*date|date)\s*[:#-]?\s*(\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4})/i)||[])[1];
+      return {technician:(tech||fileName.replace(/\.pdf$/i,'')).trim(),truck:(truck||'Not listed').trim(),date:date||new Date().toISOString().slice(0,10),pdfFile:fileName};
+    }
+    function findTruckLines(text){
+      const lines=String(text||'').split(/\n+/).map(v=>v.trim()).filter(Boolean);
+      const found=[];
+      productData.forEach(product=>{
+        const pName=product.name.toLowerCase();
+        const line=lines.find(row=>row.toLowerCase().includes(pName));
+        if(!line)return;
+        const nums=line.match(/(?:^|\s)(\d+(?:\.\d+)?)(?=\s|$)/g)||[];
+        const qty=nums.length?Number(nums[nums.length-1].trim()):1;
+        found.push({use:true,description:line,productItem:product.item,qty:Number.isFinite(qty)?qty:1});
+      });
+      return found;
+    }
+    async function processTruckFiles(fileList){
+      const files=[...fileList].filter(f=>f.type==='application/pdf'||/\.pdf$/i.test(f.name));
+      if(!files.length){showNotice('Choose a truck inventory PDF.');return}
+      truckDetected.style.display='block'; truckDetected.textContent='Reading truck inventory PDF'+(files.length>1?'s':'')+'…';
+      for(const file of files){
+        try{
+          const text=await extractPdf(file);
+          const meta=parseTruckMeta(text,file.name);
+          let lines=findTruckLines(text);
+          if(!lines.length) lines=[{use:true,description:'No product lines were matched automatically',productItem:'',qty:1}];
+          stagedTruckInventories.push({meta,lines,file});
+        }catch(err){showNotice(err.message||'Could not read truck inventory PDF.')}
+      }
+      truckDetected.textContent=`${stagedTruckInventories.length} truck inventory PDF${stagedTruckInventories.length===1?'':'s'} ready for review.`;
+      renderTruckReview(); renderTruckPreviewOptions();
+    }
+    function renderTruckReview(){
+      if(!stagedTruckInventories.length){truckReviewBody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:28px">Upload a truck inventory PDF to begin.</td></tr>';truckCurrentValue.textContent='$0.00';return}
+      let total=0,html='';
+      stagedTruckInventories.forEach((doc,di)=>doc.lines.forEach((line,li)=>{
+        const product=productData.find(p=>Number(p.item)===Number(line.productItem));
+        const price=product&&Number.isFinite(Number(product.price))?Number(product.price):0;
+        const extended=(Number(line.qty)||0)*price; if(line.use&&product)total+=extended;
+        html+=`<tr><td><input type="checkbox" data-truck-use="${di}:${li}" ${line.use?'checked':''}></td><td>${line.description}</td><td><select class="usage-product" data-truck-product="${di}:${li}">${truckProductOptions(line.productItem)}</select></td><td><input class="usage-qty" type="number" min="0" step="0.01" value="${Number(line.qty)||0}" data-truck-qty="${di}:${li}"></td><td>${product&&product.price!=null?truckMoney(price):'—'}</td><td>${product?truckMoney(extended):'—'}</td><td>${product?'<span class="status-pill status-ok">Matched</span>':'<span class="status-pill status-warning">Review</span>'}</td></tr>`;
+      }));
+      truckReviewBody.innerHTML=html;truckCurrentValue.textContent=truckMoney(total);
+      truckReviewBody.querySelectorAll('[data-truck-use]').forEach(el=>el.onchange=()=>{const[d,l]=el.dataset.truckUse.split(':').map(Number);stagedTruckInventories[d].lines[l].use=el.checked;renderTruckReview()});
+      truckReviewBody.querySelectorAll('[data-truck-product]').forEach(el=>el.onchange=()=>{const[d,l]=el.dataset.truckProduct.split(':').map(Number);stagedTruckInventories[d].lines[l].productItem=el.value;renderTruckReview()});
+      truckReviewBody.querySelectorAll('[data-truck-qty]').forEach(el=>el.onchange=()=>{const[d,l]=el.dataset.truckQty.split(':').map(Number);stagedTruckInventories[d].lines[l].qty=Math.max(0,Number(el.value)||0);renderTruckReview()});
+    }
+    function clearTruckPreviewUrls(){truckPreviewUrls.forEach(URL.revokeObjectURL);truckPreviewUrls=[]}
+    function renderTruckPreviewOptions(){clearTruckPreviewUrls();truckPreviewSelect.innerHTML='<option value="">Select PDF…</option>';stagedTruckInventories.forEach((doc,i)=>{const url=URL.createObjectURL(doc.file);truckPreviewUrls.push(url);const opt=document.createElement('option');opt.value=String(i);opt.textContent=doc.meta.pdfFile;truckPreviewSelect.appendChild(opt)});truckPreviewSelect.disabled=!stagedTruckInventories.length;openTruckPreview.disabled=true}
+    truckPreviewSelect.onchange=()=>openTruckPreview.disabled=truckPreviewSelect.value==='';
+    openTruckPreview.onclick=()=>{const i=Number(truckPreviewSelect.value);if(Number.isInteger(i)&&truckPreviewUrls[i])window.open(truckPreviewUrls[i],'_blank')};
+    truckPdfInput.onchange=()=>processTruckFiles(truckPdfInput.files);
+    ['dragenter','dragover'].forEach(evt=>truckDropZone.addEventListener(evt,e=>{e.preventDefault();truckDropZone.classList.add('dragging')}));
+    ['dragleave','drop'].forEach(evt=>truckDropZone.addEventListener(evt,e=>{e.preventDefault();truckDropZone.classList.remove('dragging')}));
+    truckDropZone.addEventListener('drop',e=>processTruckFiles(e.dataTransfer.files));
+    clearTruckReview.onclick=()=>{stagedTruckInventories=[];truckPdfInput.value='';truckDetected.style.display='none';renderTruckReview();renderTruckPreviewOptions();showNotice('Truck inventory review cleared.')};
+    postTruckInventory.onclick=()=>{
+      if(!stagedTruckInventories.length){showNotice('Upload a truck inventory PDF first.');return}
+      const history=getTruckHistory();let posted=0;
+      stagedTruckInventories.forEach(doc=>{
+        const lines=doc.lines.filter(l=>l.use&&l.productItem&&Number(l.qty)>=0).map(l=>{const p=productData.find(x=>Number(x.item)===Number(l.productItem));return {productItem:Number(l.productItem),product:p?p.name:l.description,qty:Number(l.qty)||0,unitPrice:p&&p.price!=null?Number(p.price):null,value:p&&p.price!=null?(Number(l.qty)||0)*Number(p.price):0}});
+        const total=lines.reduce((sum,l)=>sum+l.value,0);
+        history.push({...doc.meta,lines,total,postedAt:new Date().toISOString(),countPolicy:'Count new containers and containers more than half full'});posted++;
+      });
+      saveTruckHistory(history);stagedTruckInventories=[];truckPdfInput.value='';truckDetected.style.display='none';renderTruckReview();renderTruckPreviewOptions();renderTruckDirectory();showNotice(`${posted} truck inventory snapshot${posted===1?'':'s'} posted.`)
+    };
+    function renderTruckDirectory(){
+      const history=getTruckHistory();const latest={};history.forEach(r=>{const key=r.technician||'Unknown Technician';if(!latest[key]||String(r.postedAt)>String(latest[key].postedAt))latest[key]=r});
+      const rows=Object.entries(latest).sort((a,b)=>a[0].localeCompare(b[0]));
+      truckTotalValue.textContent=truckMoney(rows.reduce((s,[,r])=>s+(Number(r.total)||0),0));
+      if(!rows.length){truckDirectoryBody.innerHTML='<div style="padding:24px;color:var(--muted)">No truck inventory snapshots have been posted yet.</div>';return}
+      truckDirectoryBody.innerHTML=rows.map(([name,r])=>`<button class="technician-card" type="button" data-truck-tech="${encodeURIComponent(name)}"><strong>${name}</strong><span>Truck ${r.truck||'Not listed'}</span><span>${truckMoney(r.total)} • ${r.date||''}</span></button>`).join('');
+      truckDirectoryBody.querySelectorAll('[data-truck-tech]').forEach(btn=>btn.onclick=()=>openTruckTechnician(decodeURIComponent(btn.dataset.truckTech)));
+    }
+    function openTruckTechnician(name){
+      const rows=getTruckHistory().filter(r=>(r.technician||'Unknown Technician')===name).sort((a,b)=>String(b.postedAt).localeCompare(String(a.postedAt)));
+      truckDirectory.style.display='none';truckProfile.classList.add('active');truckProfile.style.display='block';truckProfileName.textContent=name;truckProfileSummary.textContent=`${rows.length} truck inventory snapshot${rows.length===1?'':'s'}`;
+      truckHistoryBody.innerHTML=rows.map((r,i)=>`<tr><td>${r.date||''}</td><td>${r.truck||'Not listed'}</td><td>${r.lines.length}</td><td>${truckMoney(r.total)}</td><td><button class="preview-button" type="button" data-truck-detail="${i}">View</button></td></tr>`).join('');
+      truckHistoryBody.querySelectorAll('[data-truck-detail]').forEach(btn=>btn.onclick=()=>{const r=rows[Number(btn.dataset.truckDetail)];alert(`${r.technician}\nTruck ${r.truck}\n${r.date}\n\n`+r.lines.map(l=>`${l.product}: ${l.qty} — ${truckMoney(l.value)}`).join('\n')+`\n\nTotal: ${truckMoney(r.total)}`)});
+    }
+    closeTruckProfile.onclick=()=>{truckProfile.classList.remove('active');truckProfile.style.display='none';truckDirectory.style.display='block'};
+    renderTruckDirectory();
+</script>
 
 </body>
 </html>
