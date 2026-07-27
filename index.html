@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.75</title>
+  <title>PMP Operations Center v3.66</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -821,28 +821,22 @@
 
     @media(max-width:1100px){.technician-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:650px){.technician-card-grid{grid-template-columns:1fr}}
-    .usage-screen.profile-mode{overflow:hidden}
-    .usage-screen.profile-mode .usage-shell{height:100%;min-height:0}
-    .usage-screen.profile-mode .inventory-header,
-    .usage-screen.profile-mode .usage-summary,
-    .usage-screen.profile-mode .usage-tools,
-    .usage-screen.profile-mode #checkout-detected,
-    .usage-screen.profile-mode .review-toolbar,
-    .usage-screen.profile-mode .usage-table-wrap,
-    .usage-screen.profile-mode #tech-directory,
-    .usage-screen.profile-mode .usage-actions{display:none!important}
+    /* v3.76 — Orders opens as technician directory; upload/review lives inside technician workspace */
+    .usage-screen.directory-mode .usage-summary,
+    .usage-screen.directory-mode .usage-tools,
+    .usage-screen.directory-mode #checkout-detected,
+    .usage-screen.directory-mode .review-toolbar,
+    .usage-screen.directory-mode .usage-table-wrap,
+    .usage-screen.directory-mode .tech-profile,
+    .usage-screen.directory-mode .usage-actions{display:none!important}
+    .usage-screen.profile-mode #tech-directory{display:none!important}
     .usage-screen.profile-mode .tech-profile{
-      display:flex;
-      flex-direction:column;
-      flex:1 1 auto;
+      display:block;
+      flex:0 0 auto;
       min-height:0;
       margin:0;
     }
-    .usage-screen.profile-mode .tech-history-wrap{
-      flex:1 1 auto;
-      min-height:0;
-      overflow:auto;
-    }
+    .usage-screen.profile-mode .tech-history-wrap{overflow:auto}
 
   
     .checkout-review-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr);gap:18px;align-items:start;margin-bottom:18px}
@@ -2080,160 +2074,6 @@
       body.warehouse-mode #usage-screen .usage-summary { grid-template-columns: 1fr; }
     }
 
-
-    /* v3.75 — iPad portrait technician workspace repair, based on v3.72 */
-    @media (max-width: 900px) and (orientation: portrait) {
-      /* Let technician pages grow vertically instead of clipping their contents. */
-      body.warehouse-mode #usage-screen,
-      body.warehouse-mode #truck-inventory-screen,
-      body.warehouse-mode #usage-screen .usage-shell,
-      body.warehouse-mode #truck-inventory-screen .usage-shell,
-      #usage-screen.profile-mode,
-      #usage-screen.profile-mode .usage-shell {
-        height: auto !important;
-        min-height: 100% !important;
-        overflow-x: hidden !important;
-        overflow-y: visible !important;
-      }
-
-      /* Warehouse mode must not hide the working controls inside a selected technician. */
-      body.warehouse-mode #usage-screen.profile-mode .inventory-header,
-      body.warehouse-mode #usage-screen.profile-mode .usage-summary,
-      body.warehouse-mode #usage-screen.profile-mode .usage-tools,
-      body.warehouse-mode #usage-screen.profile-mode .review-toolbar,
-      body.warehouse-mode #usage-screen.profile-mode .usage-table-wrap,
-      body.warehouse-mode #usage-screen.profile-mode .usage-actions,
-      body.warehouse-mode #truck-inventory-screen #truck-profile.active .usage-summary,
-      body.warehouse-mode #truck-inventory-screen #truck-profile.active .usage-tools,
-      body.warehouse-mode #truck-inventory-screen #truck-profile.active .review-toolbar,
-      body.warehouse-mode #truck-inventory-screen #truck-profile.active .usage-table-wrap,
-      body.warehouse-mode #truck-inventory-screen #truck-profile.active .usage-actions {
-        display: grid !important;
-      }
-
-      body.warehouse-mode #usage-screen.profile-mode .inventory-header,
-      body.warehouse-mode #usage-screen.profile-mode .review-toolbar,
-      body.warehouse-mode #truck-inventory-screen #truck-profile.active .review-toolbar {
-        display: flex !important;
-      }
-
-      body.warehouse-mode #usage-screen.profile-mode #checkout-detected,
-      body.warehouse-mode #truck-inventory-screen #truck-profile.active #truck-detected {
-        display: none;
-      }
-
-      /* Keep only the selected technician workspace, not the directory. */
-      #usage-screen.profile-mode #tech-directory,
-      #truck-inventory-screen #truck-profile.active + #truck-directory {
-        display: none !important;
-      }
-
-      /* Stack headers and controls within the portrait width. */
-      #usage-screen .inventory-header,
-      #truck-inventory-screen .inventory-header,
-      #usage-screen .tech-profile-header,
-      #truck-inventory-screen .tech-profile-header {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 10px !important;
-      }
-
-      #usage-screen .back-button,
-      #truck-inventory-screen .back-button,
-      #usage-screen .tech-profile-close,
-      #truck-inventory-screen .tech-profile-close {
-        width: 100% !important;
-        max-width: 100% !important;
-        text-align: center !important;
-      }
-
-      #usage-screen .usage-summary,
-      #truck-inventory-screen .usage-summary {
-        grid-template-columns: 1fr !important;
-        gap: 10px !important;
-      }
-
-      #usage-screen .checkout-current-card,
-      #truck-inventory-screen .truck-current-card {
-        display: block !important;
-      }
-
-      #usage-screen .usage-tools,
-      #truck-inventory-screen .usage-tools {
-        grid-template-columns: 1fr !important;
-        width: 100% !important;
-      }
-
-      #usage-screen .usage-tools > *,
-      #truck-inventory-screen .usage-tools > *,
-      #usage-screen .review-toolbar > *,
-      #truck-inventory-screen .review-toolbar > * {
-        width: 100% !important;
-        min-width: 0 !important;
-        max-width: 100% !important;
-      }
-
-      #usage-screen .review-toolbar > div:last-child,
-      #truck-inventory-screen .review-toolbar > div:last-child {
-        display: grid !important;
-        grid-template-columns: 1fr !important;
-      }
-
-      #usage-screen .usage-table-wrap,
-      #truck-inventory-screen .usage-table-wrap,
-      #usage-screen .tech-history-wrap,
-      #truck-inventory-screen .tech-history-wrap {
-        width: 100% !important;
-        max-width: 100% !important;
-        overflow-x: hidden !important;
-      }
-
-      #usage-screen .tech-history-table,
-      #truck-inventory-screen .tech-history-table {
-        width: 100% !important;
-        min-width: 0 !important;
-        table-layout: fixed !important;
-        font-size: .74rem !important;
-      }
-
-      #usage-screen .tech-history-table th,
-      #usage-screen .tech-history-table td,
-      #truck-inventory-screen .tech-history-table th,
-      #truck-inventory-screen .tech-history-table td {
-        padding: 8px 5px !important;
-        white-space: normal !important;
-        overflow-wrap: anywhere !important;
-      }
-
-      /* Order history: keep date, order, total, and view action. */
-      #usage-screen .tech-history-table th:nth-child(3),
-      #usage-screen .tech-history-table td:nth-child(3) {
-        display: none !important;
-      }
-      #usage-screen .tech-history-table th:nth-child(1) { width: 27%; }
-      #usage-screen .tech-history-table th:nth-child(2) { width: 25%; }
-      #usage-screen .tech-history-table th:nth-child(4) { width: 25%; }
-      #usage-screen .tech-history-table th:nth-child(5) { width: 23%; }
-
-      /* Truck history: keep date, truck, value, and view action. */
-      #truck-inventory-screen .tech-history-table th:nth-child(3),
-      #truck-inventory-screen .tech-history-table td:nth-child(3) {
-        display: none !important;
-      }
-      #truck-inventory-screen .tech-history-table th:nth-child(1) { width: 28%; }
-      #truck-inventory-screen .tech-history-table th:nth-child(2) { width: 22%; }
-      #truck-inventory-screen .tech-history-table th:nth-child(4) { width: 28%; }
-      #truck-inventory-screen .tech-history-table th:nth-child(5) { width: 22%; }
-
-      #usage-screen .checkout-toggle,
-      #truck-inventory-screen .preview-button {
-        width: 100% !important;
-        min-width: 0 !important;
-        padding: 7px 4px !important;
-        white-space: normal !important;
-      }
-    }
-
 </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -2245,7 +2085,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.75</div>
+      <div class="status-badge">INVENTORY BUILD • v3.66</div>
     </header>
 
     <main>
@@ -2712,15 +2552,15 @@
         <div class="inventory-header">
           <div class="inventory-title">
             <h2>Technician Inventory</h2>
-            <p>Choose orders or truck inventory.</p>
+            <p>Choose technician usage or truck inventory.</p>
           </div>
           <button id="back-from-technician-inventory" class="back-button" type="button">← Back to Inventory</button>
         </div>
         <section class="module-grid" aria-label="Technician Inventory tools">
           <button class="module-tile technician-inventory-tile" type="button" data-technician-module="Usage">
             <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><path d="M4 21v-3a5 5 0 0 1 10 0v3"/><path d="M16 8h5"/><path d="m19 5 3 3-3 3"/></svg></div>
-            <h3>Orders</h3>
-            <p>Upload Forsite order PDFs, review products issued, and track technician spend.</p>
+            <h3>Technician Usage</h3>
+            <p>Upload Forsite checkout PDFs, review product usage, and track technician spend.</p>
           </button>
           <button class="module-tile technician-inventory-tile" type="button" data-technician-module="Truck">
             <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 6h11v10H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg></div>
@@ -2789,7 +2629,7 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.75</footer>
+    <footer>PMP Operations Center • Inventory build • v3.69</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -2802,9 +2642,9 @@
       const usageCardCopy = document.getElementById("technician-inventory-card-copy");
       const usageTitle = document.getElementById("usage-screen-title");
       const usageCopy = document.getElementById("usage-screen-copy");
-      if (usageCardCopy) usageCardCopy.textContent = "Open technician orders or truck inventory.";
-      if (usageTitle) usageTitle.textContent = "Orders";
-      if (usageCopy) usageCopy.textContent = "Select a technician to review orders, upload checkout PDFs, and view order history.";
+      if (usageCardCopy) usageCardCopy.textContent = "Open technician usage history or truck inventory.";
+      if (usageTitle) usageTitle.textContent = "Technician Usage";
+      if (usageCopy) usageCopy.textContent = "Warehouse read-only view of technician checkout history and product value issued.";
     }
 
     const dashboardScreen = document.getElementById("dashboard-screen");
@@ -3709,7 +3549,10 @@
       }
 
       document.getElementById('tech-directory').classList.add('hidden');
+      usageScreen.classList.remove('directory-mode');
       usageScreen.classList.add('profile-mode');
+      usageTitle.textContent=name+' Orders';
+      usageCopy.textContent='Upload checkout PDFs, review the parsed order, post approved items, and view '+name+"'s order history.";
       techProfile.classList.add('active');
       techProfile.scrollIntoView({behavior:'auto',block:'start'});
     }
@@ -4066,11 +3909,14 @@
     closeTechProfile.onclick=()=>{
       techProfile.classList.remove('active');
       usageScreen.classList.remove('profile-mode');
+      usageScreen.classList.add('directory-mode');
+      usageTitle.textContent='Orders';
+      usageCopy.textContent='Select a technician to review orders, upload checkout PDFs, and view order history.';
       document.getElementById('tech-directory').classList.remove('hidden');
       document.getElementById('tech-directory').scrollIntoView({behavior:'auto',block:'start'});
     };
     backFromUsage.onclick=()=>{
-      usageScreen.classList.remove('active','profile-mode');
+      usageScreen.classList.remove('active','profile-mode','directory-mode');
       technicianInventoryScreen.classList.add('active');
       techProfile.classList.remove('active');
       document.getElementById('tech-directory').classList.remove('hidden');
@@ -4130,7 +3976,12 @@
       tile.addEventListener("click", () => {
         technicianInventoryScreen.classList.remove("active");
         if (tile.dataset.technicianModule === "Usage") {
-          usageScreen.classList.add("active");
+          usageScreen.classList.remove("profile-mode");
+          usageScreen.classList.add("active","directory-mode");
+          techProfile.classList.remove("active");
+          document.getElementById('tech-directory').classList.remove('hidden');
+          usageTitle.textContent='Orders';
+          usageCopy.textContent='Select a technician to review orders, upload checkout PDFs, and view order history.';
           refreshMoneyCards();
           return;
         }
