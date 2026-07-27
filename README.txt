@@ -1,10 +1,3 @@
-PMP Operations Center v3.74
-
-Changes:
-- Orders terminology restored and retained throughout Technician Inventory.
-- Orders and Truck Inventory technician pages now fit iPad portrait without horizontal cutoff.
-- Service-worker cache updated so GitHub Pages/PWA loads the new version.
-
 PMP OPERATIONS CENTER — PWA v3.63
 
 This package is the current working PMP HTML converted into an installable
@@ -106,12 +99,9 @@ V3.68 CHANGE
 Truck Inventory now displays a dedicated button for every technician, matching the Technician Usage directory. Each technician button opens that technician's truck inventory history, including an empty-state message when no snapshots have been posted.
 
 
-v3.69: Truck Inventory now opens with technician buttons first. Each technician has a dedicated upload, review, posting, value, and history workspace.
+v3.75: Truck Inventory now opens with technician buttons first. Each technician has a dedicated upload, review, posting, value, and history workspace.
 
 
 v3.71: Renamed the Technician Inventory “Technician Usage” module to “Orders” for clearer navigation. Functionality is unchanged.
 
-v3.72: Truck Inventory now resets to the technician list whenever you leave and reopen the module, matching the Orders navigation behavior.
-
-
-v3.74: Restores the complete Orders and Truck Inventory upload/review workflow on iPad technician pages while keeping the portrait layout fitted to the screen.
+v3.75: Truck Inventory now resets to the technician list whenever you leave and reopen the module, matching the Orders navigation behavior.

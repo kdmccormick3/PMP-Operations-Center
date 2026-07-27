@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.74</title>
+  <title>PMP Operations Center v3.75</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -2052,192 +2052,185 @@
     }
     body.warehouse-mode .warehouse-mode-indicator { display: flex; }
     body.warehouse-mode .office-only-tile { display: none !important; }
-    body.warehouse-mode #usage-screen:not(.profile-mode) .usage-tools,
-    body.warehouse-mode #usage-screen:not(.profile-mode) #checkout-detected,
-    body.warehouse-mode #usage-screen:not(.profile-mode) .review-toolbar,
-    body.warehouse-mode #usage-screen:not(.profile-mode) .usage-table-wrap,
-    body.warehouse-mode #usage-screen:not(.profile-mode) .usage-actions {
+    body.warehouse-mode #usage-screen .usage-tools,
+    body.warehouse-mode #usage-screen #checkout-detected,
+    body.warehouse-mode #usage-screen .review-toolbar,
+    body.warehouse-mode #usage-screen .usage-table-wrap,
+    body.warehouse-mode #usage-screen .usage-actions {
       display: none !important;
     }
-    body.warehouse-mode #usage-screen:not(.profile-mode) .usage-summary {
+    body.warehouse-mode #usage-screen .usage-summary {
       grid-template-columns: minmax(0, 1fr);
     }
-    body.warehouse-mode #usage-screen:not(.profile-mode) .checkout-current-card { display: none !important; }
+    body.warehouse-mode #usage-screen .checkout-current-card { display: none !important; }
     body.warehouse-mode #usage-screen .usage-shell { height: 100%; min-height: 0; }
     body.warehouse-mode #usage-screen #tech-directory { flex: 1 1 auto; min-height: 0; }
     body.warehouse-mode #usage-screen .technician-card-grid { overflow-y: auto; }
-    body.warehouse-mode #truck-inventory-screen:not(.profile-mode) .usage-tools,
-    body.warehouse-mode #truck-inventory-screen:not(.profile-mode) #truck-detected,
-    body.warehouse-mode #truck-inventory-screen:not(.profile-mode) .review-toolbar,
-    body.warehouse-mode #truck-inventory-screen:not(.profile-mode) .usage-table-wrap,
-    body.warehouse-mode #truck-inventory-screen:not(.profile-mode) .usage-actions { display:none !important; }
-    body.warehouse-mode #truck-inventory-screen:not(.profile-mode) .usage-summary { grid-template-columns:1fr; }
-    body.warehouse-mode #truck-inventory-screen:not(.profile-mode) .truck-current-card { display:none !important; }
+    body.warehouse-mode #truck-inventory-screen .usage-tools,
+    body.warehouse-mode #truck-inventory-screen #truck-detected,
+    body.warehouse-mode #truck-inventory-screen .review-toolbar,
+    body.warehouse-mode #truck-inventory-screen .usage-table-wrap,
+    body.warehouse-mode #truck-inventory-screen .usage-actions { display:none !important; }
+    body.warehouse-mode #truck-inventory-screen .usage-summary { grid-template-columns:1fr; }
+    body.warehouse-mode #truck-inventory-screen .truck-current-card { display:none !important; }
     body.warehouse-mode #truck-inventory-screen .usage-shell { height:100%; min-height:0; }
     body.warehouse-mode #truck-inventory-screen #truck-directory { flex:1 1 auto; min-height:0; }
     body.warehouse-mode #truck-inventory-screen .technician-card-grid { overflow-y:auto; }
     @media (max-width: 900px) and (orientation: portrait) {
-      body.warehouse-mode #usage-screen:not(.profile-mode) .usage-summary { grid-template-columns: 1fr; }
+      body.warehouse-mode #usage-screen .usage-summary { grid-template-columns: 1fr; }
     }
 
 
-    /* v3.74 — Technician Inventory iPad portrait fit */
+    /* v3.75 — iPad portrait technician workspace repair, based on v3.72 */
     @media (max-width: 900px) and (orientation: portrait) {
-      #technician-inventory-screen,
-      #usage-screen,
-      #truck-inventory-screen,
-      #usage-screen .usage-shell,
-      #truck-inventory-screen .usage-shell,
-      #usage-screen .tech-spend-panel,
-      #truck-inventory-screen .tech-spend-panel,
-      #usage-screen .tech-profile,
-      #truck-inventory-screen .tech-profile {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        box-sizing: border-box;
-        overflow-x: hidden;
+      /* Let technician pages grow vertically instead of clipping their contents. */
+      body.warehouse-mode #usage-screen,
+      body.warehouse-mode #truck-inventory-screen,
+      body.warehouse-mode #usage-screen .usage-shell,
+      body.warehouse-mode #truck-inventory-screen .usage-shell,
+      #usage-screen.profile-mode,
+      #usage-screen.profile-mode .usage-shell {
+        height: auto !important;
+        min-height: 100% !important;
+        overflow-x: hidden !important;
+        overflow-y: visible !important;
       }
 
-      #technician-inventory-screen .inventory-header,
+      /* Warehouse mode must not hide the working controls inside a selected technician. */
+      body.warehouse-mode #usage-screen.profile-mode .inventory-header,
+      body.warehouse-mode #usage-screen.profile-mode .usage-summary,
+      body.warehouse-mode #usage-screen.profile-mode .usage-tools,
+      body.warehouse-mode #usage-screen.profile-mode .review-toolbar,
+      body.warehouse-mode #usage-screen.profile-mode .usage-table-wrap,
+      body.warehouse-mode #usage-screen.profile-mode .usage-actions,
+      body.warehouse-mode #truck-inventory-screen #truck-profile.active .usage-summary,
+      body.warehouse-mode #truck-inventory-screen #truck-profile.active .usage-tools,
+      body.warehouse-mode #truck-inventory-screen #truck-profile.active .review-toolbar,
+      body.warehouse-mode #truck-inventory-screen #truck-profile.active .usage-table-wrap,
+      body.warehouse-mode #truck-inventory-screen #truck-profile.active .usage-actions {
+        display: grid !important;
+      }
+
+      body.warehouse-mode #usage-screen.profile-mode .inventory-header,
+      body.warehouse-mode #usage-screen.profile-mode .review-toolbar,
+      body.warehouse-mode #truck-inventory-screen #truck-profile.active .review-toolbar {
+        display: flex !important;
+      }
+
+      body.warehouse-mode #usage-screen.profile-mode #checkout-detected,
+      body.warehouse-mode #truck-inventory-screen #truck-profile.active #truck-detected {
+        display: none;
+      }
+
+      /* Keep only the selected technician workspace, not the directory. */
+      #usage-screen.profile-mode #tech-directory,
+      #truck-inventory-screen #truck-profile.active + #truck-directory {
+        display: none !important;
+      }
+
+      /* Stack headers and controls within the portrait width. */
       #usage-screen .inventory-header,
       #truck-inventory-screen .inventory-header,
       #usage-screen .tech-profile-header,
-      #truck-inventory-screen .tech-profile-header,
-      #usage-screen .usage-tools,
-      #truck-inventory-screen .usage-tools,
-      #usage-screen .review-toolbar,
-      #truck-inventory-screen .review-toolbar {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        box-sizing: border-box;
-        flex-wrap: wrap;
-      }
-
-      #usage-screen .inventory-title,
-      #truck-inventory-screen .inventory-title,
-      #usage-screen .tech-profile-header > div,
-      #truck-inventory-screen .tech-profile-header > div,
-      #usage-screen .review-toolbar-copy,
-      #truck-inventory-screen .review-toolbar-copy {
-        min-width: 0;
-        max-width: 100%;
+      #truck-inventory-screen .tech-profile-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
       }
 
       #usage-screen .back-button,
       #truck-inventory-screen .back-button,
       #usage-screen .tech-profile-close,
       #truck-inventory-screen .tech-profile-close {
-        flex: 0 0 auto;
-        max-width: 100%;
-        white-space: normal;
+        width: 100% !important;
+        max-width: 100% !important;
+        text-align: center !important;
       }
 
       #usage-screen .usage-summary,
       #truck-inventory-screen .usage-summary {
-        grid-template-columns: minmax(0, 1fr);
-        width: 100%;
-        min-width: 0;
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+      }
+
+      #usage-screen .checkout-current-card,
+      #truck-inventory-screen .truck-current-card {
+        display: block !important;
       }
 
       #usage-screen .usage-tools,
       #truck-inventory-screen .usage-tools {
-        flex-direction: column;
-        align-items: stretch;
+        grid-template-columns: 1fr !important;
+        width: 100% !important;
       }
 
-      #usage-screen .upload-label,
-      #truck-inventory-screen .upload-label,
-      #usage-screen .usage-tools .action-button,
-      #truck-inventory-screen .usage-tools .action-button,
-      #usage-screen .usage-actions .action-button,
-      #truck-inventory-screen .usage-actions .action-button {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        box-sizing: border-box;
+      #usage-screen .usage-tools > *,
+      #truck-inventory-screen .usage-tools > *,
+      #usage-screen .review-toolbar > *,
+      #truck-inventory-screen .review-toolbar > * {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
       }
 
       #usage-screen .review-toolbar > div:last-child,
       #truck-inventory-screen .review-toolbar > div:last-child {
-        width: 100%;
-        min-width: 0;
-      }
-
-      #usage-screen .review-toolbar select,
-      #truck-inventory-screen .review-toolbar select,
-      #usage-screen .review-toolbar button,
-      #truck-inventory-screen .review-toolbar button {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0 !important;
-        box-sizing: border-box;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
       }
 
       #usage-screen .usage-table-wrap,
       #truck-inventory-screen .usage-table-wrap,
       #usage-screen .tech-history-wrap,
       #truck-inventory-screen .tech-history-wrap {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        overflow-x: hidden;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
       }
 
-      #usage-screen .usage-table,
-      #truck-inventory-screen .usage-table,
       #usage-screen .tech-history-table,
       #truck-inventory-screen .tech-history-table {
-        width: 100%;
-        max-width: 100%;
+        width: 100% !important;
         min-width: 0 !important;
-        table-layout: fixed;
-        font-size: .72rem;
+        table-layout: fixed !important;
+        font-size: .74rem !important;
       }
 
-      #usage-screen .usage-table th,
-      #usage-screen .usage-table td,
-      #truck-inventory-screen .usage-table th,
-      #truck-inventory-screen .usage-table td,
       #usage-screen .tech-history-table th,
       #usage-screen .tech-history-table td,
       #truck-inventory-screen .tech-history-table th,
       #truck-inventory-screen .tech-history-table td {
-        padding: 8px 4px;
-        white-space: normal;
-        overflow-wrap: anywhere;
-        word-break: break-word;
+        padding: 8px 5px !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
       }
 
-      /* Keep the essential review fields visible without horizontal scrolling. */
-      #truck-inventory-screen .usage-table th:nth-child(2),
-      #truck-inventory-screen .usage-table td:nth-child(2),
-      #truck-inventory-screen .usage-table th:nth-child(5),
-      #truck-inventory-screen .usage-table td:nth-child(5) {
-        display: none;
-      }
-
-      #truck-inventory-screen .usage-table th:nth-child(1) { width: 10%; }
-      #truck-inventory-screen .usage-table th:nth-child(3) { width: 43%; }
-      #truck-inventory-screen .usage-table th:nth-child(4) { width: 14%; }
-      #truck-inventory-screen .usage-table th:nth-child(6) { width: 18%; }
-      #truck-inventory-screen .usage-table th:nth-child(7) { width: 15%; }
-
+      /* Order history: keep date, order, total, and view action. */
       #usage-screen .tech-history-table th:nth-child(3),
-      #usage-screen .tech-history-table td:nth-child(3),
+      #usage-screen .tech-history-table td:nth-child(3) {
+        display: none !important;
+      }
+      #usage-screen .tech-history-table th:nth-child(1) { width: 27%; }
+      #usage-screen .tech-history-table th:nth-child(2) { width: 25%; }
+      #usage-screen .tech-history-table th:nth-child(4) { width: 25%; }
+      #usage-screen .tech-history-table th:nth-child(5) { width: 23%; }
+
+      /* Truck history: keep date, truck, value, and view action. */
       #truck-inventory-screen .tech-history-table th:nth-child(3),
       #truck-inventory-screen .tech-history-table td:nth-child(3) {
-        display: none;
+        display: none !important;
       }
+      #truck-inventory-screen .tech-history-table th:nth-child(1) { width: 28%; }
+      #truck-inventory-screen .tech-history-table th:nth-child(2) { width: 22%; }
+      #truck-inventory-screen .tech-history-table th:nth-child(4) { width: 28%; }
+      #truck-inventory-screen .tech-history-table th:nth-child(5) { width: 22%; }
 
-      #usage-screen .technician-card-grid,
-      #truck-inventory-screen .technician-card-grid {
-        grid-template-columns: minmax(0, 1fr);
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        box-sizing: border-box;
+      #usage-screen .checkout-toggle,
+      #truck-inventory-screen .preview-button {
+        width: 100% !important;
+        min-width: 0 !important;
+        padding: 7px 4px !important;
+        white-space: normal !important;
       }
     }
 
@@ -2252,7 +2245,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.74</div>
+      <div class="status-badge">INVENTORY BUILD • v3.75</div>
     </header>
 
     <main>
@@ -2273,7 +2266,7 @@
               </svg>
             </div>
             <h3>Inventory</h3>
-            <p>Manage products, stock levels, receiving, technician orders, inventory history, and reorder needs.</p>
+            <p>Manage products, stock levels, receiving, technician usage, inventory history, and reorder needs.</p>
           </div>
         </button>
 
@@ -2346,7 +2339,7 @@
           <button class="module-tile" type="button" data-module="Technician Inventory">
             <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="7" r="3"/><path d="M3 21v-3a5 5 0 0 1 10 0v3"/><path d="M15 8h6v7h-6z"/><path d="M17 15v3h4v-3"/></svg></div>
             <h3 id="technician-inventory-card-title">Technician Inventory</h3>
-            <p id="technician-inventory-card-copy">Manage technician orders and truck inventory in one place.</p>
+            <p id="technician-inventory-card-copy">Manage technician usage and truck inventory in one place.</p>
           </button>
 
           <button class="module-tile" type="button" data-module="Inventory History">
@@ -2697,7 +2690,7 @@
             <select id="history-type-filter" aria-label="Filter inventory history by activity type">
               <option value="all">All activity</option>
               <option value="Receiving">Receiving</option>
-              <option value="Orders">Orders</option>
+              <option value="Technician Usage">Technician Usage</option>
               <option value="Physical Count">Physical Count</option>
               <option value="Price Change">Price Changes</option>
               <option value="Minimum Change">Minimum Changes</option>
@@ -2777,7 +2770,7 @@
         </div>
       </section>
 
-      <section id="usage-screen" class="screen usage-screen" aria-label="Technician checkout"><div class="usage-shell"><div class="inventory-header"><div class="inventory-title"><h2 id="usage-screen-title">Orders</h2><p id="usage-screen-copy">Select a technician to open their order workspace.</p></div><button id="back-from-usage" class="back-button" type="button">← Back to Technician Inventory</button></div><div class="usage-summary"><div class="money-card checkout-current-card"><span>This Checkout</span><strong id="checkout-value">$0.00</strong></div><div class="money-card"><span>Total Product Value Issued</span><strong id="issued-value">$0.00</strong></div></div><div class="usage-tools"><label id="checkout-drop-zone" class="upload-label"><strong>Drag & Drop Checkout PDFs Here</strong><span>Drop multiple PDFs at once, or click to choose them</span><input id="checkout-pdf" type="file" accept="application/pdf" multiple></label><button id="clear-usage" class="action-button" type="button">Clear Review</button></div><div id="checkout-detected" style="display:none;margin:0 0 16px;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:#f7fafc;font-weight:600"></div><div class="review-toolbar"><div class="review-toolbar-copy"><strong>Checkout Review</strong><span>Compare the parsed items with the original checkout documents before posting.</span></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><select id="pdf-preview-select" class="usage-product" aria-label="Select PDF to preview" disabled style="min-width:240px"><option value="">Select PDF…</option></select><button id="open-pdf-preview" class="preview-button" type="button" disabled>View Selected PDF ↗</button></div></div><div class="usage-table-wrap"><table class="usage-table"><thead><tr><th>Use</th><th>PDF Description</th><th>Matched Product</th><th>Qty</th><th>Unit Price</th><th>Price UOM</th><th>Extended Cost</th><th>Status</th></tr></thead><tbody id="usage-body"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">Upload a checkout PDF to begin.</td></tr></tbody></table></div><div id="tech-directory" class="tech-spend-panel"><div class="tech-spend-title"><h3>Technicians</h3><p>Select a technician to open their order history.</p></div><div id="tech-spend-body" class="technician-card-grid"></div></div><div id="tech-profile" class="tech-profile"><div class="tech-profile-header"><div><h3 id="tech-profile-name">Technician</h3><p id="tech-profile-summary">Checkout history</p></div><button id="close-tech-profile" class="tech-profile-close" type="button">← Back to Technicians</button></div><div class="tech-history-wrap"><table class="tech-history-table checkout-history-table"><thead><tr><th>Checkout Date</th><th>Order #</th><th>Items</th><th>Total Value</th><th></th></tr></thead><tbody id="tech-history-body"></tbody></table></div></div><div class="usage-actions"><button id="post-checkout" class="action-button primary" type="button">Post Approved Checkout</button></div></div></section>
+      <section id="usage-screen" class="screen usage-screen" aria-label="Technician checkout"><div class="usage-shell"><div class="inventory-header"><div class="inventory-title"><h2 id="usage-screen-title">Technician Checkout</h2><p id="usage-screen-copy">Upload one or more technician checkout PDFs. The technician, checkout date, order number, quantities, and historical prices are read directly from each document.</p></div><button id="back-from-usage" class="back-button" type="button">← Back to Technician Inventory</button></div><div class="usage-summary"><div class="money-card checkout-current-card"><span>This Checkout</span><strong id="checkout-value">$0.00</strong></div><div class="money-card"><span>Total Product Value Issued</span><strong id="issued-value">$0.00</strong></div></div><div class="usage-tools"><label id="checkout-drop-zone" class="upload-label"><strong>Drag & Drop Checkout PDFs Here</strong><span>Drop multiple PDFs at once, or click to choose them</span><input id="checkout-pdf" type="file" accept="application/pdf" multiple></label><button id="clear-usage" class="action-button" type="button">Clear Review</button></div><div id="checkout-detected" style="display:none;margin:0 0 16px;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:#f7fafc;font-weight:600"></div><div class="review-toolbar"><div class="review-toolbar-copy"><strong>Checkout Review</strong><span>Compare the parsed items with the original checkout documents before posting.</span></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><select id="pdf-preview-select" class="usage-product" aria-label="Select PDF to preview" disabled style="min-width:240px"><option value="">Select PDF…</option></select><button id="open-pdf-preview" class="preview-button" type="button" disabled>View Selected PDF ↗</button></div></div><div class="usage-table-wrap"><table class="usage-table"><thead><tr><th>Use</th><th>PDF Description</th><th>Matched Product</th><th>Qty</th><th>Unit Price</th><th>Price UOM</th><th>Extended Cost</th><th>Status</th></tr></thead><tbody id="usage-body"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">Upload a checkout PDF to begin.</td></tr></tbody></table></div><div id="tech-directory" class="tech-spend-panel"><div class="tech-spend-title"><h3>Orders</h3><p>Select a technician to open their order workspace.</p></div><div id="tech-spend-body" class="technician-card-grid"></div></div><div id="tech-profile" class="tech-profile"><div class="tech-profile-header"><div><h3 id="tech-profile-name">Technician</h3><p id="tech-profile-summary">Checkout history</p></div><button id="close-tech-profile" class="tech-profile-close" type="button">← Back to Technicians</button></div><div class="tech-history-wrap"><table class="tech-history-table checkout-history-table"><thead><tr><th>Checkout Date</th><th>Order #</th><th>Items</th><th>Total Value</th><th></th></tr></thead><tbody id="tech-history-body"></tbody></table></div></div><div class="usage-actions"><button id="post-checkout" class="action-button primary" type="button">Post Approved Checkout</button></div></div></section>
       <section id="count-screen" class="screen count-screen" aria-label="Physical inventory count">
         <div class="count-shell">
           <div class="inventory-header">
@@ -2796,7 +2789,7 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.74</footer>
+    <footer>PMP Operations Center • Inventory build • v3.75</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -2809,9 +2802,9 @@
       const usageCardCopy = document.getElementById("technician-inventory-card-copy");
       const usageTitle = document.getElementById("usage-screen-title");
       const usageCopy = document.getElementById("usage-screen-copy");
-      if (usageCardCopy) usageCardCopy.textContent = "Open technician usage history or truck inventory.";
+      if (usageCardCopy) usageCardCopy.textContent = "Open technician orders or truck inventory.";
       if (usageTitle) usageTitle.textContent = "Orders";
-      if (usageCopy) usageCopy.textContent = "Warehouse read-only view of technician checkout history and product value issued.";
+      if (usageCopy) usageCopy.textContent = "Select a technician to review orders, upload checkout PDFs, and view order history.";
     }
 
     const dashboardScreen = document.getElementById("dashboard-screen");
@@ -3873,7 +3866,7 @@
         (record.lines||[]).forEach(line=>{
           const product=productData.find(item=>String(item.item)===String(line.item));
           const qty=Number(line.quantity)||0;
-          entries.push({date:record.date||record.postedAt,type:"Orders",product:line.product||line.description||(product&&product.name)||"Unknown product",change:-qty,before:null,after:null,source:record.technician||"Technician",reference:record.orderNumber||record.pdfFile||"",details:`Issued ${qty}${line.unit?` ${line.unit}`:""}${line.extendedCost!=null?` • ${money(line.extendedCost)}`:""}`,stamp:record.postedAt||record.date||""});
+          entries.push({date:record.date||record.postedAt,type:"Technician Usage",product:line.product||line.description||(product&&product.name)||"Unknown product",change:-qty,before:null,after:null,source:record.technician||"Technician",reference:record.orderNumber||record.pdfFile||"",details:`Issued ${qty}${line.unit?` ${line.unit}`:""}${line.extendedCost!=null?` • ${money(line.extendedCost)}`:""}`,stamp:record.postedAt||record.date||""});
         });
       });
       safeHistory("pmpPhysicalCountHistory_v3_2").forEach(record=>{
@@ -4339,7 +4332,6 @@
       renderTruckReview();
       renderTruckPreviewOptions();
       truckProfile.classList.remove('active');
-      truckInventoryScreen.classList.remove('profile-mode');
       truckProfile.style.display='none';
       truckDirectory.style.display='block';
       renderTruckDirectory();
@@ -4348,7 +4340,7 @@
     function openTruckTechnician(name){
       selectedTruckTechnician=name;
       const rows=getTruckHistory().filter(r=>(r.technician||'Unknown Technician')===name).sort((a,b)=>String(b.postedAt).localeCompare(String(a.postedAt)));
-      truckDirectory.style.display='none';truckInventoryScreen.classList.add('profile-mode');truckProfile.classList.add('active');truckProfile.style.display='block';truckProfileName.textContent=name;truckProfileSummary.textContent=`${rows.length} truck inventory snapshot${rows.length===1?'':'s'} • Uploads on this page are assigned to ${name}`;
+      truckDirectory.style.display='none';truckProfile.classList.add('active');truckProfile.style.display='block';truckProfileName.textContent=name;truckProfileSummary.textContent=`${rows.length} truck inventory snapshot${rows.length===1?'':'s'} • Uploads on this page are assigned to ${name}`;
       truckTotalValue.textContent=truckMoney(rows.length?rows[0].total:0);
       truckHistoryBody.innerHTML=rows.length?rows.map((r,i)=>`<tr><td>${r.date||''}</td><td>${r.truck||'Not listed'}</td><td>${r.lines.length}</td><td>${truckMoney(r.total)}</td><td><button class="preview-button" type="button" data-truck-detail="${i}">View</button></td></tr>`).join(''):'<tr><td colspan="5" class="empty-tech">No truck inventory snapshots have been posted for this technician.</td></tr>';
       truckHistoryBody.querySelectorAll('[data-truck-detail]').forEach(btn=>btn.onclick=()=>{const r=rows[Number(btn.dataset.truckDetail)];alert(`${r.technician}\nTruck ${r.truck}\n${r.date}\n\n`+r.lines.map(l=>`${l.product}: ${l.qty} — ${truckMoney(l.value)}`).join('\n')+`\n\nTotal: ${truckMoney(r.total)}`)});
