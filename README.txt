@@ -1,4 +1,4 @@
-PMP OPERATIONS CENTER — PWA v3.60
+PMP OPERATIONS CENTER — PWA v3.61
 
 This package is the current working PMP HTML converted into an installable
 Progressive Web App shell.
@@ -70,3 +70,7 @@ Stopped the history search field from automatically opening the iPad keyboard.
 V3.60 CHANGE
 Inventory History date filters now show Start Date and End Date labels.
 Fixed blank-looking filter fields and Clear Filters overlap on iPad portrait and landscape.
+
+
+V3.61 CHANGE
+Inventory History date filters now use a stable two-row iPad landscape layout and a single-column portrait layout. Start Date, End Date, and Clear Filters no longer overlap.
