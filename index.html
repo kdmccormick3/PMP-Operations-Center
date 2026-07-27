@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.59</title>
+  <title>PMP Operations Center v3.60</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -1758,6 +1758,54 @@
       #inventory-history-screen .history-mobile-meta { display: block; }
     }
 
+
+
+    /* v3.60 — Inventory History filter labels and iPad landscape fit */
+    .history-date-field {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      color: white;
+      font-size: .72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .history-date-field input {
+      min-width: 0;
+    }
+
+    @media (max-width: 1100px) {
+      #inventory-history-screen .history-toolbar {
+        grid-template-columns: minmax(0, 1.35fr) minmax(0, .85fr) minmax(0, .8fr) minmax(0, .8fr);
+      }
+
+      #inventory-history-screen #history-clear-filters {
+        grid-column: 1 / -1;
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 900px) and (orientation: portrait) {
+      #inventory-history-screen #history-type-filter {
+        grid-column: 1 / -1;
+      }
+
+      #inventory-history-screen .history-date-field {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+      }
+
+      #inventory-history-screen .history-date-field input {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+      }
+    }
+
 </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -1769,7 +1817,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.59</div>
+      <div class="status-badge">INVENTORY BUILD • v3.60</div>
     </header>
 
     <main>
@@ -2219,8 +2267,8 @@
               <option value="Price Change">Price Changes</option>
               <option value="Minimum Change">Minimum Changes</option>
             </select>
-            <input id="history-start-date" type="date" aria-label="History start date" />
-            <input id="history-end-date" type="date" aria-label="History end date" />
+            <label class="history-date-field" for="history-start-date"><span>Start Date</span><input id="history-start-date" type="date" aria-label="History start date" /></label>
+            <label class="history-date-field" for="history-end-date"><span>End Date</span><input id="history-end-date" type="date" aria-label="History end date" /></label>
             <button id="history-clear-filters" class="action-button" type="button">Clear Filters</button>
           </div>
           <div class="history-table-wrap">
@@ -2251,7 +2299,7 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.57</footer>
+    <footer>PMP Operations Center • Inventory build • v3.60</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
