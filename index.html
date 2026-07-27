@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.78</title>
+  <title>PMP Operations Center v3.79</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -2081,7 +2081,99 @@
       body.warehouse-mode #usage-screen .usage-summary { grid-template-columns: 1fr; }
     }
 
-</style>
+
+
+    /* v3.79 — iPad portrait technician pages: full-width, no horizontal cutoff */
+    @media (max-width: 900px) and (orientation: portrait) {
+      body.warehouse-mode #usage-screen,
+      body.warehouse-mode #truck-inventory-screen {
+        overflow-x: hidden !important;
+      }
+
+      body.warehouse-mode #usage-screen .usage-shell,
+      body.warehouse-mode #truck-inventory-screen .usage-shell {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+      }
+
+      body.warehouse-mode #usage-screen .inventory-header,
+      body.warehouse-mode #truck-inventory-screen .inventory-header,
+      body.warehouse-mode #usage-screen .usage-summary,
+      body.warehouse-mode #truck-inventory-screen .usage-summary,
+      body.warehouse-mode #usage-screen .tech-profile,
+      body.warehouse-mode #truck-inventory-screen .tech-profile,
+      body.warehouse-mode #usage-screen .tech-spend-panel,
+      body.warehouse-mode #truck-inventory-screen .tech-spend-panel {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+      }
+
+      body.warehouse-mode #usage-screen .inventory-header,
+      body.warehouse-mode #truck-inventory-screen .inventory-header,
+      body.warehouse-mode #usage-screen .tech-profile-header,
+      body.warehouse-mode #truck-inventory-screen .tech-profile-header {
+        flex-wrap: wrap !important;
+        align-items: flex-start !important;
+      }
+
+      body.warehouse-mode #usage-screen .inventory-title,
+      body.warehouse-mode #truck-inventory-screen .inventory-title,
+      body.warehouse-mode #usage-screen .tech-profile-header > div,
+      body.warehouse-mode #truck-inventory-screen .tech-profile-header > div {
+        min-width: 0 !important;
+        max-width: 100% !important;
+      }
+
+      body.warehouse-mode #usage-screen .back-button,
+      body.warehouse-mode #truck-inventory-screen .back-button,
+      body.warehouse-mode #usage-screen .tech-profile-close,
+      body.warehouse-mode #truck-inventory-screen .tech-profile-close {
+        max-width: 100% !important;
+        white-space: normal !important;
+      }
+
+      body.warehouse-mode #usage-screen .tech-history-wrap,
+      body.warehouse-mode #truck-inventory-screen .tech-history-wrap {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+      }
+
+      body.warehouse-mode #usage-screen .tech-history-table,
+      body.warehouse-mode #truck-inventory-screen .tech-history-table {
+        width: 100% !important;
+        min-width: 0 !important;
+        table-layout: fixed !important;
+        font-size: .78rem !important;
+      }
+
+      body.warehouse-mode #usage-screen .tech-history-table th,
+      body.warehouse-mode #usage-screen .tech-history-table td,
+      body.warehouse-mode #truck-inventory-screen .tech-history-table th,
+      body.warehouse-mode #truck-inventory-screen .tech-history-table td {
+        padding: 9px 6px !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+        word-break: break-word !important;
+      }
+
+      body.warehouse-mode #usage-screen .tech-history-table th:last-child,
+      body.warehouse-mode #usage-screen .tech-history-table td:last-child,
+      body.warehouse-mode #truck-inventory-screen .tech-history-table th:last-child,
+      body.warehouse-mode #truck-inventory-screen .tech-history-table td:last-child {
+        width: 1px !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+    }
+
+  </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 </head>
@@ -2092,7 +2184,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.78</div>
+      <div class="status-badge">INVENTORY BUILD • v3.79</div>
     </header>
 
     <main>
@@ -2636,7 +2728,7 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.78</footer>
+    <footer>PMP Operations Center • Inventory build • v3.79</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
