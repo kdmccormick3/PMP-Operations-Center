@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.73</title>
+  <title>PMP Operations Center v3.74</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -2052,36 +2052,36 @@
     }
     body.warehouse-mode .warehouse-mode-indicator { display: flex; }
     body.warehouse-mode .office-only-tile { display: none !important; }
-    body.warehouse-mode #usage-screen .usage-tools,
-    body.warehouse-mode #usage-screen #checkout-detected,
-    body.warehouse-mode #usage-screen .review-toolbar,
-    body.warehouse-mode #usage-screen .usage-table-wrap,
-    body.warehouse-mode #usage-screen .usage-actions {
+    body.warehouse-mode #usage-screen:not(.profile-mode) .usage-tools,
+    body.warehouse-mode #usage-screen:not(.profile-mode) #checkout-detected,
+    body.warehouse-mode #usage-screen:not(.profile-mode) .review-toolbar,
+    body.warehouse-mode #usage-screen:not(.profile-mode) .usage-table-wrap,
+    body.warehouse-mode #usage-screen:not(.profile-mode) .usage-actions {
       display: none !important;
     }
-    body.warehouse-mode #usage-screen .usage-summary {
+    body.warehouse-mode #usage-screen:not(.profile-mode) .usage-summary {
       grid-template-columns: minmax(0, 1fr);
     }
-    body.warehouse-mode #usage-screen .checkout-current-card { display: none !important; }
+    body.warehouse-mode #usage-screen:not(.profile-mode) .checkout-current-card { display: none !important; }
     body.warehouse-mode #usage-screen .usage-shell { height: 100%; min-height: 0; }
     body.warehouse-mode #usage-screen #tech-directory { flex: 1 1 auto; min-height: 0; }
     body.warehouse-mode #usage-screen .technician-card-grid { overflow-y: auto; }
-    body.warehouse-mode #truck-inventory-screen .usage-tools,
-    body.warehouse-mode #truck-inventory-screen #truck-detected,
-    body.warehouse-mode #truck-inventory-screen .review-toolbar,
-    body.warehouse-mode #truck-inventory-screen .usage-table-wrap,
-    body.warehouse-mode #truck-inventory-screen .usage-actions { display:none !important; }
-    body.warehouse-mode #truck-inventory-screen .usage-summary { grid-template-columns:1fr; }
-    body.warehouse-mode #truck-inventory-screen .truck-current-card { display:none !important; }
+    body.warehouse-mode #truck-inventory-screen:not(.profile-mode) .usage-tools,
+    body.warehouse-mode #truck-inventory-screen:not(.profile-mode) #truck-detected,
+    body.warehouse-mode #truck-inventory-screen:not(.profile-mode) .review-toolbar,
+    body.warehouse-mode #truck-inventory-screen:not(.profile-mode) .usage-table-wrap,
+    body.warehouse-mode #truck-inventory-screen:not(.profile-mode) .usage-actions { display:none !important; }
+    body.warehouse-mode #truck-inventory-screen:not(.profile-mode) .usage-summary { grid-template-columns:1fr; }
+    body.warehouse-mode #truck-inventory-screen:not(.profile-mode) .truck-current-card { display:none !important; }
     body.warehouse-mode #truck-inventory-screen .usage-shell { height:100%; min-height:0; }
     body.warehouse-mode #truck-inventory-screen #truck-directory { flex:1 1 auto; min-height:0; }
     body.warehouse-mode #truck-inventory-screen .technician-card-grid { overflow-y:auto; }
     @media (max-width: 900px) and (orientation: portrait) {
-      body.warehouse-mode #usage-screen .usage-summary { grid-template-columns: 1fr; }
+      body.warehouse-mode #usage-screen:not(.profile-mode) .usage-summary { grid-template-columns: 1fr; }
     }
 
 
-    /* v3.73 — Technician Inventory iPad portrait fit */
+    /* v3.74 — Technician Inventory iPad portrait fit */
     @media (max-width: 900px) and (orientation: portrait) {
       #technician-inventory-screen,
       #usage-screen,
@@ -2252,7 +2252,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.73</div>
+      <div class="status-badge">INVENTORY BUILD • v3.74</div>
     </header>
 
     <main>
@@ -2796,7 +2796,7 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.73</footer>
+    <footer>PMP Operations Center • Inventory build • v3.74</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -4339,6 +4339,7 @@
       renderTruckReview();
       renderTruckPreviewOptions();
       truckProfile.classList.remove('active');
+      truckInventoryScreen.classList.remove('profile-mode');
       truckProfile.style.display='none';
       truckDirectory.style.display='block';
       renderTruckDirectory();
@@ -4347,7 +4348,7 @@
     function openTruckTechnician(name){
       selectedTruckTechnician=name;
       const rows=getTruckHistory().filter(r=>(r.technician||'Unknown Technician')===name).sort((a,b)=>String(b.postedAt).localeCompare(String(a.postedAt)));
-      truckDirectory.style.display='none';truckProfile.classList.add('active');truckProfile.style.display='block';truckProfileName.textContent=name;truckProfileSummary.textContent=`${rows.length} truck inventory snapshot${rows.length===1?'':'s'} • Uploads on this page are assigned to ${name}`;
+      truckDirectory.style.display='none';truckInventoryScreen.classList.add('profile-mode');truckProfile.classList.add('active');truckProfile.style.display='block';truckProfileName.textContent=name;truckProfileSummary.textContent=`${rows.length} truck inventory snapshot${rows.length===1?'':'s'} • Uploads on this page are assigned to ${name}`;
       truckTotalValue.textContent=truckMoney(rows.length?rows[0].total:0);
       truckHistoryBody.innerHTML=rows.length?rows.map((r,i)=>`<tr><td>${r.date||''}</td><td>${r.truck||'Not listed'}</td><td>${r.lines.length}</td><td>${truckMoney(r.total)}</td><td><button class="preview-button" type="button" data-truck-detail="${i}">View</button></td></tr>`).join(''):'<tr><td colspan="5" class="empty-tech">No truck inventory snapshots have been posted for this technician.</td></tr>';
       truckHistoryBody.querySelectorAll('[data-truck-detail]').forEach(btn=>btn.onclick=()=>{const r=rows[Number(btn.dataset.truckDetail)];alert(`${r.technician}\nTruck ${r.truck}\n${r.date}\n\n`+r.lines.map(l=>`${l.product}: ${l.qty} — ${truckMoney(l.value)}`).join('\n')+`\n\nTotal: ${truckMoney(r.total)}`)});
