@@ -94,3 +94,6 @@ Added automatic iPad Warehouse Mode while preserving the full laptop/desktop app
 On iPad, Technician Usage is read-only (totals, technician directory, and checkout history); PDF upload, checkout review, and posting are hidden.
 Price Review and Master Data Review are hidden on iPad because they are office workflows. Products, Order, Receive, Physical Count, Minimums, Technician Usage history, and Inventory History remain available.
 Laptop and desktop retain 100% of the existing functionality.
+
+V3.68 CHANGE
+Truck Inventory now displays a dedicated button for every technician, matching the Technician Usage directory. Each technician button opens that technician's truck inventory history, including an empty-state message when no snapshots have been posted.

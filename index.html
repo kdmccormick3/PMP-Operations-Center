@@ -2621,7 +2621,7 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.67</footer>
+    <footer>PMP Operations Center • Inventory build • v3.68</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -4049,7 +4049,7 @@
     }
   
 
-    // Truck Inventory workflow (v3.67)
+    // Truck Inventory workflow (v3.68)
     const truckPdfInput=document.getElementById('truck-inventory-pdf');
     const truckDropZone=document.getElementById('truck-drop-zone');
     const truckReviewBody=document.getElementById('truck-review-body');
@@ -4145,16 +4145,15 @@
     };
     function renderTruckDirectory(){
       const history=getTruckHistory();const latest={};history.forEach(r=>{const key=r.technician||'Unknown Technician';if(!latest[key]||String(r.postedAt)>String(latest[key].postedAt))latest[key]=r});
-      const rows=Object.entries(latest).sort((a,b)=>a[0].localeCompare(b[0]));
-      truckTotalValue.textContent=truckMoney(rows.reduce((s,[,r])=>s+(Number(r.total)||0),0));
-      if(!rows.length){truckDirectoryBody.innerHTML='<div style="padding:24px;color:var(--muted)">No truck inventory snapshots have been posted yet.</div>';return}
-      truckDirectoryBody.innerHTML=rows.map(([name,r])=>`<button class="technician-card" type="button" data-truck-tech="${encodeURIComponent(name)}"><strong>${name}</strong><span>Truck ${r.truck||'Not listed'}</span><span>${truckMoney(r.total)} • ${r.date||''}</span></button>`).join('');
+      const names=[...new Set([...technicianRoster,...Object.keys(latest).filter(name=>!technicianRoster.includes(name))])];
+      truckTotalValue.textContent=truckMoney(Object.values(latest).reduce((sum,r)=>sum+(Number(r.total)||0),0));
+      truckDirectoryBody.innerHTML=names.map(name=>`<button class="technician-button" type="button" data-truck-tech="${encodeURIComponent(name)}"><span class="technician-button-name">${escapeHtml(name)}</span></button>`).join('');
       truckDirectoryBody.querySelectorAll('[data-truck-tech]').forEach(btn=>btn.onclick=()=>openTruckTechnician(decodeURIComponent(btn.dataset.truckTech)));
     }
     function openTruckTechnician(name){
       const rows=getTruckHistory().filter(r=>(r.technician||'Unknown Technician')===name).sort((a,b)=>String(b.postedAt).localeCompare(String(a.postedAt)));
       truckDirectory.style.display='none';truckProfile.classList.add('active');truckProfile.style.display='block';truckProfileName.textContent=name;truckProfileSummary.textContent=`${rows.length} truck inventory snapshot${rows.length===1?'':'s'}`;
-      truckHistoryBody.innerHTML=rows.map((r,i)=>`<tr><td>${r.date||''}</td><td>${r.truck||'Not listed'}</td><td>${r.lines.length}</td><td>${truckMoney(r.total)}</td><td><button class="preview-button" type="button" data-truck-detail="${i}">View</button></td></tr>`).join('');
+      truckHistoryBody.innerHTML=rows.length?rows.map((r,i)=>`<tr><td>${r.date||''}</td><td>${r.truck||'Not listed'}</td><td>${r.lines.length}</td><td>${truckMoney(r.total)}</td><td><button class="preview-button" type="button" data-truck-detail="${i}">View</button></td></tr>`).join(''):'<tr><td colspan="5" class="empty-tech">No truck inventory snapshots have been posted for this technician.</td></tr>';
       truckHistoryBody.querySelectorAll('[data-truck-detail]').forEach(btn=>btn.onclick=()=>{const r=rows[Number(btn.dataset.truckDetail)];alert(`${r.technician}\nTruck ${r.truck}\n${r.date}\n\n`+r.lines.map(l=>`${l.product}: ${l.qty} — ${truckMoney(l.value)}`).join('\n')+`\n\nTotal: ${truckMoney(r.total)}`)});
     }
     closeTruckProfile.onclick=()=>{truckProfile.classList.remove('active');truckProfile.style.display='none';truckDirectory.style.display='block'};
