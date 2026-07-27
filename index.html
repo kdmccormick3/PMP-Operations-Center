@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.79</title>
+  <title>PMP Operations Center v3.80</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -2083,7 +2083,7 @@
 
 
 
-    /* v3.79 — iPad portrait technician pages: full-width, no horizontal cutoff */
+    /* v3.80 — iPad portrait technician pages: full-width, no horizontal cutoff */
     @media (max-width: 900px) and (orientation: portrait) {
       body.warehouse-mode #usage-screen,
       body.warehouse-mode #truck-inventory-screen {
@@ -2173,6 +2173,23 @@
       }
     }
 
+
+    /* v3.80 — Data Backup & Transfer */
+    .data-transfer-shell{width:min(1040px,100%);margin:0 auto;display:flex;flex-direction:column;gap:18px}
+    .data-transfer-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .data-transfer-card{background:rgba(255,255,255,.97);border:2px solid rgba(255,255,255,.4);border-radius:16px;padding:22px;box-shadow:0 16px 36px rgba(0,0,0,.18);color:var(--text)}
+    .data-transfer-card h3{margin:0 0 8px;color:var(--navy-dark);font-size:1.25rem}
+    .data-transfer-card p{margin:0 0 16px;color:var(--muted);line-height:1.5}
+    .data-transfer-card .action-button{width:100%;min-height:48px}
+    .data-transfer-status{background:rgba(255,255,255,.97);border-left:6px solid var(--red);border-radius:14px;padding:18px 20px;box-shadow:0 12px 28px rgba(0,0,0,.14);color:var(--text)}
+    .data-transfer-status strong{display:block;color:var(--navy-dark);margin-bottom:5px}
+    .data-transfer-file{display:none}
+    .data-transfer-note{font-size:.86rem;color:var(--muted);margin-top:12px}
+    .data-transfer-steps{margin:0;padding-left:20px;color:var(--text);line-height:1.65}
+    .data-transfer-danger{border:1px solid #efb5ba;background:#fff5f6;color:#7d1720;border-radius:12px;padding:12px 14px;margin-top:14px;font-size:.88rem}
+    #export-count-backup{background:#176b3a;border-color:#176b3a}
+    @media(max-width:760px){.data-transfer-grid{grid-template-columns:1fr}.data-transfer-card{padding:18px}.data-transfer-shell{gap:14px}}
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -2184,7 +2201,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.79</div>
+      <div class="status-badge">INVENTORY BUILD • v3.80</div>
     </header>
 
     <main>
@@ -2285,6 +2302,12 @@
             <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l3 2"/></svg></div>
             <h3>Inventory History</h3>
             <p>Review receiving, usage, and adjustment activity.</p>
+          </button>
+
+          <button class="module-tile" type="button" data-module="Data Backup & Transfer">
+            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14a2 2 0 0 0 2-2v-3"/><path d="M3 16v3a2 2 0 0 0 2 2"/></svg></div>
+            <h3>Data Backup & Transfer</h3>
+            <p>Move the current inventory data safely between the warehouse iPad and office desktop.</p>
           </button>
         </section>
       </section>
@@ -2723,12 +2746,59 @@
             <div class="count-field"><label for="count-reason">Reason</label><select id="count-reason"><option>Spot Check</option><option>Monthly Inventory</option><option>Quarterly Audit</option><option>Annual Audit</option></select></div>
           </div>
           <div class="count-table-wrap"><table class="count-table"><thead><tr><th>Product</th><th>Expected</th><th>Counted</th><th>Difference</th><th>Notes</th></tr></thead><tbody id="count-body"></tbody></table></div>
-          <div class="count-actions"><button id="clear-count" class="action-button" type="button">Clear Count</button><button id="apply-count" class="action-button primary" type="button">Apply Counted Quantities</button></div>
+          <div class="count-actions"><button id="clear-count" class="action-button" type="button">Clear Count</button><button id="export-count-backup" class="action-button" type="button">Export Data Backup</button><button id="apply-count" class="action-button primary" type="button">Apply Counted Quantities</button></div>
         </div>
       </section>
+
+
+      <section id="data-transfer-screen" class="screen" aria-label="Data Backup and Transfer">
+        <div class="data-transfer-shell">
+          <div class="inventory-header">
+            <div class="inventory-title">
+              <h2>Data Backup &amp; Transfer</h2>
+              <p>Keep the warehouse iPad and office desktop on the same PMP inventory data.</p>
+            </div>
+            <button id="back-from-data-transfer" class="back-button" type="button">← Back to Inventory</button>
+          </div>
+
+          <div id="data-transfer-status" class="data-transfer-status" role="status" aria-live="polite">
+            <strong>Current device data is ready.</strong>
+            <span id="data-transfer-summary">No backup has been exported or imported during this session.</span>
+          </div>
+
+          <div class="data-transfer-grid">
+            <article class="data-transfer-card">
+              <h3>1. Export from this device</h3>
+              <p>Creates one PMP backup file containing warehouse counts, minimums, prices, receiving history, orders, truck inventory, and other saved PMP records.</p>
+              <button id="export-pmp-data" class="action-button primary" type="button">Export PMP Data</button>
+              <div class="data-transfer-note">On iPad, save the downloaded JSON file to Files, iCloud Drive, Google Drive, or email it to yourself.</div>
+            </article>
+
+            <article class="data-transfer-card">
+              <h3>2. Import on the other device</h3>
+              <p>Select the PMP backup file. Import replaces the PMP data currently stored in this browser, then reloads the app with the transferred information.</p>
+              <button id="choose-pmp-data" class="action-button" type="button">Choose PMP Backup File</button>
+              <input id="import-pmp-data" class="data-transfer-file" type="file" accept="application/json,.json" />
+              <div id="selected-backup-name" class="data-transfer-note">No backup file selected.</div>
+              <div class="data-transfer-danger"><strong>Important:</strong> Export a backup from the receiving device first if it contains information you may need. Importing replaces its current PMP browser data.</div>
+            </article>
+          </div>
+
+          <article class="data-transfer-card">
+            <h3>Recommended workflow</h3>
+            <ol class="data-transfer-steps">
+              <li>After a warehouse count, export PMP Data from the iPad.</li>
+              <li>Open PMP on the desktop and import that backup.</li>
+              <li>After desktop Orders, Receiving, or Truck Inventory work, export PMP Data from the desktop.</li>
+              <li>Import that backup on the iPad before the next warehouse count.</li>
+            </ol>
+          </article>
+        </div>
+      </section>
+
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.79</footer>
+    <footer>PMP Operations Center • Inventory build • v3.80</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -2838,6 +2908,14 @@
     const countReason = document.getElementById("count-reason");
     const clearCount = document.getElementById("clear-count");
     const applyCount = document.getElementById("apply-count");
+    const exportCountBackup = document.getElementById("export-count-backup");
+    const dataTransferScreen = document.getElementById("data-transfer-screen");
+    const backFromDataTransfer = document.getElementById("back-from-data-transfer");
+    const exportPmpData = document.getElementById("export-pmp-data");
+    const choosePmpData = document.getElementById("choose-pmp-data");
+    const importPmpData = document.getElementById("import-pmp-data");
+    const selectedBackupName = document.getElementById("selected-backup-name");
+    const dataTransferSummary = document.getElementById("data-transfer-summary");
     const inventoryHistoryScreen = document.getElementById("inventory-history-screen");
     const backFromInventoryHistory = document.getElementById("back-from-inventory-history");
     const inventoryHistoryBody = document.getElementById("inventory-history-body");
@@ -3541,7 +3619,79 @@
       countBody.querySelectorAll('.counted-qty').forEach((input)=>input.addEventListener('input',()=>{const row=input.closest('tr');const product=productData.find((item)=>String(item.item)===row.dataset.item);const cell=row.querySelector('.difference');if(input.value===''){cell.textContent='—';cell.className='difference';return;}const diff=Number(input.value)-Number(product.onHand);cell.textContent=diff>0?`+${diff}`:String(diff);cell.className='difference '+(diff===0?'match':'mismatch');}));
     }
     clearCount.addEventListener('click',()=>{countBody.querySelectorAll('input').forEach((input)=>input.value='');countBody.querySelectorAll('.difference').forEach((cell)=>{cell.textContent='—';cell.className='difference';});showNotice('Physical count cleared.');});
-    applyCount.addEventListener('click',()=>{const changed=[];countBody.querySelectorAll('tr[data-item]').forEach((row)=>{const input=row.querySelector('.counted-qty');if(input.value==='')return;const product=productData.find((item)=>String(item.item)===row.dataset.item);const previous=Number(product.onHand),counted=Number(input.value);if(counted!==previous){changed.push({item:product.item,product:product.name,previous,counted,difference:counted-previous,note:row.querySelector('.count-note').value.trim()});product.onHand=counted;updateUseRemainingAtZero(product);}});if(!changed.length){showNotice('No inventory differences were entered.');return;}const overrides={};productData.forEach((product)=>overrides[product.item]=product.onHand);localStorage.setItem('pmpInventoryOverrides_v3_2',JSON.stringify(overrides));const history=JSON.parse(localStorage.getItem('pmpPhysicalCountHistory_v3_2')||'[]');history.push({date:countDate.value,countedBy:countedBy.value.trim(),location:countLocation.value.trim(),reason:countReason.value,changes:changed,savedAt:new Date().toISOString()});localStorage.setItem('pmpPhysicalCountHistory_v3_2',JSON.stringify(history));renderProducts();renderPhysicalCount();showNotice(`${changed.length} inventory ${changed.length===1?'quantity':'quantities'} updated.`);});
+
+    function pmpStorageSnapshot(){
+      const records={};
+      for(let i=0;i<localStorage.length;i++){
+        const key=localStorage.key(i);
+        if(key && key.startsWith('pmp')) records[key]=localStorage.getItem(key);
+      }
+      return records;
+    }
+    function pmpBackupFileName(){
+      const now=new Date();
+      const stamp=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-')+'_'+[String(now.getHours()).padStart(2,'0'),String(now.getMinutes()).padStart(2,'0')].join('');
+      return `PMP_Data_Backup_${stamp}.json`;
+    }
+    function exportPmpBackup(){
+      const records=pmpStorageSnapshot();
+      const payload={
+        format:'PMP Operations Center Data Backup',
+        schemaVersion:1,
+        appVersion:'3.80',
+        exportedAt:new Date().toISOString(),
+        sourceDevice:isIPadWarehouse?'iPad':'Desktop',
+        recordCount:Object.keys(records).length,
+        records
+      };
+      const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+      const url=URL.createObjectURL(blob);
+      const link=document.createElement('a');
+      link.href=url;link.download=pmpBackupFileName();document.body.appendChild(link);link.click();link.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),1500);
+      const when=new Date(payload.exportedAt).toLocaleString();
+      localStorage.setItem('pmpLastDataExport_v3_80',payload.exportedAt);
+      if(dataTransferSummary)dataTransferSummary.textContent=`Exported ${payload.recordCount} saved PMP data records from this ${payload.sourceDevice} on ${when}.`;
+      showNotice('PMP data backup exported. Save the file for transfer to the other device.');
+    }
+    function updateDataTransferSummary(){
+      if(!dataTransferSummary)return;
+      const count=Object.keys(pmpStorageSnapshot()).length;
+      const lastExport=localStorage.getItem('pmpLastDataExport_v3_80');
+      const lastImport=localStorage.getItem('pmpLastDataImport_v3_80');
+      const parts=[`${count} saved PMP data record${count===1?'':'s'} on this device.`];
+      if(lastExport)parts.push(`Last export: ${new Date(lastExport).toLocaleString()}.`);
+      if(lastImport)parts.push(`Last import: ${new Date(lastImport).toLocaleString()}.`);
+      dataTransferSummary.textContent=parts.join(' ');
+    }
+    async function importPmpBackupFile(file){
+      if(!file)return;
+      if(selectedBackupName)selectedBackupName.textContent=file.name;
+      let payload;
+      try{payload=JSON.parse(await file.text())}catch(error){showNotice('That file is not a valid PMP JSON backup.');return}
+      if(!payload || payload.format!=='PMP Operations Center Data Backup' || !payload.records || typeof payload.records!=='object'){
+        showNotice('That file is not a recognized PMP Operations Center backup.');return;
+      }
+      const source=payload.sourceDevice||'another device';
+      const exported=payload.exportedAt?new Date(payload.exportedAt).toLocaleString():'an unknown time';
+      const count=Object.keys(payload.records).length;
+      const approved=window.confirm(`Import ${count} PMP data records exported from ${source} on ${exported}?\n\nThis replaces the PMP data currently stored in this browser.`);
+      if(!approved){if(importPmpData)importPmpData.value='';return}
+      const currentKeys=[];
+      for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key&&key.startsWith('pmp'))currentKeys.push(key)}
+      currentKeys.forEach(key=>localStorage.removeItem(key));
+      Object.entries(payload.records).forEach(([key,value])=>{if(key.startsWith('pmp') && typeof value==='string')localStorage.setItem(key,value)});
+      localStorage.setItem('pmpLastDataImport_v3_80',new Date().toISOString());
+      alert('PMP data imported successfully. The app will reload now.');
+      window.location.reload();
+    }
+    if(exportPmpData)exportPmpData.addEventListener('click',exportPmpBackup);
+    if(exportCountBackup)exportCountBackup.addEventListener('click',exportPmpBackup);
+    if(choosePmpData)choosePmpData.addEventListener('click',()=>importPmpData.click());
+    if(importPmpData)importPmpData.addEventListener('change',()=>importPmpBackupFile(importPmpData.files&&importPmpData.files[0]));
+    if(backFromDataTransfer)backFromDataTransfer.addEventListener('click',()=>{dataTransferScreen.classList.remove('active');inventoryScreen.classList.add('active')});
+
+    applyCount.addEventListener('click',()=>{const changed=[];countBody.querySelectorAll('tr[data-item]').forEach((row)=>{const input=row.querySelector('.counted-qty');if(input.value==='')return;const product=productData.find((item)=>String(item.item)===row.dataset.item);const previous=Number(product.onHand),counted=Number(input.value);if(counted!==previous){changed.push({item:product.item,product:product.name,previous,counted,difference:counted-previous,note:row.querySelector('.count-note').value.trim()});product.onHand=counted;updateUseRemainingAtZero(product);}});if(!changed.length){showNotice('No inventory differences were entered.');return;}const overrides={};productData.forEach((product)=>overrides[product.item]=product.onHand);localStorage.setItem('pmpInventoryOverrides_v3_2',JSON.stringify(overrides));const history=JSON.parse(localStorage.getItem('pmpPhysicalCountHistory_v3_2')||'[]');history.push({date:countDate.value,countedBy:countedBy.value.trim(),location:countLocation.value.trim(),reason:countReason.value,changes:changed,savedAt:new Date().toISOString()});localStorage.setItem('pmpPhysicalCountHistory_v3_2',JSON.stringify(history));renderProducts();renderPhysicalCount();showNotice(`${changed.length} inventory ${changed.length===1?'quantity':'quantities'} updated on this device. Export a data backup to transfer the count.`);});
     backFromCount.addEventListener('click',()=>{countScreen.classList.remove('active');productManagerMenuScreen.classList.add('active');});
 
 
@@ -4056,6 +4206,7 @@
         }
         if (tile.dataset.module === "Technician Inventory") {inventoryScreen.classList.remove("active");technicianInventoryScreen.classList.add("active");return;}
         if (tile.dataset.module === "Inventory History") {inventoryScreen.classList.remove("active");inventoryHistoryScreen.classList.add("active");renderInventoryHistory();return;}
+        if (tile.dataset.module === "Data Backup & Transfer") {inventoryScreen.classList.remove("active");dataTransferScreen.classList.add("active");updateDataTransferSummary();return;}
         if (tile.dataset.module === "Price Review") {inventoryScreen.classList.remove("active");priceReviewScreen.classList.add("active");renderPriceReview();return;}
         if (tile.dataset.module === "Physical Count") {
           inventoryScreen.classList.remove("active");
@@ -4306,6 +4457,7 @@
     }
     closeTruckProfile.onclick=()=>{resetTruckInventoryToDirectory()};
     renderTruckDirectory();
+    updateDataTransferSummary();
 </script>
 
 </body>
