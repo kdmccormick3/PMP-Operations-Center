@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.65</title>
+  <title>PMP Operations Center v3.66</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -2081,7 +2081,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.65</div>
+      <div class="status-badge">INVENTORY BUILD • v3.66</div>
     </header>
 
     <main>
@@ -2172,10 +2172,10 @@
             <p>Open minimums, ordering, receiving, physical count, and price review.</p>
           </button>
 
-          <button class="module-tile" type="button" data-module="Technician Usage">
-            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><path d="M4 21v-3a5 5 0 0 1 10 0v3"/><path d="M16 8h5"/><path d="m19 5 3 3-3 3"/></svg></div>
-            <h3 id="technician-usage-card-title">Technician Usage</h3>
-            <p id="technician-usage-card-copy">Upload checkout PDFs, review product matches, and track technician spend.</p>
+          <button class="module-tile" type="button" data-module="Technician Inventory">
+            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="7" r="3"/><path d="M3 21v-3a5 5 0 0 1 10 0v3"/><path d="M15 8h6v7h-6z"/><path d="M17 15v3h4v-3"/></svg></div>
+            <h3 id="technician-inventory-card-title">Technician Inventory</h3>
+            <p id="technician-inventory-card-copy">Manage technician usage and truck inventory in one place.</p>
           </button>
 
           <button class="module-tile" type="button" data-module="Inventory History">
@@ -2544,7 +2544,46 @@
         </div>
       </section>
 
-      <section id="usage-screen" class="screen usage-screen" aria-label="Technician checkout"><div class="usage-shell"><div class="inventory-header"><div class="inventory-title"><h2 id="usage-screen-title">Technician Checkout</h2><p id="usage-screen-copy">Upload one or more technician checkout PDFs. The technician, checkout date, order number, quantities, and historical prices are read directly from each document.</p></div><button id="back-from-usage" class="back-button" type="button">← Back to Inventory</button></div><div class="usage-summary"><div class="money-card checkout-current-card"><span>This Checkout</span><strong id="checkout-value">$0.00</strong></div><div class="money-card"><span>Total Product Value Issued</span><strong id="issued-value">$0.00</strong></div></div><div class="usage-tools"><label id="checkout-drop-zone" class="upload-label"><strong>Drag & Drop Checkout PDFs Here</strong><span>Drop multiple PDFs at once, or click to choose them</span><input id="checkout-pdf" type="file" accept="application/pdf" multiple></label><button id="clear-usage" class="action-button" type="button">Clear Review</button></div><div id="checkout-detected" style="display:none;margin:0 0 16px;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:#f7fafc;font-weight:600"></div><div class="review-toolbar"><div class="review-toolbar-copy"><strong>Checkout Review</strong><span>Compare the parsed items with the original checkout documents before posting.</span></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><select id="pdf-preview-select" class="usage-product" aria-label="Select PDF to preview" disabled style="min-width:240px"><option value="">Select PDF…</option></select><button id="open-pdf-preview" class="preview-button" type="button" disabled>View Selected PDF ↗</button></div></div><div class="usage-table-wrap"><table class="usage-table"><thead><tr><th>Use</th><th>PDF Description</th><th>Matched Product</th><th>Qty</th><th>Unit Price</th><th>Price UOM</th><th>Extended Cost</th><th>Status</th></tr></thead><tbody id="usage-body"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">Upload a checkout PDF to begin.</td></tr></tbody></table></div><div id="tech-directory" class="tech-spend-panel"><div class="tech-spend-title"><h3>Technician Usage</h3><p>Select a technician to open their checkout history.</p></div><div id="tech-spend-body" class="technician-card-grid"></div></div><div id="tech-profile" class="tech-profile"><div class="tech-profile-header"><div><h3 id="tech-profile-name">Technician</h3><p id="tech-profile-summary">Checkout history</p></div><button id="close-tech-profile" class="tech-profile-close" type="button">← Back to Technicians</button></div><div class="tech-history-wrap"><table class="tech-history-table checkout-history-table"><thead><tr><th>Checkout Date</th><th>Order #</th><th>Items</th><th>Total Value</th><th></th></tr></thead><tbody id="tech-history-body"></tbody></table></div></div><div class="usage-actions"><button id="post-checkout" class="action-button primary" type="button">Post Approved Checkout</button></div></div></section>
+      <section id="technician-inventory-screen" class="screen" aria-label="Technician Inventory">
+        <div class="inventory-header">
+          <div class="inventory-title">
+            <h2>Technician Inventory</h2>
+            <p>Choose technician usage or truck inventory.</p>
+          </div>
+          <button id="back-from-technician-inventory" class="back-button" type="button">← Back to Inventory</button>
+        </div>
+        <section class="module-grid" aria-label="Technician Inventory tools">
+          <button class="module-tile technician-inventory-tile" type="button" data-technician-module="Usage">
+            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><path d="M4 21v-3a5 5 0 0 1 10 0v3"/><path d="M16 8h5"/><path d="m19 5 3 3-3 3"/></svg></div>
+            <h3>Technician Usage</h3>
+            <p>Upload Forsite checkout PDFs, review product usage, and track technician spend.</p>
+          </button>
+          <button class="module-tile technician-inventory-tile" type="button" data-technician-module="Truck">
+            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 6h11v10H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg></div>
+            <h3>Truck Inventory</h3>
+            <p>Upload Cognito truck counts, review field inventory, and track inventory value by technician.</p>
+          </button>
+        </section>
+      </section>
+
+      <section id="truck-inventory-screen" class="screen" aria-label="Truck Inventory">
+        <div class="inventory-header">
+          <div class="inventory-title">
+            <h2>Truck Inventory</h2>
+            <p>Technician truck counts and on-truck inventory value.</p>
+          </div>
+          <button id="back-from-truck-inventory" class="back-button" type="button">← Back to Technician Inventory</button>
+        </div>
+        <section class="module-grid" aria-label="Truck Inventory setup">
+          <div class="module-tile" style="cursor:default">
+            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 6h11v10H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg></div>
+            <h3>Cognito Truck Inventory</h3>
+            <p>This is the new home for truck inventory uploads, technician truck counts, and inventory value. We will build this workflow one step at a time.</p>
+          </div>
+        </section>
+      </section>
+
+      <section id="usage-screen" class="screen usage-screen" aria-label="Technician checkout"><div class="usage-shell"><div class="inventory-header"><div class="inventory-title"><h2 id="usage-screen-title">Technician Checkout</h2><p id="usage-screen-copy">Upload one or more technician checkout PDFs. The technician, checkout date, order number, quantities, and historical prices are read directly from each document.</p></div><button id="back-from-usage" class="back-button" type="button">← Back to Technician Inventory</button></div><div class="usage-summary"><div class="money-card checkout-current-card"><span>This Checkout</span><strong id="checkout-value">$0.00</strong></div><div class="money-card"><span>Total Product Value Issued</span><strong id="issued-value">$0.00</strong></div></div><div class="usage-tools"><label id="checkout-drop-zone" class="upload-label"><strong>Drag & Drop Checkout PDFs Here</strong><span>Drop multiple PDFs at once, or click to choose them</span><input id="checkout-pdf" type="file" accept="application/pdf" multiple></label><button id="clear-usage" class="action-button" type="button">Clear Review</button></div><div id="checkout-detected" style="display:none;margin:0 0 16px;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:#f7fafc;font-weight:600"></div><div class="review-toolbar"><div class="review-toolbar-copy"><strong>Checkout Review</strong><span>Compare the parsed items with the original checkout documents before posting.</span></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><select id="pdf-preview-select" class="usage-product" aria-label="Select PDF to preview" disabled style="min-width:240px"><option value="">Select PDF…</option></select><button id="open-pdf-preview" class="preview-button" type="button" disabled>View Selected PDF ↗</button></div></div><div class="usage-table-wrap"><table class="usage-table"><thead><tr><th>Use</th><th>PDF Description</th><th>Matched Product</th><th>Qty</th><th>Unit Price</th><th>Price UOM</th><th>Extended Cost</th><th>Status</th></tr></thead><tbody id="usage-body"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">Upload a checkout PDF to begin.</td></tr></tbody></table></div><div id="tech-directory" class="tech-spend-panel"><div class="tech-spend-title"><h3>Technician Usage</h3><p>Select a technician to open their checkout history.</p></div><div id="tech-spend-body" class="technician-card-grid"></div></div><div id="tech-profile" class="tech-profile"><div class="tech-profile-header"><div><h3 id="tech-profile-name">Technician</h3><p id="tech-profile-summary">Checkout history</p></div><button id="close-tech-profile" class="tech-profile-close" type="button">← Back to Technicians</button></div><div class="tech-history-wrap"><table class="tech-history-table checkout-history-table"><thead><tr><th>Checkout Date</th><th>Order #</th><th>Items</th><th>Total Value</th><th></th></tr></thead><tbody id="tech-history-body"></tbody></table></div></div><div class="usage-actions"><button id="post-checkout" class="action-button primary" type="button">Post Approved Checkout</button></div></div></section>
       <section id="count-screen" class="screen count-screen" aria-label="Physical inventory count">
         <div class="count-shell">
           <div class="inventory-header">
@@ -2563,7 +2602,7 @@
       </section>
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.65</footer>
+    <footer>PMP Operations Center • Inventory build • v3.66</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -2573,16 +2612,20 @@
     const isIPadWarehouse = /iPad/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     if (isIPadWarehouse) {
       document.body.classList.add("warehouse-mode");
-      const usageCardCopy = document.getElementById("technician-usage-card-copy");
+      const usageCardCopy = document.getElementById("technician-inventory-card-copy");
       const usageTitle = document.getElementById("usage-screen-title");
       const usageCopy = document.getElementById("usage-screen-copy");
-      if (usageCardCopy) usageCardCopy.textContent = "View technician checkout history and issued-product totals.";
+      if (usageCardCopy) usageCardCopy.textContent = "Open technician usage history or truck inventory.";
       if (usageTitle) usageTitle.textContent = "Technician Usage";
       if (usageCopy) usageCopy.textContent = "Warehouse read-only view of technician checkout history and product value issued.";
     }
 
     const dashboardScreen = document.getElementById("dashboard-screen");
     const inventoryScreen = document.getElementById("inventory-screen");
+    const technicianInventoryScreen = document.getElementById("technician-inventory-screen");
+    const truckInventoryScreen = document.getElementById("truck-inventory-screen");
+    const backFromTechnicianInventory = document.getElementById("back-from-technician-inventory");
+    const backFromTruckInventory = document.getElementById("back-from-truck-inventory");
     const productManagerMenuScreen = document.getElementById("product-manager-menu-screen");
     const backFromProductManagerMenu = document.getElementById("back-from-product-manager-menu");
     const productsScreen = document.getElementById("products-screen");
@@ -3841,7 +3884,7 @@
     };
     backFromUsage.onclick=()=>{
       usageScreen.classList.remove('active','profile-mode');
-      inventoryScreen.classList.add('active');
+      technicianInventoryScreen.classList.add('active');
       techProfile.classList.remove('active');
       document.getElementById('tech-directory').classList.remove('hidden');
     };
@@ -3874,7 +3917,7 @@
           productManagerMenuScreen.classList.add("active");
           return;
         }
-        if (tile.dataset.module === "Technician Usage") {inventoryScreen.classList.remove("active");usageScreen.classList.add("active");refreshMoneyCards();return;}
+        if (tile.dataset.module === "Technician Inventory") {inventoryScreen.classList.remove("active");technicianInventoryScreen.classList.add("active");return;}
         if (tile.dataset.module === "Inventory History") {inventoryScreen.classList.remove("active");inventoryHistoryScreen.classList.add("active");renderInventoryHistory();return;}
         if (tile.dataset.module === "Price Review") {inventoryScreen.classList.remove("active");priceReviewScreen.classList.add("active");renderPriceReview();return;}
         if (tile.dataset.module === "Physical Count") {
@@ -3884,6 +3927,28 @@
           return;
         }
         showNotice(tile.dataset.module + " is waiting until Products is complete.");
+      });
+    });
+
+    backFromTechnicianInventory.onclick = () => {
+      technicianInventoryScreen.classList.remove("active");
+      inventoryScreen.classList.add("active");
+    };
+    backFromTruckInventory.onclick = () => {
+      truckInventoryScreen.classList.remove("active");
+      technicianInventoryScreen.classList.add("active");
+    };
+    document.querySelectorAll(".technician-inventory-tile").forEach((tile) => {
+      tile.addEventListener("click", () => {
+        technicianInventoryScreen.classList.remove("active");
+        if (tile.dataset.technicianModule === "Usage") {
+          usageScreen.classList.add("active");
+          refreshMoneyCards();
+          return;
+        }
+        if (tile.dataset.technicianModule === "Truck") {
+          truckInventoryScreen.classList.add("active");
+        }
       });
     });
 
