@@ -821,7 +821,7 @@
 
     @media(max-width:1100px){.technician-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:650px){.technician-card-grid{grid-template-columns:1fr}}
-    /* v3.76 — Orders opens as technician directory; upload/review lives inside technician workspace */
+    /* v3.77 — Orders opens as technician directory; upload/review lives inside technician workspace */
     .usage-screen.directory-mode .usage-summary,
     .usage-screen.directory-mode .usage-tools,
     .usage-screen.directory-mode #checkout-detected,
@@ -837,6 +837,12 @@
       margin:0;
     }
     .usage-screen.profile-mode .tech-history-wrap{overflow:auto}
+    /* v3.77 — Selected Orders technician mirrors the Truck Inventory workspace */
+    .usage-screen.profile-mode .inventory-header,
+    .usage-screen.profile-mode .usage-summary,
+    .usage-screen.profile-mode .tech-profile{flex:0 0 auto}
+    body.warehouse-mode #usage-screen.profile-mode .usage-shell{height:auto;min-height:100%}
+    body.warehouse-mode #usage-screen.profile-mode .tech-profile{display:block!important}
 
   
     .checkout-review-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr);gap:18px;align-items:start;margin-bottom:18px}
@@ -3551,10 +3557,11 @@
       document.getElementById('tech-directory').classList.add('hidden');
       usageScreen.classList.remove('directory-mode');
       usageScreen.classList.add('profile-mode');
-      usageTitle.textContent=name+' Orders';
-      usageCopy.textContent='Upload checkout PDFs, review the parsed order, post approved items, and view '+name+"'s order history.";
+      usageTitle.textContent='Orders';
+      usageCopy.textContent='Upload checkout PDFs, review the parsed order, and view '+name+"'s order history.";
+      issuedValue.textContent=money(total);
       techProfile.classList.add('active');
-      techProfile.scrollIntoView({behavior:'auto',block:'start'});
+      window.scrollTo({top:0,behavior:'auto'});
     }
         function getPriceReviewRows(){
       const history=JSON.parse(localStorage.getItem('pmpTechnicianCheckoutHistory_v3_2')||'[]');
@@ -3913,7 +3920,8 @@
       usageTitle.textContent='Orders';
       usageCopy.textContent='Select a technician to review orders, upload checkout PDFs, and view order history.';
       document.getElementById('tech-directory').classList.remove('hidden');
-      document.getElementById('tech-directory').scrollIntoView({behavior:'auto',block:'start'});
+      refreshMoneyCards();
+      window.scrollTo({top:0,behavior:'auto'});
     };
     backFromUsage.onclick=()=>{
       usageScreen.classList.remove('active','profile-mode','directory-mode');
