@@ -2187,6 +2187,18 @@
     .data-transfer-note{font-size:.86rem;color:var(--muted);margin-top:12px}
     .data-transfer-steps{margin:0;padding-left:20px;color:var(--text);line-height:1.65}
     .data-transfer-danger{border:1px solid #efb5ba;background:#fff5f6;color:#7d1720;border-radius:12px;padding:12px 14px;margin-top:14px;font-size:.88rem}
+    .backup-preview{display:none;margin-top:14px;border:1px solid #cbd5e1;background:#f8fafc;border-radius:12px;padding:14px;color:var(--text)}
+    .backup-preview.active{display:block}
+    .backup-preview h4{margin:0 0 10px;color:var(--navy-dark);font-size:1rem}
+    .backup-preview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px;font-size:.88rem}
+    .backup-preview-grid span{color:var(--muted)}
+    .backup-preview-grid strong{display:block;color:var(--text);margin-top:2px;overflow-wrap:anywhere}
+    .backup-preview-actions{display:flex;gap:10px;margin-top:14px}
+    .backup-preview-actions .action-button{width:auto;flex:1}
+    .backup-success{display:none;margin-top:14px;border:1px solid #9fd0ae;background:#f2fbf5;color:#155b31;border-radius:12px;padding:13px 14px;font-size:.9rem;line-height:1.45}
+    .backup-success.active{display:block}
+    .backup-success strong{display:block;margin-bottom:3px}
+    @media(max-width:520px){.backup-preview-grid{grid-template-columns:1fr}.backup-preview-actions{flex-direction:column}}
     #export-count-backup{background:#176b3a;border-color:#176b3a}
     @media(max-width:760px){.data-transfer-grid{grid-template-columns:1fr}.data-transfer-card{padding:18px}.data-transfer-shell{gap:14px}}
 
@@ -2772,6 +2784,7 @@
               <p>Creates one PMP backup file containing warehouse counts, minimums, prices, receiving history, orders, truck inventory, and other saved PMP records.</p>
               <button id="export-pmp-data" class="action-button primary" type="button">Export PMP Data</button>
               <div class="data-transfer-note">On iPad, save the downloaded JSON file to Files, iCloud Drive, Google Drive, or email it to yourself.</div>
+              <div id="backup-export-success" class="backup-success" role="status" aria-live="polite"></div>
             </article>
 
             <article class="data-transfer-card">
@@ -2780,6 +2793,14 @@
               <button id="choose-pmp-data" class="action-button" type="button">Choose PMP Backup File</button>
               <input id="import-pmp-data" class="data-transfer-file" type="file" accept="application/json,.json" />
               <div id="selected-backup-name" class="data-transfer-note">No backup file selected.</div>
+              <div id="backup-import-preview" class="backup-preview" aria-live="polite">
+                <h4>Review backup before importing</h4>
+                <div id="backup-import-details" class="backup-preview-grid"></div>
+                <div class="backup-preview-actions">
+                  <button id="cancel-pmp-import" class="action-button" type="button">Cancel</button>
+                  <button id="confirm-pmp-import" class="action-button primary" type="button">Import This Backup</button>
+                </div>
+              </div>
               <div class="data-transfer-danger"><strong>Important:</strong> Export a backup from the receiving device first if it contains information you may need. Importing replaces its current PMP browser data.</div>
             </article>
           </div>
@@ -2798,7 +2819,7 @@
 
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.80</footer>
+    <footer>PMP Operations Center • Inventory build • v3.81</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -2916,6 +2937,12 @@
     const importPmpData = document.getElementById("import-pmp-data");
     const selectedBackupName = document.getElementById("selected-backup-name");
     const dataTransferSummary = document.getElementById("data-transfer-summary");
+    const backupExportSuccess = document.getElementById("backup-export-success");
+    const backupImportPreview = document.getElementById("backup-import-preview");
+    const backupImportDetails = document.getElementById("backup-import-details");
+    const cancelPmpImport = document.getElementById("cancel-pmp-import");
+    const confirmPmpImport = document.getElementById("confirm-pmp-import");
+    let selectedPmpBackupPayload = null;
     const inventoryHistoryScreen = document.getElementById("inventory-history-screen");
     const backFromInventoryHistory = document.getElementById("back-from-inventory-history");
     const inventoryHistoryBody = document.getElementById("inventory-history-body");
@@ -3638,7 +3665,7 @@
       const payload={
         format:'PMP Operations Center Data Backup',
         schemaVersion:1,
-        appVersion:'3.80',
+        appVersion:'3.81',
         exportedAt:new Date().toISOString(),
         sourceDevice:isIPadWarehouse?'iPad':'Desktop',
         recordCount:Object.keys(records).length,
@@ -3646,25 +3673,41 @@
       };
       const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
       const url=URL.createObjectURL(blob);
+      const fileName=pmpBackupFileName();
       const link=document.createElement('a');
-      link.href=url;link.download=pmpBackupFileName();document.body.appendChild(link);link.click();link.remove();
+      link.href=url;link.download=fileName;document.body.appendChild(link);link.click();link.remove();
       setTimeout(()=>URL.revokeObjectURL(url),1500);
       const when=new Date(payload.exportedAt).toLocaleString();
-      localStorage.setItem('pmpLastDataExport_v3_80',payload.exportedAt);
+      localStorage.setItem('pmpLastDataExport_v3_81',payload.exportedAt);
       if(dataTransferSummary)dataTransferSummary.textContent=`Exported ${payload.recordCount} saved PMP data records from this ${payload.sourceDevice} on ${when}.`;
-      showNotice('PMP data backup exported. Save the file for transfer to the other device.');
+      if(backupExportSuccess){backupExportSuccess.innerHTML=`<strong>Backup created successfully</strong>${fileName}<br>${when} • ${payload.recordCount} saved PMP data records`;backupExportSuccess.classList.add('active');}
+      showNotice(`Backup created: ${fileName}`);
     }
     function updateDataTransferSummary(){
       if(!dataTransferSummary)return;
       const count=Object.keys(pmpStorageSnapshot()).length;
-      const lastExport=localStorage.getItem('pmpLastDataExport_v3_80');
-      const lastImport=localStorage.getItem('pmpLastDataImport_v3_80');
+      const lastExport=localStorage.getItem('pmpLastDataExport_v3_81');
+      const lastImport=localStorage.getItem('pmpLastDataImport_v3_81');
       const parts=[`${count} saved PMP data record${count===1?'':'s'} on this device.`];
       if(lastExport)parts.push(`Last export: ${new Date(lastExport).toLocaleString()}.`);
       if(lastImport)parts.push(`Last import: ${new Date(lastImport).toLocaleString()}.`);
       dataTransferSummary.textContent=parts.join(' ');
     }
+    function backupRecordArrayCount(records,key){
+      try{const value=JSON.parse(records[key]||'[]');return Array.isArray(value)?value.length:0}catch(error){return 0}
+    }
+    function backupRecordObjectCount(records,key){
+      try{const value=JSON.parse(records[key]||'{}');return value&&typeof value==='object'&&!Array.isArray(value)?Object.keys(value).length:0}catch(error){return 0}
+    }
+    function resetPmpImportSelection(){
+      selectedPmpBackupPayload=null;
+      if(importPmpData)importPmpData.value='';
+      if(selectedBackupName)selectedBackupName.textContent='No backup file selected.';
+      if(backupImportPreview)backupImportPreview.classList.remove('active');
+      if(backupImportDetails)backupImportDetails.innerHTML='';
+    }
     async function importPmpBackupFile(file){
+      resetPmpImportSelection();
       if(!file)return;
       if(selectedBackupName)selectedBackupName.textContent=file.name;
       let payload;
@@ -3672,16 +3715,35 @@
       if(!payload || payload.format!=='PMP Operations Center Data Backup' || !payload.records || typeof payload.records!=='object'){
         showNotice('That file is not a recognized PMP Operations Center backup.');return;
       }
-      const source=payload.sourceDevice||'another device';
-      const exported=payload.exportedAt?new Date(payload.exportedAt).toLocaleString():'an unknown time';
+      selectedPmpBackupPayload=payload;
+      const source=payload.sourceDevice||'Unknown device';
+      const exported=payload.exportedAt?new Date(payload.exportedAt).toLocaleString():'Unknown date';
       const count=Object.keys(payload.records).length;
-      const approved=window.confirm(`Import ${count} PMP data records exported from ${source} on ${exported}?\n\nThis replaces the PMP data currently stored in this browser.`);
-      if(!approved){if(importPmpData)importPmpData.value='';return}
+      const productCount=backupRecordObjectCount(payload.records,'pmpInventoryOverrides_v3_2');
+      const physicalCounts=backupRecordArrayCount(payload.records,'pmpPhysicalCountHistory_v3_2');
+      const orders=backupRecordArrayCount(payload.records,'pmpTechnicianCheckoutHistory_v3_2');
+      const truckInventories=backupRecordArrayCount(payload.records,'pmpTruckInventoryHistory_v3_67');
+      if(backupImportDetails)backupImportDetails.innerHTML=`
+        <div><span>File</span><strong>${file.name}</strong></div>
+        <div><span>Backup date</span><strong>${exported}</strong></div>
+        <div><span>Source device</span><strong>${source}</strong></div>
+        <div><span>App version</span><strong>v${payload.appVersion||'Unknown'}</strong></div>
+        <div><span>Products with saved counts</span><strong>${productCount}</strong></div>
+        <div><span>Physical-count records</span><strong>${physicalCounts}</strong></div>
+        <div><span>Order records</span><strong>${orders}</strong></div>
+        <div><span>Truck inventory records</span><strong>${truckInventories}</strong></div>
+        <div><span>Total saved PMP records</span><strong>${count}</strong></div>`;
+      if(backupImportPreview)backupImportPreview.classList.add('active');
+      showNotice('Backup loaded for review. Nothing has been imported yet.');
+    }
+    function confirmPmpBackupImport(){
+      const payload=selectedPmpBackupPayload;
+      if(!payload){showNotice('Choose a PMP backup file first.');return}
       const currentKeys=[];
       for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key&&key.startsWith('pmp'))currentKeys.push(key)}
       currentKeys.forEach(key=>localStorage.removeItem(key));
       Object.entries(payload.records).forEach(([key,value])=>{if(key.startsWith('pmp') && typeof value==='string')localStorage.setItem(key,value)});
-      localStorage.setItem('pmpLastDataImport_v3_80',new Date().toISOString());
+      localStorage.setItem('pmpLastDataImport_v3_81',new Date().toISOString());
       alert('PMP data imported successfully. The app will reload now.');
       window.location.reload();
     }
@@ -3689,6 +3751,8 @@
     if(exportCountBackup)exportCountBackup.addEventListener('click',exportPmpBackup);
     if(choosePmpData)choosePmpData.addEventListener('click',()=>importPmpData.click());
     if(importPmpData)importPmpData.addEventListener('change',()=>importPmpBackupFile(importPmpData.files&&importPmpData.files[0]));
+    if(cancelPmpImport)cancelPmpImport.addEventListener('click',resetPmpImportSelection);
+    if(confirmPmpImport)confirmPmpImport.addEventListener('click',confirmPmpBackupImport);
     if(backFromDataTransfer)backFromDataTransfer.addEventListener('click',()=>{dataTransferScreen.classList.remove('active');inventoryScreen.classList.add('active')});
 
     applyCount.addEventListener('click',()=>{const changed=[];countBody.querySelectorAll('tr[data-item]').forEach((row)=>{const input=row.querySelector('.counted-qty');if(input.value==='')return;const product=productData.find((item)=>String(item.item)===row.dataset.item);const previous=Number(product.onHand),counted=Number(input.value);if(counted!==previous){changed.push({item:product.item,product:product.name,previous,counted,difference:counted-previous,note:row.querySelector('.count-note').value.trim()});product.onHand=counted;updateUseRemainingAtZero(product);}});if(!changed.length){showNotice('No inventory differences were entered.');return;}const overrides={};productData.forEach((product)=>overrides[product.item]=product.onHand);localStorage.setItem('pmpInventoryOverrides_v3_2',JSON.stringify(overrides));const history=JSON.parse(localStorage.getItem('pmpPhysicalCountHistory_v3_2')||'[]');history.push({date:countDate.value,countedBy:countedBy.value.trim(),location:countLocation.value.trim(),reason:countReason.value,changes:changed,savedAt:new Date().toISOString()});localStorage.setItem('pmpPhysicalCountHistory_v3_2',JSON.stringify(history));renderProducts();renderPhysicalCount();showNotice(`${changed.length} inventory ${changed.length===1?'quantity':'quantities'} updated on this device. Export a data backup to transfer the count.`);});
