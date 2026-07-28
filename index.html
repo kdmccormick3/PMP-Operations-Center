@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v4.04</title>
+  <title>PMP Operations Center v4.05</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -2214,6 +2214,31 @@
     .cloud-success strong{display:block;font-size:1rem;margin-bottom:4px}
     #initialize-cloud-data.cloud-complete{background:#2f7d4a;border-color:#2f7d4a;color:#fff;cursor:default;opacity:1}
     #initialize-cloud-data[hidden]{display:none !important;}
+  
+
+    /* v4.05 — trustworthy inventory summary and Cloud Manager page positioning */
+    .products-summary {display:grid;grid-template-columns:repeat(6,minmax(0,1fr)) minmax(190px,1.45fr);gap:9px}
+    .products-summary-item{min-width:0;background:rgba(255,255,255,.97);border:2px solid rgba(255,255,255,.4);border-radius:11px;padding:9px 11px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
+    .products-summary-item span{display:block;color:var(--muted);font-size:.68rem;font-weight:800;letter-spacing:.035em;line-height:1.15;text-transform:uppercase}
+    .products-summary-item strong{display:block;margin-top:4px;color:var(--navy-dark);font-size:1.06rem;line-height:1.1}
+    .products-summary-value strong{white-space:nowrap}
+    .products-view-count{color:rgba(255,255,255,.9);font-size:.78rem;font-weight:700;text-align:right;margin-top:-7px;padding-right:2px}
+    #data-transfer-screen{justify-content:flex-start;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:28px}
+    #data-transfer-screen .data-transfer-shell{height:auto;min-height:100%;padding-top:2px;padding-bottom:28px}
+    #data-transfer-screen .inventory-header{flex:0 0 auto;margin-bottom:18px}
+    @media (max-width:1180px){.products-summary{grid-template-columns:repeat(4,minmax(0,1fr))}.products-summary-value{grid-column:span 2}}
+    @media (max-width:900px) and (orientation:portrait){
+      #data-transfer-screen{padding-top:8px}
+      #data-transfer-screen .data-transfer-shell{width:100%;max-width:100%;padding-left:12px;padding-right:12px}
+      #data-transfer-screen .inventory-header{width:100%;max-width:100%;align-items:stretch;flex-direction:column;gap:12px;margin-bottom:14px}
+      #data-transfer-screen .inventory-title h2{font-size:1.65rem}
+      #data-transfer-screen .back-button{width:100%}
+      #data-transfer-screen .data-transfer-grid{grid-template-columns:1fr}
+      .products-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .products-summary-value{grid-column:1/-1}
+      .products-view-count{text-align:left;margin-top:-5px}
+    }
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -2225,7 +2250,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.04</div>
+      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.05</div>
     </header>
 
     <main>
@@ -2434,12 +2459,16 @@
             </table>
             <div id="products-empty" class="empty-state">No products match the current filters.</div>
           </div>
-          <div class="products-total-bar">
-            <span id="products-on-hand-count">Products on Hand: 0</span>
-            <div class="products-total-actions">
-              <strong id="products-inventory-total">Total Inventory Value: $0.00</strong>
-            </div>
+          <div class="products-summary" aria-label="Inventory summary">
+            <div class="products-summary-item"><span>Total Products</span><strong id="products-total-count">0</strong></div>
+            <div class="products-summary-item"><span>Active</span><strong id="products-active-count">0</strong></div>
+            <div class="products-summary-item"><span>Use Remaining</span><strong id="products-use-remaining-count">0</strong></div>
+            <div class="products-summary-item"><span>Inactive</span><strong id="products-inactive-count">0</strong></div>
+            <div class="products-summary-item"><span>With Stock</span><strong id="products-with-stock-count">0</strong></div>
+            <div class="products-summary-item"><span>Out of Stock</span><strong id="products-out-of-stock-count">0</strong></div>
+            <div class="products-summary-item products-summary-value"><span>Total Inventory Value</span><strong id="products-inventory-total">$0.00</strong></div>
           </div>
+          <div class="products-view-count" id="products-view-count">Showing 0 products</div>
         </div>
       </section>
 
@@ -2846,7 +2875,7 @@
 
     </main>
 
-    <footer>PMP Operations Center • Cloud Manager • v4.04</footer>
+    <footer>PMP Operations Center • v4.05</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -2931,7 +2960,7 @@
         if(!cloudReady || !cloudInitialized || applyingCloud || !stateRef) return;
         const revision=makeRevision();
         lastKnownRevision=revision;
-        setStatus("SAVING TO CLOUD • v4.04","warning");
+        setStatus("SAVING TO CLOUD • v4.05","warning");
         setDetail(`${reason}…`);
         try{
           await stateRef.set({
@@ -2944,11 +2973,11 @@
             updatedBy:auth.currentUser ? auth.currentUser.uid : "unknown"
           });
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD SYNCED • v4.04","ready");
+          setStatus("CLOUD SYNCED • v4.05","ready");
           setDetail(`Saved to cloud at ${new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}.`);
         }catch(error){
           console.error("PMP cloud save failed",error);
-          setStatus("CLOUD SAVE FAILED • v4.04","error");
+          setStatus("CLOUD SAVE FAILED • v4.05","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud data can be saved." : `Cloud save failed: ${error.message}`);
         }
       }
@@ -2976,7 +3005,7 @@
         if(!stateRef || !cloudReady) return;
         if(!confirm("Initialize Firebase using the PMP data currently stored on this device? Use the device with the authoritative inventory data.")) return;
         const revision=makeRevision();
-        setStatus("INITIALIZING CLOUD • v4.04","warning");
+        setStatus("INITIALIZING CLOUD • v4.05","warning");
         setDetail("Creating the first shared PMP cloud record…");
         try{
           await stateRef.set({
@@ -2992,7 +3021,7 @@
           cloudInitialized=true;
           lastKnownRevision=revision;
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD SYNCED • v4.04","ready");
+          setStatus("CLOUD SYNCED • v4.05","ready");
           setDetail("Cloud initialized from this device. Future PMP changes will synchronize automatically.");
           showCloudSuccess(`The Go-Live Master is now stored in Firebase. ${Object.keys(snapshotRecords()).length} PMP data records are synchronized and this device is live.`);
           setButtons();
@@ -3000,13 +3029,13 @@
           watchCloud();
         }catch(error){
           console.error("PMP cloud initialization failed",error);
-          setStatus("CLOUD SETUP BLOCKED • v4.04","error");
+          setStatus("CLOUD SETUP BLOCKED • v4.05","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud initialization." : `Cloud initialization failed: ${error.message}`);
         }
       }
       async function loadCloudData({reload=true}={}){
         if(!stateRef || !cloudReady) return;
-        setStatus("LOADING CLOUD DATA • v4.04","warning");
+        setStatus("LOADING CLOUD DATA • v4.05","warning");
         try{
           const snap=await stateRef.get();
           if(!snap.exists || !snap.data().initialized){
@@ -3021,14 +3050,14 @@
           lastKnownRevision=data.revision||"";
           replaceLocalRecords(data.records||{});
           localStorage.setItem("pmpCloudRevision_v4",lastKnownRevision);
-          setStatus("CLOUD SYNCED • v4.04","ready");
+          setStatus("CLOUD SYNCED • v4.05","ready");
           setDetail("Latest shared PMP data loaded successfully.");
           showCloudSuccess("The latest shared PMP records were loaded onto this device successfully.");
           setButtons();
           if(reload) location.reload();
         }catch(error){
           console.error("PMP cloud load failed",error);
-          setStatus("CLOUD ACCESS BLOCKED • v4.04","error");
+          setStatus("CLOUD ACCESS BLOCKED • v4.05","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before the app can read cloud data." : `Cloud load failed: ${error.message}`);
         }
       }
@@ -3042,12 +3071,12 @@
           lastKnownRevision=revision;
           replaceLocalRecords(data.records||{});
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD UPDATE RECEIVED • v4.04","ready");
+          setStatus("CLOUD UPDATE RECEIVED • v4.05","ready");
           setDetail("Another device updated PMP. Refreshing with the latest cloud data…");
           setTimeout(()=>location.reload(),500);
         },error=>{
           console.error("PMP live sync failed",error);
-          setStatus("LIVE SYNC PAUSED • v4.04","error");
+          setStatus("LIVE SYNC PAUSED • v4.05","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated to enable live synchronization." : `Live sync paused: ${error.message}`);
         });
       }
@@ -3057,7 +3086,7 @@
           auth=firebase.auth();
           db=firebase.firestore();
           stateRef=db.collection(STATE_COLLECTION).doc(STATE_DOCUMENT);
-          setStatus("AUTHENTICATING • v4.04","starting");
+          setStatus("AUTHENTICATING • v4.05","starting");
           await auth.signInAnonymously();
           cloudReady=true;
           setButtons();
@@ -3079,13 +3108,13 @@
             replaceLocalRecords(data.records||{});
             localStorage.setItem("pmpCloudRevision_v4",cloudRevision);
             lastKnownRevision=cloudRevision;
-            setStatus("CLOUD DATA LOADED • v4.04","ready");
+            setStatus("CLOUD DATA LOADED • v4.05","ready");
             setDetail("Latest shared PMP data loaded. Refreshing…");
             setTimeout(()=>location.reload(),350);
             return;
           }
           lastKnownRevision=cloudRevision;
-          setStatus("CLOUD SYNCED • v4.04","ready");
+          setStatus("CLOUD SYNCED • v4.05","ready");
           setDetail("This device is connected to the shared PMP cloud data.");
           const created = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : "previously";
           showCloudSuccess(`Firebase was initialized ${created}. Automatic synchronization is active. Use “Load Latest Cloud Data” only when you need to manually refresh this device.`);
@@ -3094,7 +3123,7 @@
           console.error("PMP Firebase startup failed",error);
           cloudReady=false;
           setButtons();
-          setStatus("CLOUD CONNECTION FAILED • v4.04","error");
+          setStatus("CLOUD CONNECTION FAILED • v4.05","error");
           setDetail(error.code==="permission-denied" ? "Firebase connected, but Firestore rules must be updated next." : `Firebase connection failed: ${error.message}`);
         }
       }
@@ -3204,7 +3233,7 @@
     const exportReorderExcel = document.getElementById("export-reorder-excel");
     const reviewedOrderCost = document.getElementById("reviewed-order-cost");
 
-    const usageScreen=document.getElementById("usage-screen"),backFromUsage=document.getElementById("back-from-usage"),checkoutPdf=document.getElementById("checkout-pdf"),checkoutDropZone=document.getElementById("checkout-drop-zone"),usageBody=document.getElementById("usage-body"),clearUsage=document.getElementById("clear-usage"),postCheckout=document.getElementById("post-checkout"),checkoutValue=document.getElementById("checkout-value"),issuedValue=document.getElementById("issued-value"),checkoutDetected=document.getElementById("checkout-detected"),productsOnHandCount=document.getElementById("products-on-hand-count"),productsInventoryTotal=document.getElementById("products-inventory-total"),techSpendBody=document.getElementById("tech-spend-body"),techProfile=document.getElementById("tech-profile"),techProfileName=document.getElementById("tech-profile-name"),techProfileSummary=document.getElementById("tech-profile-summary"),techHistoryBody=document.getElementById("tech-history-body"),closeTechProfile=document.getElementById("close-tech-profile");
+    const usageScreen=document.getElementById("usage-screen"),backFromUsage=document.getElementById("back-from-usage"),checkoutPdf=document.getElementById("checkout-pdf"),checkoutDropZone=document.getElementById("checkout-drop-zone"),usageBody=document.getElementById("usage-body"),clearUsage=document.getElementById("clear-usage"),postCheckout=document.getElementById("post-checkout"),checkoutValue=document.getElementById("checkout-value"),issuedValue=document.getElementById("issued-value"),checkoutDetected=document.getElementById("checkout-detected"),productsTotalCount=document.getElementById("products-total-count"),productsActiveCount=document.getElementById("products-active-count"),productsUseRemainingCount=document.getElementById("products-use-remaining-count"),productsInactiveCount=document.getElementById("products-inactive-count"),productsWithStockCount=document.getElementById("products-with-stock-count"),productsOutOfStockCount=document.getElementById("products-out-of-stock-count"),productsViewCount=document.getElementById("products-view-count"),productsInventoryTotal=document.getElementById("products-inventory-total"),techSpendBody=document.getElementById("tech-spend-body"),techProfile=document.getElementById("tech-profile"),techProfileName=document.getElementById("tech-profile-name"),techProfileSummary=document.getElementById("tech-profile-summary"),techHistoryBody=document.getElementById("tech-history-body"),closeTechProfile=document.getElementById("close-tech-profile");
     const countScreen = document.getElementById("count-screen");
     const backFromCount = document.getElementById("back-from-count");
     const countBody = document.getElementById("count-body");
@@ -3542,10 +3571,25 @@
       }).join("");
 
       productsEmpty.style.display = filtered.length ? "none" : "block";
-      const onHandProducts = filtered.filter((product)=>Number(product.onHand)>0);
-      const filteredValue = filtered.reduce((sum,product)=>sum+(isQuantityOnlyProduct(product)?0:(Number(product.onHand)||0)*(Number(product.price)||0)),0);
-      productsOnHandCount.textContent = `Products on Hand: ${onHandProducts.length}`;
-      productsInventoryTotal.textContent = `Total Inventory Value: ${money(filteredValue)}`;
+
+      // Catalog-wide metrics stay consistent even while the table is filtered.
+      const totalProducts = productData.length;
+      const activeProducts = productData.filter((product) => product.status === "active").length;
+      const useRemainingProducts = productData.filter((product) => product.status === "use-remaining").length;
+      const inactiveProducts = productData.filter((product) => product.status === "inactive").length;
+      const productsWithStock = productData.filter((product) => Number(product.onHand) > 0).length;
+      const productsOutOfStock = totalProducts - productsWithStock;
+      const totalInventoryValue = productData.reduce((sum, product) =>
+        sum + (isQuantityOnlyProduct(product) ? 0 : (Number(product.onHand) || 0) * (Number(product.price) || 0)), 0);
+
+      productsTotalCount.textContent = totalProducts;
+      productsActiveCount.textContent = activeProducts;
+      productsUseRemainingCount.textContent = useRemainingProducts;
+      productsInactiveCount.textContent = inactiveProducts;
+      productsWithStockCount.textContent = productsWithStock;
+      productsOutOfStockCount.textContent = productsOutOfStock;
+      productsInventoryTotal.textContent = money(totalInventoryValue);
+      productsViewCount.textContent = `Showing ${filtered.length} of ${totalProducts} products`;
       exportOnHandExcel.style.display='';
     }
 

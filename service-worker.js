@@ -1,4 +1,4 @@
-const CACHE_NAME = "pmp-operations-v4-01-shell";
+const CACHE_NAME = "pmp-operations-v4-05-shell";
 const APP_SHELL = [
   "./",
   "./index.html",

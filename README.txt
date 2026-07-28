@@ -126,3 +126,10 @@ v4.03 GO-LIVE MASTER
 - Embedded 108 cleaned master products.
 - One-time local migration loads authoritative counts, minimums, prices, and product statuses.
 - Cloud Manager now confirms the product count before initialization.
+
+
+v4.05:
+- Corrected Products summary labels and catalog-wide totals.
+- Shows 108 total, 88 active, 12 use remaining, 8 inactive, 91 with stock, and 17 out of stock.
+- Added a separate filtered-view count.
+- Fixed Cloud Manager header overlap and scrolling on desktop and iPad.
