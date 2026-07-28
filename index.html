@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v4.01</title>
+  <title>PMP Operations Center v4.02</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -2220,7 +2220,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.01</div>
+      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.02</div>
     </header>
 
     <main>
@@ -2286,6 +2286,20 @@
             <p>Access product labels, SDS, MOA information, technical references, policies, forms, and regulatory resources.</p>
           </div>
         </button>
+
+        <button class="dashboard-card" type="button" data-section="Cloud Manager">
+          <div>
+            <div class="icon-wrap" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M7 18h10a4 4 0 0 0 .7-7.94A6 6 0 0 0 6.2 8.3 4.5 4.5 0 0 0 7 18Z" />
+                <path d="M12 11v7" />
+                <path d="m9.5 13.5 2.5-2.5 2.5 2.5" />
+              </svg>
+            </div>
+            <h3>Cloud Manager</h3>
+            <p>Initialize shared cloud data, load the latest records, review sync status, and manage backup or recovery files.</p>
+          </div>
+        </button>
         </section>
       </section>
 
@@ -2337,7 +2351,7 @@
             <h2>Product Manager</h2>
             <p>Choose the inventory maintenance task you need.</p>
           </div>
-          <button id="back-from-product-manager-menu" class="back-button" type="button">← Back to Inventory</button>
+          <button id="back-from-product-manager-menu" class="back-button" type="button">← Back to Dashboard</button>
         </div>
 
         <section class="module-grid" aria-label="Product Manager tools">
@@ -2774,8 +2788,8 @@
         <div class="data-transfer-shell">
           <div class="inventory-header">
             <div class="inventory-title">
-              <h2>Data Backup &amp; Transfer</h2>
-              <p>Cloud synchronization keeps the warehouse iPad and office desktop on the same PMP data. Backup files remain available for disaster recovery.</p>
+              <h2>Cloud Manager</h2>
+              <p>Initialize and monitor the shared PMP cloud database. Backup files remain available for disaster recovery.</p>
             </div>
             <button id="back-from-data-transfer" class="back-button" type="button">← Back to Inventory</button>
           </div>
@@ -2826,7 +2840,7 @@
 
     </main>
 
-    <footer>PMP Operations Center • Cloud foundation • v4.01</footer>
+    <footer>PMP Operations Center • Cloud Manager • v4.02</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -3250,6 +3264,12 @@
         if (section === "Inventory") {
           dashboardScreen.classList.remove("active");
           inventoryScreen.classList.add("active");
+          return;
+        }
+        if (section === "Cloud Manager") {
+          dashboardScreen.classList.remove("active");
+          dataTransferScreen.classList.add("active");
+          updateDataTransferSummary();
           return;
         }
         showNotice(section + " module is a placeholder for a future build.");
@@ -4000,7 +4020,7 @@
     if(importPmpData)importPmpData.addEventListener('change',()=>importPmpBackupFile(importPmpData.files&&importPmpData.files[0]));
     if(cancelPmpImport)cancelPmpImport.addEventListener('click',resetPmpImportSelection);
     if(confirmPmpImport)confirmPmpImport.addEventListener('click',confirmPmpBackupImport);
-    if(backFromDataTransfer)backFromDataTransfer.addEventListener('click',()=>{dataTransferScreen.classList.remove('active');inventoryScreen.classList.add('active')});
+    if(backFromDataTransfer)backFromDataTransfer.addEventListener('click',()=>{dataTransferScreen.classList.remove('active');dashboardScreen.classList.add('active')});
 
     applyCount.addEventListener('click',()=>{const changed=[];countBody.querySelectorAll('tr[data-item]').forEach((row)=>{const input=row.querySelector('.counted-qty');if(input.value==='')return;const product=productData.find((item)=>String(item.item)===row.dataset.item);const previous=Number(product.onHand),counted=Number(input.value);if(counted!==previous){changed.push({item:product.item,product:product.name,previous,counted,difference:counted-previous,note:row.querySelector('.count-note').value.trim()});product.onHand=counted;updateUseRemainingAtZero(product);}});if(!changed.length){showNotice('No inventory differences were entered.');return;}const overrides={};productData.forEach((product)=>overrides[product.item]=product.onHand);localStorage.setItem('pmpInventoryOverrides_v3_2',JSON.stringify(overrides));const history=JSON.parse(localStorage.getItem('pmpPhysicalCountHistory_v3_2')||'[]');history.push({date:countDate.value,countedBy:countedBy.value.trim(),location:countLocation.value.trim(),reason:countReason.value,changes:changed,savedAt:new Date().toISOString()});localStorage.setItem('pmpPhysicalCountHistory_v3_2',JSON.stringify(history));renderProducts();renderPhysicalCount();showNotice(`${changed.length} inventory ${changed.length===1?'quantity':'quantities'} updated on this device. Export a data backup to transfer the count.`);});
     backFromCount.addEventListener('click',()=>{countScreen.classList.remove('active');productManagerMenuScreen.classList.add('active');});
