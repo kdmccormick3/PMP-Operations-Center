@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v3.80</title>
+  <title>PMP Operations Center v4.0</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -2202,6 +2202,13 @@
     #export-count-backup{background:#176b3a;border-color:#176b3a}
     @media(max-width:760px){.data-transfer-grid{grid-template-columns:1fr}.data-transfer-card{padding:18px}.data-transfer-shell{gap:14px}}
 
+
+
+    .cloud-status.cloud-starting { background: rgba(255,255,255,.10); }
+    .cloud-status.cloud-ready { background: rgba(34,197,94,.18); border-color: rgba(134,239,172,.65); }
+    .cloud-status.cloud-warning { background: rgba(245,158,11,.20); border-color: rgba(253,230,138,.70); }
+    .cloud-status.cloud-error { background: rgba(217,35,46,.24); border-color: rgba(254,202,202,.75); }
+    .cloud-sync-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:14px; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -2213,7 +2220,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div class="status-badge">INVENTORY BUILD • v3.80</div>
+      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.0</div>
     </header>
 
     <main>
@@ -2768,7 +2775,7 @@
           <div class="inventory-header">
             <div class="inventory-title">
               <h2>Data Backup &amp; Transfer</h2>
-              <p>Keep the warehouse iPad and office desktop on the same PMP inventory data.</p>
+              <p>Cloud synchronization keeps the warehouse iPad and office desktop on the same PMP data. Backup files remain available for disaster recovery.</p>
             </div>
             <button id="back-from-data-transfer" class="back-button" type="button">← Back to Inventory</button>
           </div>
@@ -2780,7 +2787,7 @@
 
           <div class="data-transfer-grid">
             <article class="data-transfer-card">
-              <h3>1. Export from this device</h3>
+              <h3>Disaster recovery export</h3>
               <p>Creates one PMP backup file containing warehouse counts, minimums, prices, receiving history, orders, truck inventory, and other saved PMP records.</p>
               <button id="export-pmp-data" class="action-button primary" type="button">Export PMP Data</button>
               <div class="data-transfer-note">On iPad, save the downloaded JSON file to Files, iCloud Drive, Google Drive, or email it to yourself.</div>
@@ -2788,8 +2795,8 @@
             </article>
 
             <article class="data-transfer-card">
-              <h3>2. Import on the other device</h3>
-              <p>Select the PMP backup file. Import replaces the PMP data currently stored in this browser, then reloads the app with the transferred information.</p>
+              <h3>Disaster recovery import</h3>
+              <p>Select a PMP backup file only when recovering data. Import replaces the PMP data currently stored on this device, then reloads the app.</p>
               <button id="choose-pmp-data" class="action-button" type="button">Choose PMP Backup File</button>
               <input id="import-pmp-data" class="data-transfer-file" type="file" accept="application/json,.json" />
               <div id="selected-backup-name" class="data-transfer-note">No backup file selected.</div>
@@ -2806,23 +2813,263 @@
           </div>
 
           <article class="data-transfer-card">
-            <h3>Recommended workflow</h3>
-            <ol class="data-transfer-steps">
-              <li>After a warehouse count, export PMP Data from the iPad.</li>
-              <li>Open PMP on the desktop and import that backup.</li>
-              <li>After desktop Orders, Receiving, or Truck Inventory work, export PMP Data from the desktop.</li>
-              <li>Import that backup on the iPad before the next warehouse count.</li>
-            </ol>
+            <h3>Cloud synchronization</h3>
+            <p id="cloud-sync-copy">Firebase is connecting. On the first authoritative device, initialize the cloud once. After that, changes will synchronize automatically.</p>
+            <div class="cloud-sync-actions">
+              <button id="initialize-cloud-data" class="action-button primary" type="button" disabled>Initialize Cloud from This Device</button>
+              <button id="load-cloud-data" class="action-button" type="button" disabled>Load Latest Cloud Data</button>
+            </div>
+            <div id="cloud-sync-detail" class="data-transfer-note" role="status" aria-live="polite">Waiting for Firebase…</div>
           </article>
         </div>
       </section>
 
     </main>
 
-    <footer>PMP Operations Center • Inventory build • v3.81</footer>
+    <footer>PMP Operations Center • Cloud foundation • v4.0</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  <script>
+    (() => {
+      const firebaseConfig = {
+        apiKey: "AIzaSyC5_9KnFmY3n0gxGTbYqq1Ac6chBr6PNdA",
+        authDomain: "pmp-operations-center.firebaseapp.com",
+        projectId: "pmp-operations-center",
+        storageBucket: "pmp-operations-center.firebasestorage.app",
+        messagingSenderId: "324299121090",
+        appId: "1:324299121090:web:143e5e80d1367021f1b65b"
+      };
+      const STATE_COLLECTION = "pmpOperations";
+      const STATE_DOCUMENT = "current";
+      const INTERNAL_PREFIX = "pmpCloud";
+      let db = null;
+      let auth = null;
+      let stateRef = null;
+      let cloudInitialized = false;
+      let cloudReady = false;
+      let uploadTimer = null;
+      let applyingCloud = false;
+      let lastKnownRevision = "";
+      let unsubscribe = null;
+
+      function statusElement(){ return document.getElementById("cloud-status"); }
+      function detailElement(){ return document.getElementById("cloud-sync-detail"); }
+      function initializeButton(){ return document.getElementById("initialize-cloud-data"); }
+      function loadButton(){ return document.getElementById("load-cloud-data"); }
+      function setStatus(text, state="starting") {
+        const el=statusElement();
+        if(el){ el.textContent=text; el.classList.remove("cloud-starting","cloud-ready","cloud-warning","cloud-error"); el.classList.add(`cloud-${state}`); }
+      }
+      function setDetail(text){ const el=detailElement(); if(el) el.textContent=text; }
+      function setButtons(){
+        const init=initializeButton(), load=loadButton();
+        if(init) init.disabled=!cloudReady || cloudInitialized;
+        if(load) load.disabled=!cloudReady || !cloudInitialized;
+      }
+      function snapshotRecords(){
+        const records={};
+        for(let i=0;i<localStorage.length;i++){
+          const key=localStorage.key(i);
+          if(key && key.startsWith("pmp") && !key.startsWith(INTERNAL_PREFIX)) records[key]=localStorage.getItem(key);
+        }
+        return records;
+      }
+      function replaceLocalRecords(records){
+        applyingCloud=true;
+        try{
+          const keys=[];
+          for(let i=0;i<localStorage.length;i++){
+            const key=localStorage.key(i);
+            if(key && key.startsWith("pmp") && !key.startsWith(INTERNAL_PREFIX)) keys.push(key);
+          }
+          keys.forEach(key=>localStorage.removeItem(key));
+          Object.entries(records||{}).forEach(([key,value])=>{
+            if(key.startsWith("pmp") && !key.startsWith(INTERNAL_PREFIX) && typeof value==="string") localStorage.setItem(key,value);
+          });
+        } finally { applyingCloud=false; }
+      }
+      function makeRevision(){ return `${Date.now()}-${Math.random().toString(36).slice(2,10)}`; }
+      async function uploadNow(reason="Automatic sync"){
+        if(!cloudReady || !cloudInitialized || applyingCloud || !stateRef) return;
+        const revision=makeRevision();
+        lastKnownRevision=revision;
+        setStatus("SAVING TO CLOUD • v4.0","warning");
+        setDetail(`${reason}…`);
+        try{
+          await stateRef.set({
+            initialized:true,
+            schemaVersion:1,
+            appVersion:"4.0",
+            records:snapshotRecords(),
+            revision,
+            updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+            updatedBy:auth.currentUser ? auth.currentUser.uid : "unknown"
+          });
+          localStorage.setItem("pmpCloudRevision_v4",revision);
+          setStatus("CLOUD SYNCED • v4.0","ready");
+          setDetail(`Saved to cloud at ${new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}.`);
+        }catch(error){
+          console.error("PMP cloud save failed",error);
+          setStatus("CLOUD SAVE FAILED • v4.0","error");
+          setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud data can be saved." : `Cloud save failed: ${error.message}`);
+        }
+      }
+      function scheduleUpload(){
+        if(!cloudReady || !cloudInitialized || applyingCloud) return;
+        clearTimeout(uploadTimer);
+        uploadTimer=setTimeout(()=>uploadNow(),900);
+      }
+      const originalSetItem=Storage.prototype.setItem;
+      const originalRemoveItem=Storage.prototype.removeItem;
+      const originalClear=Storage.prototype.clear;
+      Storage.prototype.setItem=function(key,value){
+        originalSetItem.call(this,key,value);
+        if(this===localStorage && String(key).startsWith("pmp") && !String(key).startsWith(INTERNAL_PREFIX)) scheduleUpload();
+      };
+      Storage.prototype.removeItem=function(key){
+        originalRemoveItem.call(this,key);
+        if(this===localStorage && String(key).startsWith("pmp") && !String(key).startsWith(INTERNAL_PREFIX)) scheduleUpload();
+      };
+      Storage.prototype.clear=function(){
+        originalClear.call(this);
+        if(this===localStorage) scheduleUpload();
+      };
+      async function initializeCloudFromDevice(){
+        if(!stateRef || !cloudReady) return;
+        if(!confirm("Initialize Firebase using the PMP data currently stored on this device? Use the device with the authoritative inventory data.")) return;
+        const revision=makeRevision();
+        setStatus("INITIALIZING CLOUD • v4.0","warning");
+        setDetail("Creating the first shared PMP cloud record…");
+        try{
+          await stateRef.set({
+            initialized:true,
+            schemaVersion:1,
+            appVersion:"4.0",
+            records:snapshotRecords(),
+            revision,
+            createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+            updatedBy:auth.currentUser.uid
+          });
+          cloudInitialized=true;
+          lastKnownRevision=revision;
+          localStorage.setItem("pmpCloudRevision_v4",revision);
+          setStatus("CLOUD SYNCED • v4.0","ready");
+          setDetail("Cloud initialized from this device. Future PMP changes will synchronize automatically.");
+          setButtons();
+          watchCloud();
+        }catch(error){
+          console.error("PMP cloud initialization failed",error);
+          setStatus("CLOUD SETUP BLOCKED • v4.0","error");
+          setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud initialization." : `Cloud initialization failed: ${error.message}`);
+        }
+      }
+      async function loadCloudData({reload=true}={}){
+        if(!stateRef || !cloudReady) return;
+        setStatus("LOADING CLOUD DATA • v4.0","warning");
+        try{
+          const snap=await stateRef.get();
+          if(!snap.exists || !snap.data().initialized){
+            cloudInitialized=false;
+            setStatus("CLOUD READY • NOT INITIALIZED","warning");
+            setDetail("No shared PMP data exists yet. Initialize from the authoritative device.");
+            setButtons();
+            return;
+          }
+          const data=snap.data();
+          cloudInitialized=true;
+          lastKnownRevision=data.revision||"";
+          replaceLocalRecords(data.records||{});
+          localStorage.setItem("pmpCloudRevision_v4",lastKnownRevision);
+          setStatus("CLOUD SYNCED • v4.0","ready");
+          setDetail("Latest shared PMP data loaded successfully.");
+          setButtons();
+          if(reload) location.reload();
+        }catch(error){
+          console.error("PMP cloud load failed",error);
+          setStatus("CLOUD ACCESS BLOCKED • v4.0","error");
+          setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before the app can read cloud data." : `Cloud load failed: ${error.message}`);
+        }
+      }
+      function watchCloud(){
+        if(unsubscribe || !stateRef || !cloudInitialized) return;
+        unsubscribe=stateRef.onSnapshot(snap=>{
+          if(!snap.exists) return;
+          const data=snap.data();
+          const revision=data.revision||"";
+          if(!revision || revision===lastKnownRevision) return;
+          lastKnownRevision=revision;
+          replaceLocalRecords(data.records||{});
+          localStorage.setItem("pmpCloudRevision_v4",revision);
+          setStatus("CLOUD UPDATE RECEIVED • v4.0","ready");
+          setDetail("Another device updated PMP. Refreshing with the latest cloud data…");
+          setTimeout(()=>location.reload(),500);
+        },error=>{
+          console.error("PMP live sync failed",error);
+          setStatus("LIVE SYNC PAUSED • v4.0","error");
+          setDetail(error.code==="permission-denied" ? "Firestore rules must be updated to enable live synchronization." : `Live sync paused: ${error.message}`);
+        });
+      }
+      async function start(){
+        try{
+          firebase.initializeApp(firebaseConfig);
+          auth=firebase.auth();
+          db=firebase.firestore();
+          stateRef=db.collection(STATE_COLLECTION).doc(STATE_DOCUMENT);
+          setStatus("AUTHENTICATING • v4.0","starting");
+          await auth.signInAnonymously();
+          cloudReady=true;
+          setButtons();
+          const snap=await stateRef.get();
+          if(!snap.exists || !snap.data().initialized){
+            cloudInitialized=false;
+            setStatus("CLOUD READY • SETUP NEEDED","warning");
+            setDetail("Firebase is connected. Initialize once from the device holding the authoritative PMP data.");
+            setButtons();
+            return;
+          }
+          const data=snap.data();
+          cloudInitialized=true;
+          const cloudRevision=data.revision||"";
+          const localRevision=localStorage.getItem("pmpCloudRevision_v4")||"";
+          setButtons();
+          if(cloudRevision && cloudRevision!==localRevision){
+            replaceLocalRecords(data.records||{});
+            localStorage.setItem("pmpCloudRevision_v4",cloudRevision);
+            lastKnownRevision=cloudRevision;
+            setStatus("CLOUD DATA LOADED • v4.0","ready");
+            setDetail("Latest shared PMP data loaded. Refreshing…");
+            setTimeout(()=>location.reload(),350);
+            return;
+          }
+          lastKnownRevision=cloudRevision;
+          setStatus("CLOUD SYNCED • v4.0","ready");
+          setDetail("This device is connected to the shared PMP cloud data.");
+          watchCloud();
+        }catch(error){
+          console.error("PMP Firebase startup failed",error);
+          cloudReady=false;
+          setButtons();
+          setStatus("CLOUD CONNECTION FAILED • v4.0","error");
+          setDetail(error.code==="permission-denied" ? "Firebase connected, but Firestore rules must be updated next." : `Firebase connection failed: ${error.message}`);
+        }
+      }
+      window.PMPCloud={start, initializeCloudFromDevice, loadCloudData, uploadNow, snapshotRecords};
+      window.addEventListener("DOMContentLoaded",()=>{
+        const init=initializeButton(), load=loadButton();
+        if(init) init.addEventListener("click",initializeCloudFromDevice);
+        if(load) load.addEventListener("click",()=>loadCloudData({reload:true}));
+        setButtons();
+        start();
+      });
+    })();
+  </script>
 
   <script>
     const notice = document.getElementById("notice");

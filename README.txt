@@ -108,3 +108,12 @@ v3.77: Truck Inventory now resets to the technician list whenever you leave and 
 
 
 v3.78: Corrected iPad Orders navigation so Back to Technicians reliably restores the technician directory. Replaced remaining Technician Usage labels with Orders and refreshed the PWA cache/version.
+
+V4.0 CHANGE
+Added the Firebase cloud foundation using the registered PMP Operations Center web app.
+Added automatic anonymous authentication, cloud connection status, safe one-time cloud initialization, manual cloud load, and automatic synchronization of saved PMP browser records after initialization.
+Backup export/import remains available for disaster recovery.
+IMPORTANT: Firestore production rules must be updated to permit authenticated access before initialization can complete.
+
+FIRESTORE RULES
+The included firestore.rules.txt contains the temporary authenticated-access rule for the v4.0 cloud foundation. Anonymous authentication is enabled, so this is a development-stage rule. Replace it with named users and role-based access before wider distribution.
