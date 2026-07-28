@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v4.0</title>
+  <title>PMP Operations Center v4.01</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -2220,7 +2220,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.0</div>
+      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.01</div>
     </header>
 
     <main>
@@ -2826,7 +2826,7 @@
 
     </main>
 
-    <footer>PMP Operations Center • Cloud foundation • v4.0</footer>
+    <footer>PMP Operations Center • Cloud foundation • v4.01</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -2838,7 +2838,7 @@
   <script>
     (() => {
       const firebaseConfig = {
-        apiKey: "AIzaSyC5_9KnFmY3n0gxGTbYqq1Ac6chBr6PNdA",
+        apiKey: "AIzaSyC5_9KnFmY3nOgxGTbYqq1Ac6chBr6PNdA",
         authDomain: "pmp-operations-center.firebaseapp.com",
         projectId: "pmp-operations-center",
         storageBucket: "pmp-operations-center.firebasestorage.app",
@@ -2899,7 +2899,7 @@
         if(!cloudReady || !cloudInitialized || applyingCloud || !stateRef) return;
         const revision=makeRevision();
         lastKnownRevision=revision;
-        setStatus("SAVING TO CLOUD • v4.0","warning");
+        setStatus("SAVING TO CLOUD • v4.01","warning");
         setDetail(`${reason}…`);
         try{
           await stateRef.set({
@@ -2912,11 +2912,11 @@
             updatedBy:auth.currentUser ? auth.currentUser.uid : "unknown"
           });
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD SYNCED • v4.0","ready");
+          setStatus("CLOUD SYNCED • v4.01","ready");
           setDetail(`Saved to cloud at ${new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}.`);
         }catch(error){
           console.error("PMP cloud save failed",error);
-          setStatus("CLOUD SAVE FAILED • v4.0","error");
+          setStatus("CLOUD SAVE FAILED • v4.01","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud data can be saved." : `Cloud save failed: ${error.message}`);
         }
       }
@@ -2944,7 +2944,7 @@
         if(!stateRef || !cloudReady) return;
         if(!confirm("Initialize Firebase using the PMP data currently stored on this device? Use the device with the authoritative inventory data.")) return;
         const revision=makeRevision();
-        setStatus("INITIALIZING CLOUD • v4.0","warning");
+        setStatus("INITIALIZING CLOUD • v4.01","warning");
         setDetail("Creating the first shared PMP cloud record…");
         try{
           await stateRef.set({
@@ -2960,19 +2960,19 @@
           cloudInitialized=true;
           lastKnownRevision=revision;
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD SYNCED • v4.0","ready");
+          setStatus("CLOUD SYNCED • v4.01","ready");
           setDetail("Cloud initialized from this device. Future PMP changes will synchronize automatically.");
           setButtons();
           watchCloud();
         }catch(error){
           console.error("PMP cloud initialization failed",error);
-          setStatus("CLOUD SETUP BLOCKED • v4.0","error");
+          setStatus("CLOUD SETUP BLOCKED • v4.01","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud initialization." : `Cloud initialization failed: ${error.message}`);
         }
       }
       async function loadCloudData({reload=true}={}){
         if(!stateRef || !cloudReady) return;
-        setStatus("LOADING CLOUD DATA • v4.0","warning");
+        setStatus("LOADING CLOUD DATA • v4.01","warning");
         try{
           const snap=await stateRef.get();
           if(!snap.exists || !snap.data().initialized){
@@ -2987,13 +2987,13 @@
           lastKnownRevision=data.revision||"";
           replaceLocalRecords(data.records||{});
           localStorage.setItem("pmpCloudRevision_v4",lastKnownRevision);
-          setStatus("CLOUD SYNCED • v4.0","ready");
+          setStatus("CLOUD SYNCED • v4.01","ready");
           setDetail("Latest shared PMP data loaded successfully.");
           setButtons();
           if(reload) location.reload();
         }catch(error){
           console.error("PMP cloud load failed",error);
-          setStatus("CLOUD ACCESS BLOCKED • v4.0","error");
+          setStatus("CLOUD ACCESS BLOCKED • v4.01","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before the app can read cloud data." : `Cloud load failed: ${error.message}`);
         }
       }
@@ -3007,12 +3007,12 @@
           lastKnownRevision=revision;
           replaceLocalRecords(data.records||{});
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD UPDATE RECEIVED • v4.0","ready");
+          setStatus("CLOUD UPDATE RECEIVED • v4.01","ready");
           setDetail("Another device updated PMP. Refreshing with the latest cloud data…");
           setTimeout(()=>location.reload(),500);
         },error=>{
           console.error("PMP live sync failed",error);
-          setStatus("LIVE SYNC PAUSED • v4.0","error");
+          setStatus("LIVE SYNC PAUSED • v4.01","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated to enable live synchronization." : `Live sync paused: ${error.message}`);
         });
       }
@@ -3022,7 +3022,7 @@
           auth=firebase.auth();
           db=firebase.firestore();
           stateRef=db.collection(STATE_COLLECTION).doc(STATE_DOCUMENT);
-          setStatus("AUTHENTICATING • v4.0","starting");
+          setStatus("AUTHENTICATING • v4.01","starting");
           await auth.signInAnonymously();
           cloudReady=true;
           setButtons();
@@ -3043,20 +3043,20 @@
             replaceLocalRecords(data.records||{});
             localStorage.setItem("pmpCloudRevision_v4",cloudRevision);
             lastKnownRevision=cloudRevision;
-            setStatus("CLOUD DATA LOADED • v4.0","ready");
+            setStatus("CLOUD DATA LOADED • v4.01","ready");
             setDetail("Latest shared PMP data loaded. Refreshing…");
             setTimeout(()=>location.reload(),350);
             return;
           }
           lastKnownRevision=cloudRevision;
-          setStatus("CLOUD SYNCED • v4.0","ready");
+          setStatus("CLOUD SYNCED • v4.01","ready");
           setDetail("This device is connected to the shared PMP cloud data.");
           watchCloud();
         }catch(error){
           console.error("PMP Firebase startup failed",error);
           cloudReady=false;
           setButtons();
-          setStatus("CLOUD CONNECTION FAILED • v4.0","error");
+          setStatus("CLOUD CONNECTION FAILED • v4.01","error");
           setDetail(error.code==="permission-denied" ? "Firebase connected, but Firestore rules must be updated next." : `Firebase connection failed: ${error.message}`);
         }
       }

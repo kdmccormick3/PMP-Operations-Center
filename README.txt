@@ -116,4 +116,4 @@ Backup export/import remains available for disaster recovery.
 IMPORTANT: Firestore production rules must be updated to permit authenticated access before initialization can complete.
 
 FIRESTORE RULES
-The included firestore.rules.txt contains the temporary authenticated-access rule for the v4.0 cloud foundation. Anonymous authentication is enabled, so this is a development-stage rule. Replace it with named users and role-based access before wider distribution.
+The included firestore.rules.txt contains the temporary authenticated-access rule for the v4.01 cloud foundation. Anonymous authentication is enabled, so this is a development-stage rule. Replace it with named users and role-based access before wider distribution.
