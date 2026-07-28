@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v4.05</title>
+  <title>PMP Operations Center v4.06</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -3694,7 +3694,7 @@
           <td class="manager-col-manufacturer">${escapeHtml(product.manufacturer||"")}</td>
           <td class="manager-col-category">${escapeHtml(product.category||"")}</td>
           <td class="number manager-col-onhand">${product.onHand==null?"—":product.onHand}</td>
-          <td class="number manager-col-minimum"><input class="manager-number" type="number" min="0" step="1" value="${product.minimum==null?"":product.minimum}" data-manager-min="${product.item}" aria-label="Minimum for ${escapeHtml(product.name)}"></td>
+          <td class="number manager-col-minimum"><input class="manager-number" type="number" min="0" step="1" value="" placeholder="${product.minimum==null?"":product.minimum}" data-manager-min="${product.item}" aria-label="Minimum for ${escapeHtml(product.name)}"></td>
           <td class="manager-col-status">
             <select class="manager-status" data-manager-status="${product.item}" aria-label="Status for ${escapeHtml(product.name)}">
               <option value="active"${product.status==="active"?" selected":""}>Active</option>
@@ -3735,13 +3735,20 @@
       managerBody.querySelectorAll("[data-manager-min]").forEach(input=>{
         const product=productData.find(item=>String(item.item)===String(input.dataset.managerMin));
         if(!product)return;
+        const entered=input.value.trim();
+        if(entered===""){
+          input.style.borderColor="";
+          return;
+        }
         const previous=product.minimum;
-        const next=input.value===""?null:Math.max(0,Number(input.value));
+        const next=Math.max(0,Number(entered));
         if(previous!==next){
           product.minimum=next;
           changes.push({item:product.item,product:product.name,previous,next});
           changed++;
         }
+        input.value="";
+        input.placeholder=product.minimum==null?"":product.minimum;
         input.style.borderColor="";
       });
       productData.forEach(product=>{overrides[product.item]=product.minimum;});
