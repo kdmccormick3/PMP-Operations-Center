@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v4.10</title>
+  <title>PMP Operations Center v4.15</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -466,6 +466,93 @@
       .price-review-toolbar select{width:100%;}
     }
 
+
+    /* v4.15 — Manual master price maintenance */
+    .manual-price-editor{
+      background:rgba(255,255,255,.97);
+      border:2px solid rgba(255,255,255,.45);
+      border-radius:14px;
+      padding:14px;
+      box-shadow:0 10px 24px rgba(0,0,0,.13);
+      flex:0 0 auto;
+    }
+    .manual-price-heading{
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:11px;
+    }
+    .manual-price-heading strong{color:var(--navy-dark);font-size:1rem}
+    .manual-price-heading span{color:var(--muted);font-size:.82rem}
+    .manual-price-grid{
+      display:grid;
+      grid-template-columns:minmax(300px,1.7fr) minmax(130px,.6fr) minmax(140px,.65fr) minmax(150px,.7fr) minmax(150px,.7fr) auto;
+      gap:11px;
+      align-items:end;
+    }
+    .manual-price-grid label,
+    .manual-current-price{
+      min-width:0;
+    }
+    .manual-price-grid label span,
+    .manual-current-price span{
+      display:block;
+      margin-bottom:5px;
+      color:var(--muted);
+      font-size:.72rem;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.035em;
+    }
+    .manual-price-grid select,
+    .manual-price-grid input{
+      width:100%;
+      min-width:0;
+      border:1px solid var(--border);
+      border-radius:9px;
+      padding:9px 10px;
+      background:#fff;
+      color:var(--text);
+      font:inherit;
+    }
+    .manual-current-price{
+      border:1px solid var(--border);
+      border-radius:9px;
+      padding:8px 10px;
+      background:#f8fafc;
+    }
+    .manual-current-price span{margin-bottom:3px}
+    .manual-current-price strong{display:block;color:var(--navy-dark);font-size:1rem;line-height:1.25}
+    .manual-price-grid .excel-button{height:42px}
+
+    .manual-price-product-field{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:6px;
+    }
+    .manual-price-product-field > span{margin-bottom:0!important}
+    .manual-price-product-field select{
+      max-height:42px;
+    }
+
+    .manual-price-custom-uom-field[hidden]{display:none!important}
+    .manual-price-custom-uom-field input{text-transform:uppercase}
+    .manual-price-no-results{
+      color:#a81722;
+      font-size:.78rem;
+      font-weight:700;
+      margin-top:2px;
+    }
+    @media(max-width:1000px){
+      .manual-price-grid{grid-template-columns:1fr 1fr}
+      .manual-price-grid .excel-button{width:100%}
+    }
+    @media(max-width:620px){
+      .manual-price-heading{align-items:flex-start;flex-direction:column;gap:4px}
+      .manual-price-grid{grid-template-columns:1fr}
+    }
+
     .products-screen {
       justify-content: flex-start;
       padding-top: 0;
@@ -590,7 +677,7 @@
     .manager-number{width:92px;padding:7px 8px;border:1px solid var(--border);border-radius:8px;text-align:right}
     .manager-minimum-entry{display:flex;align-items:center;justify-content:flex-end;gap:8px;white-space:nowrap}
     .manager-current-minimum{font-size:.72rem;color:#8a98a6;font-weight:700}
-    /* v4.10 — Remove number spinners and soften current minimum */
+    /* v4.15 — Remove number spinners and soften current minimum */
     input[type=number]::-webkit-outer-spin-button,
     input[type=number]::-webkit-inner-spin-button{
       -webkit-appearance:none;
@@ -1219,6 +1306,53 @@
       }
     }
 
+
+
+    /* v4.15 — Receive Inventory iPad portrait header and column alignment */
+    @media (max-width: 900px) and (orientation: portrait) {
+      #receive-inventory-screen .products-table th:nth-child(2),
+      #receive-inventory-screen .products-table th:nth-child(4),
+      #receive-inventory-screen .products-table th:nth-child(7),
+      #receive-inventory-screen .products-table th:nth-child(8) {
+        display: table-cell !important;
+      }
+
+      #receive-inventory-screen .products-table th:nth-child(1) { width: 8% !important; }
+      #receive-inventory-screen .products-table th:nth-child(2) { width: 34% !important; }
+      #receive-inventory-screen .products-table th:nth-child(4) { width: 14% !important; }
+      #receive-inventory-screen .products-table th:nth-child(7) { width: 22% !important; }
+      #receive-inventory-screen .products-table th:nth-child(8) { width: 22% !important; }
+
+      #receive-inventory-screen .receive-col-product {
+        display: table-cell !important;
+        width: 34%;
+      }
+
+      #receive-inventory-screen .receive-col-current {
+        width: 14%;
+      }
+
+      #receive-inventory-screen .receive-col-quantity {
+        width: 22%;
+      }
+
+      #receive-inventory-screen .receive-col-new {
+        width: 22%;
+      }
+
+      #receive-inventory-screen .products-table thead {
+        width: 100%;
+      }
+
+      #receive-inventory-screen .products-table thead tr {
+        width: 100%;
+      }
+
+      #receive-inventory-screen .products-table th {
+        vertical-align: middle;
+        line-height: 1.15;
+      }
+    }
 
     /* v3.55 — Price Review iPad portrait fit and alignment */
     .price-review-mobile-meta {
@@ -2242,7 +2376,7 @@
     #initialize-cloud-data[hidden]{display:none !important;}
   
 
-    /* v4.10 — trustworthy inventory summary and Cloud Manager page positioning */
+    /* v4.15 — trustworthy inventory summary and Cloud Manager page positioning */
     .products-summary {display:grid;grid-template-columns:repeat(6,minmax(0,1fr)) minmax(190px,1.45fr);gap:9px}
     .products-summary-item{min-width:0;background:rgba(255,255,255,.97);border:2px solid rgba(255,255,255,.4);border-radius:11px;padding:9px 11px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
     .products-summary-item span{display:block;color:var(--muted);font-size:.68rem;font-weight:800;letter-spacing:.035em;line-height:1.15;text-transform:uppercase}
@@ -2276,7 +2410,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.10</div>
+      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.15</div>
     </header>
 
     <main>
@@ -2423,8 +2557,8 @@
           </button>
           <button class="module-tile manager-menu-tile office-only-tile" type="button" data-manager-module="Price Review">
             <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 6.5c0-1.9-2.2-3.5-5-3.5S7 4.6 7 6.5 9.2 10 12 10s5 1.6 5 3.5S14.8 17 12 17s-5-1.6-5-3.5"/><path d="M4 21h16"/></svg></div>
-            <h3>Price Review</h3>
-            <p>Compare checkout prices with the master price and approve updates.</p>
+            <h3>Prices</h3>
+            <p>Add or change a product price, and review price differences from checkout PDFs.</p>
           </button>
           <button class="module-tile manager-menu-tile" type="button" data-manager-module="Physical Count">
             <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 4h6"/><path d="M9 2h6v4H9z"/><path d="M7 4H5.5A1.5 1.5 0 0 0 4 5.5v15h16v-15A1.5 1.5 0 0 0 18.5 4H17"/><path d="M8 11h8"/><path d="M8 15h5"/></svg></div>
@@ -2697,11 +2831,47 @@
         <div class="price-review-shell">
           <div class="inventory-header">
             <div class="inventory-title">
-              <h2>Price Review</h2>
-              <p>Checkout PDFs supply the transaction price. Review differences before updating the master inventory price.</p>
+              <h2>Prices</h2>
+              <p>Add or change a master product price directly, then review differences found in checkout PDFs.</p>
             </div>
             <button id="back-from-price-review" class="back-button" type="button">← Back to Product Manager</button>
           </div>
+
+          <div class="manual-price-editor" aria-label="Manual price management">
+            <div class="manual-price-heading">
+              <strong>Manual Price Management</strong>
+              <span>Select any product to add its first price or change its current price.</span>
+            </div>
+            <div class="manual-price-grid">
+              <label class="manual-price-product-field">
+                <span>Find Product</span>
+                <input id="manual-price-search" type="search" placeholder="Type product or manufacturer…" autocomplete="off" />
+                <select id="manual-price-product" aria-label="Select product for price update">
+                  <option value="">Select a product…</option>
+                </select>
+              </label>
+              <div class="manual-current-price">
+                <span>Current Price</span>
+                <strong id="manual-current-price">—</strong>
+              </div>
+              <label>
+                <span>New Unit Price</span>
+                <input id="manual-new-price" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00" />
+              </label>
+              <label>
+                <span>Price UOM</span>
+                <select id="manual-price-uom" aria-label="Select price unit of measure">
+                  <option value="">Select UOM…</option>
+                </select>
+              </label>
+              <label id="manual-price-custom-uom-field" class="manual-price-custom-uom-field" hidden>
+                <span>New UOM</span>
+                <input id="manual-price-custom-uom" type="text" placeholder="Enter a new UOM" maxlength="24" />
+              </label>
+              <button id="save-manual-price" class="excel-button" type="button">Save Price</button>
+            </div>
+          </div>
+
           <div class="price-review-summary">
             <div class="price-review-card"><span>Products Needing Review</span><strong id="price-review-count">0</strong></div>
             <div class="price-review-card"><span>Price Increases</span><strong id="price-increase-count">0</strong></div>
@@ -2901,7 +3071,7 @@
 
     </main>
 
-    <footer>PMP Operations Center • v4.10</footer>
+    <footer>PMP Operations Center • v4.15</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -2986,7 +3156,7 @@
         if(!cloudReady || !cloudInitialized || applyingCloud || !stateRef) return;
         const revision=makeRevision();
         lastKnownRevision=revision;
-        setStatus("SAVING TO CLOUD • v4.10","warning");
+        setStatus("SAVING TO CLOUD • v4.15","warning");
         setDetail(`${reason}…`);
         try{
           await stateRef.set({
@@ -2999,11 +3169,11 @@
             updatedBy:auth.currentUser ? auth.currentUser.uid : "unknown"
           });
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD SYNCED • v4.10","ready");
+          setStatus("CLOUD SYNCED • v4.15","ready");
           setDetail(`Saved to cloud at ${new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}.`);
         }catch(error){
           console.error("PMP cloud save failed",error);
-          setStatus("CLOUD SAVE FAILED • v4.10","error");
+          setStatus("CLOUD SAVE FAILED • v4.15","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud data can be saved." : `Cloud save failed: ${error.message}`);
         }
       }
@@ -3031,7 +3201,7 @@
         if(!stateRef || !cloudReady) return;
         if(!confirm("Initialize Firebase using the PMP data currently stored on this device? Use the device with the authoritative inventory data.")) return;
         const revision=makeRevision();
-        setStatus("INITIALIZING CLOUD • v4.10","warning");
+        setStatus("INITIALIZING CLOUD • v4.15","warning");
         setDetail("Creating the first shared PMP cloud record…");
         try{
           await stateRef.set({
@@ -3047,7 +3217,7 @@
           cloudInitialized=true;
           lastKnownRevision=revision;
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD SYNCED • v4.10","ready");
+          setStatus("CLOUD SYNCED • v4.15","ready");
           setDetail("Cloud initialized from this device. Future PMP changes will synchronize automatically.");
           showCloudSuccess(`The Go-Live Master is now stored in Firebase. ${Object.keys(snapshotRecords()).length} PMP data records are synchronized and this device is live.`);
           setButtons();
@@ -3055,13 +3225,13 @@
           watchCloud();
         }catch(error){
           console.error("PMP cloud initialization failed",error);
-          setStatus("CLOUD SETUP BLOCKED • v4.10","error");
+          setStatus("CLOUD SETUP BLOCKED • v4.15","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud initialization." : `Cloud initialization failed: ${error.message}`);
         }
       }
       async function loadCloudData({reload=true}={}){
         if(!stateRef || !cloudReady) return;
-        setStatus("LOADING CLOUD DATA • v4.10","warning");
+        setStatus("LOADING CLOUD DATA • v4.15","warning");
         try{
           const snap=await stateRef.get();
           if(!snap.exists || !snap.data().initialized){
@@ -3076,14 +3246,14 @@
           lastKnownRevision=data.revision||"";
           replaceLocalRecords(data.records||{});
           localStorage.setItem("pmpCloudRevision_v4",lastKnownRevision);
-          setStatus("CLOUD SYNCED • v4.10","ready");
+          setStatus("CLOUD SYNCED • v4.15","ready");
           setDetail("Latest shared PMP data loaded successfully.");
           showCloudSuccess("The latest shared PMP records were loaded onto this device successfully.");
           setButtons();
           if(reload) location.reload();
         }catch(error){
           console.error("PMP cloud load failed",error);
-          setStatus("CLOUD ACCESS BLOCKED • v4.10","error");
+          setStatus("CLOUD ACCESS BLOCKED • v4.15","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before the app can read cloud data." : `Cloud load failed: ${error.message}`);
         }
       }
@@ -3097,12 +3267,12 @@
           lastKnownRevision=revision;
           replaceLocalRecords(data.records||{});
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD UPDATE RECEIVED • v4.10","ready");
+          setStatus("CLOUD UPDATE RECEIVED • v4.15","ready");
           setDetail("Another device updated PMP. Refreshing with the latest cloud data…");
           setTimeout(()=>location.reload(),500);
         },error=>{
           console.error("PMP live sync failed",error);
-          setStatus("LIVE SYNC PAUSED • v4.10","error");
+          setStatus("LIVE SYNC PAUSED • v4.15","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated to enable live synchronization." : `Live sync paused: ${error.message}`);
         });
       }
@@ -3112,7 +3282,7 @@
           auth=firebase.auth();
           db=firebase.firestore();
           stateRef=db.collection(STATE_COLLECTION).doc(STATE_DOCUMENT);
-          setStatus("AUTHENTICATING • v4.10","starting");
+          setStatus("AUTHENTICATING • v4.15","starting");
           await auth.signInAnonymously();
           cloudReady=true;
           setButtons();
@@ -3134,13 +3304,13 @@
             replaceLocalRecords(data.records||{});
             localStorage.setItem("pmpCloudRevision_v4",cloudRevision);
             lastKnownRevision=cloudRevision;
-            setStatus("CLOUD DATA LOADED • v4.10","ready");
+            setStatus("CLOUD DATA LOADED • v4.15","ready");
             setDetail("Latest shared PMP data loaded. Refreshing…");
             setTimeout(()=>location.reload(),350);
             return;
           }
           lastKnownRevision=cloudRevision;
-          setStatus("CLOUD SYNCED • v4.10","ready");
+          setStatus("CLOUD SYNCED • v4.15","ready");
           setDetail("This device is connected to the shared PMP cloud data.");
           const created = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : "previously";
           showCloudSuccess(`Firebase was initialized ${created}. Automatic synchronization is active. Use “Load Latest Cloud Data” only when you need to manually refresh this device.`);
@@ -3149,7 +3319,7 @@
           console.error("PMP Firebase startup failed",error);
           cloudReady=false;
           setButtons();
-          setStatus("CLOUD CONNECTION FAILED • v4.10","error");
+          setStatus("CLOUD CONNECTION FAILED • v4.15","error");
           setDetail(error.code==="permission-denied" ? "Firebase connected, but Firestore rules must be updated next." : `Firebase connection failed: ${error.message}`);
         }
       }
@@ -3248,6 +3418,14 @@
     const priceDecreaseCount = document.getElementById("price-decrease-count");
     const updateAllMasterPrices = document.getElementById("update-all-master-prices");
     const exportPriceDifferenceReport = document.getElementById("export-price-difference-report");
+    const manualPriceSearch = document.getElementById("manual-price-search");
+    const manualPriceProduct = document.getElementById("manual-price-product");
+    const manualCurrentPrice = document.getElementById("manual-current-price");
+    const manualNewPrice = document.getElementById("manual-new-price");
+    const manualPriceUom = document.getElementById("manual-price-uom");
+    const manualPriceCustomUomField = document.getElementById("manual-price-custom-uom-field");
+    const manualPriceCustomUom = document.getElementById("manual-price-custom-uom");
+    const saveManualPrice = document.getElementById("save-manual-price");
     const backButton = document.getElementById("back-to-dashboard");
     const backToInventory = document.getElementById("back-to-inventory");
     const productSearch = document.getElementById("product-search");
@@ -3860,6 +4038,29 @@
       orderEmpty.style.display=rows.length?"none":"block";
     }
 
+    function updateReceiveInventorySummary(rows=null){
+      const visibleRows=rows || productData.filter(product=>{
+        const search=(receiveSearch.value||"").trim().toLowerCase();
+        const matchesSearch=!search ||
+          String(product.name).toLowerCase().includes(search) ||
+          String(product.manufacturer).toLowerCase().includes(search) ||
+          String(product.item).includes(search);
+        return matchesSearch && product.status==="active";
+      });
+
+      const selected=visibleRows.filter(product=>(Number(receiveQuantitiesDedicated[product.item])||0)>0);
+      const totalQty=selected.reduce((sum,product)=>sum+(Number(receiveQuantitiesDedicated[product.item])||0),0);
+      const totalValue=selected.reduce((sum,product)=>{
+        const price=Number(product.price);
+        const qty=Number(receiveQuantitiesDedicated[product.item])||0;
+        return sum+(Number.isFinite(price)?qty*price:0);
+      },0);
+
+      receiveProductCount.textContent=`Products Selected: ${selected.length}`;
+      receiveQuantityTotal.textContent=`Total Quantity Received: ${totalQty}`;
+      receiveValueTotal.textContent=`Shipment Value: ${money(totalValue)}`;
+    }
+
     function renderReceiveInventory(){
       const search=(receiveSearch.value||"").trim().toLowerCase();
       const rows=productData.filter(product=>{
@@ -3873,32 +4074,33 @@
       receiveBody.innerHTML=rows.map(product=>{
         const qty=Number(receiveQuantitiesDedicated[product.item])||0;
         const newOnHand=(Number(product.onHand)||0)+qty;
-        return `<tr>
+        return `<tr data-receive-row="${product.item}">
           <td class="number receive-col-item">${product.item}</td>
           <td class="receive-col-product"><strong>${escapeHtml(product.name)}</strong><span class="receive-product-meta">${escapeHtml(product.manufacturer||"")}${product.unit?` • ${escapeHtml(product.unit)}`:""}</span></td>
           <td class="receive-col-manufacturer">${escapeHtml(product.manufacturer||"")}</td>
           <td class="number receive-col-current">${product.onHand==null?"—":product.onHand}</td>
           <td class="receive-col-unit">${escapeHtml(product.unit||"")}</td>
           <td class="number receive-col-price">${product.price==null?"—":money(product.price)}</td>
-          <td class="number receive-col-quantity"><input class="receiving-qty" type="number" min="0" step="1" value="${qty||""}" data-receive-qty="${product.item}"></td>
-          <td class="number receive-col-new"><strong>${newOnHand}</strong></td>
+          <td class="number receive-col-quantity"><input class="receiving-qty" type="number" min="0" step="1" inputmode="numeric" pattern="[0-9]*" value="${qty||""}" data-receive-qty="${product.item}" aria-label="Quantity received for ${escapeHtml(product.name)}"></td>
+          <td class="number receive-col-new"><strong data-receive-new="${product.item}">${newOnHand}</strong></td>
         </tr>`;
       }).join("");
 
-      receiveBody.querySelectorAll("[data-receive-qty]").forEach(input=>input.oninput=()=>{
-        receiveQuantitiesDedicated[input.dataset.receiveQty]=Math.max(0,Math.floor(Number(input.value)||0));
-        renderReceiveInventory();
+      receiveBody.querySelectorAll("[data-receive-qty]").forEach(input=>{
+        input.addEventListener("input",()=>{
+          const item=Number(input.dataset.receiveQty);
+          const product=productData.find(row=>Number(row.item)===item);
+          const qty=Math.max(0,Math.floor(Number(input.value)||0));
+          receiveQuantitiesDedicated[item]=qty;
+
+          const newTotal=receiveBody.querySelector(`[data-receive-new="${item}"]`);
+          if(newTotal && product) newTotal.textContent=(Number(product.onHand)||0)+qty;
+
+          updateReceiveInventorySummary(rows);
+        });
       });
 
-      const selected=rows.filter(p=>(Number(receiveQuantitiesDedicated[p.item])||0)>0);
-      const totalQty=selected.reduce((sum,p)=>sum+(Number(receiveQuantitiesDedicated[p.item])||0),0);
-      const totalValue=selected.reduce((sum,p)=>{
-        const price=Number(p.price);
-        return sum+(Number.isFinite(price)?(Number(receiveQuantitiesDedicated[p.item])||0)*price:0);
-      },0);
-      receiveProductCount.textContent=`Products Selected: ${selected.length}`;
-      receiveQuantityTotal.textContent=`Total Quantity Received: ${totalQty}`;
-      receiveValueTotal.textContent=`Shipment Value: ${money(totalValue)}`;
+      updateReceiveInventorySummary(rows);
       receiveEmpty.style.display=rows.length?"none":"block";
     }
 
@@ -4361,6 +4563,181 @@
 
     exportPriceDifferenceReport.addEventListener('click',exportPriceDifferenceExcel);
 
+
+    function populateManualPriceProducts(){
+      if(!manualPriceProduct) return;
+      const selected=manualPriceProduct.value;
+      const term=String(manualPriceSearch?.value||"").trim().toLowerCase();
+
+      const rows=[...productData]
+        .filter(product=>{
+          if(!term) return true;
+          const haystack=[
+            product.name,
+            product.manufacturer,
+            product.category,
+            product.distributorSku,
+            product.item
+          ].map(value=>String(value??"").toLowerCase()).join(" ");
+          return haystack.includes(term);
+        })
+        .sort((a,b)=>String(a.name||"").localeCompare(String(b.name||"")));
+
+      manualPriceProduct.innerHTML=
+        `<option value="">${rows.length ? `Select from ${rows.length} matching product${rows.length===1?"":"s"}…` : "No matching products"}</option>`+
+        rows.map(product=>`<option value="${product.item}">${escapeHtml(product.name)} — ${escapeHtml(product.manufacturer||"")}</option>`).join("");
+
+      if(selected && rows.some(product=>String(product.item)===String(selected))){
+        manualPriceProduct.value=selected;
+      }else if(rows.length===1 && term){
+        manualPriceProduct.value=String(rows[0].item);
+      }
+
+      updateManualPriceSelection();
+    }
+
+    function getPriceUomOptions(){
+      const standard=[
+        "EACH",
+        "CASE",
+        "BOX",
+        "PAIL",
+        "BAG",
+        "BOTTLE",
+        "CAN",
+        "JUG",
+        "ROLL",
+        "PACK",
+        "TUBE",
+        "GALLON",
+        "QUART",
+        "PINT",
+        "OUNCE",
+        "POUND",
+        "DOZEN",
+        "4/PK",
+        "12/PK",
+        "30/PK",
+        "72/PK",
+        "288/CASE"
+      ];
+      const existing=productData
+        .map(product=>String(product.priceUom||"").trim().toUpperCase())
+        .filter(Boolean);
+      return [...new Set([...standard,...existing])].sort((a,b)=>a.localeCompare(b));
+    }
+
+    function populatePriceUomOptions(selectedValue=""){
+      if(!manualPriceUom) return;
+      const selected=String(selectedValue||"").trim().toUpperCase();
+      const options=getPriceUomOptions();
+      manualPriceUom.innerHTML=
+        '<option value="">Select UOM…</option>'+
+        options.map(value=>`<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join('')+
+        '<option value="__CUSTOM__">Add a different UOM…</option>';
+
+      if(selected && options.includes(selected)){
+        manualPriceUom.value=selected;
+      }else if(selected){
+        manualPriceUom.value="__CUSTOM__";
+        manualPriceCustomUomField.hidden=false;
+        manualPriceCustomUom.value=selected;
+      }else{
+        manualPriceUom.value="";
+        manualPriceCustomUomField.hidden=true;
+        manualPriceCustomUom.value="";
+      }
+    }
+
+    function handleManualPriceUomChange(){
+      const isCustom=manualPriceUom.value==="__CUSTOM__";
+      manualPriceCustomUomField.hidden=!isCustom;
+      if(isCustom){
+        manualPriceCustomUom.focus();
+      }else{
+        manualPriceCustomUom.value="";
+      }
+    }
+
+    function updateManualPriceSelection(){
+      if(!manualPriceProduct) return;
+      const product=productData.find(row=>String(row.item)===String(manualPriceProduct.value));
+      if(!product){
+        manualCurrentPrice.textContent='—';
+        manualNewPrice.value='';
+        populatePriceUomOptions('');
+        saveManualPrice.disabled=true;
+        return;
+      }
+      manualCurrentPrice.textContent=product.price==null?'No price entered':`${money(product.price)}${product.priceUom?` • ${product.priceUom}`:''}`;
+      manualNewPrice.value=product.price==null?'':Number(product.price).toFixed(2);
+      populatePriceUomOptions(product.priceUom||'');
+      saveManualPrice.disabled=false;
+    }
+
+    function saveDirectMasterPrice(){
+      const product=productData.find(row=>String(row.item)===String(manualPriceProduct.value));
+      if(!product){
+        showNotice('Select a product first.');
+        return;
+      }
+      const entered=String(manualNewPrice.value||'').trim();
+      if(entered==='' || !Number.isFinite(Number(entered)) || Number(entered)<0){
+        showNotice('Enter a valid unit price.');
+        manualNewPrice.focus();
+        return;
+      }
+      const nextPrice=Math.round(Number(entered)*100)/100;
+      const previousPrice=product.price==null?null:Number(product.price);
+      const nextUom=String(
+        manualPriceUom.value==="__CUSTOM__"
+          ? manualPriceCustomUom.value
+          : manualPriceUom.value
+      ||'').trim().toUpperCase();
+      const previousUom=product.priceUom||'';
+
+      if(manualPriceUom.value==="__CUSTOM__" && !nextUom){
+        showNotice('Enter the new price UOM.');
+        manualPriceCustomUom.focus();
+        return;
+      }
+
+      product.price=nextPrice;
+      product.priceUom=nextUom;
+
+      const overrides=JSON.parse(localStorage.getItem('pmpPriceOverrides_v3_23')||'{}');
+      overrides[product.item]=nextPrice;
+      localStorage.setItem('pmpPriceOverrides_v3_23',JSON.stringify(overrides));
+
+      const uomOverrides=JSON.parse(localStorage.getItem('pmpPriceUomOverrides_v4_11')||'{}');
+      uomOverrides[product.item]=nextUom;
+      localStorage.setItem('pmpPriceUomOverrides_v4_11',JSON.stringify(uomOverrides));
+
+      const priceHistory=JSON.parse(localStorage.getItem('pmpPriceHistory_v3_48')||'[]');
+      priceHistory.push({
+        date:new Date().toISOString().slice(0,10),
+        savedAt:new Date().toISOString(),
+        changes:[{
+          item:product.item,
+          product:product.name,
+          previous:previousPrice,
+          next:nextPrice,
+          previousUom,
+          nextUom,
+          source:'Manual Price Management'
+        }]
+      });
+      localStorage.setItem('pmpPriceHistory_v3_48',JSON.stringify(priceHistory));
+
+      renderProducts();
+      renderOrderInventory();
+      renderReceiveInventory();
+      renderPriceReview();
+      populatePriceUomOptions(nextUom);
+      updateManualPriceSelection();
+      showNotice(`${product.name} price saved at ${money(nextPrice)}${nextUom?` per ${nextUom}`:''}.`);
+    }
+
     function renderPriceReview(){
       const rows=getPriceReviewRows();
       const reviewRows=rows.filter(r=>r.needsReview);
@@ -4402,6 +4779,32 @@
       showNotice(`${rows.length} master prices updated from the latest checkout prices.`);
     }
 
+    if(manualPriceSearch){
+      manualPriceSearch.addEventListener('input',populateManualPriceProducts);
+      manualPriceSearch.addEventListener('keydown',event=>{
+        if(event.key==='Escape'){
+          manualPriceSearch.value='';
+          populateManualPriceProducts();
+        }else if(event.key==='Enter'){
+          event.preventDefault();
+          const options=[...manualPriceProduct.options].filter(option=>option.value);
+          if(options.length===1){
+            manualPriceProduct.value=options[0].value;
+            updateManualPriceSelection();
+            manualNewPrice.focus();
+          }
+        }
+      });
+    }
+    if(manualPriceProduct) manualPriceProduct.addEventListener('change',updateManualPriceSelection);
+    if(manualPriceUom) manualPriceUom.addEventListener('change',handleManualPriceUomChange);
+    if(manualPriceCustomUom) manualPriceCustomUom.addEventListener('input',()=>{
+      manualPriceCustomUom.value=manualPriceCustomUom.value.toUpperCase();
+    });
+    if(saveManualPrice) saveManualPrice.addEventListener('click',saveDirectMasterPrice);
+    if(manualNewPrice) manualNewPrice.addEventListener('keydown',event=>{if(event.key==='Enter') saveDirectMasterPrice();});
+    populateManualPriceProducts();
+
     updateAllMasterPrices.addEventListener('click',updateAllReviewedMasterPrices);
     priceReviewFilter.addEventListener('change',renderPriceReview);
     backFromPriceReview.addEventListener('click',()=>{priceReviewScreen.classList.remove('active');productManagerMenuScreen.classList.add('active');});
@@ -4430,7 +4833,7 @@
         (record.changes||[]).forEach(change=>entries.push({date:record.date||record.savedAt,type:"Physical Count",product:change.product||"Unknown product",change:Number(change.difference)||0,before:historyNumber(change.previous),after:historyNumber(change.counted),source:record.countedBy||"Physical Count",reference:record.location||record.reason||"",details:[record.reason,change.note].filter(Boolean).join(" • "),stamp:record.savedAt||record.date||""}));
       });
       safeHistory("pmpPriceHistory_v3_48").forEach(record=>{
-        (record.changes||[]).forEach(change=>entries.push({date:change.date||record.date||record.savedAt,type:"Price Change",product:change.product||"Unknown product",change:(historyNumber(change.next)||0)-(historyNumber(change.previous)||0),before:historyNumber(change.previous),after:historyNumber(change.next),source:"Price Review",reference:change.orderNumber||change.sku||"",details:"Master price updated from checkout PDF",stamp:record.savedAt||record.date||"",moneyValues:true}));
+        (record.changes||[]).forEach(change=>entries.push({date:change.date||record.date||record.savedAt,type:"Price Change",product:change.product||"Unknown product",change:(historyNumber(change.next)||0)-(historyNumber(change.previous)||0),before:historyNumber(change.previous),after:historyNumber(change.next),source:change.source||"Price Review",reference:change.orderNumber||change.sku||"",details:change.source==="Manual Price Management"?"Master price updated manually":"Master price updated from checkout PDF",stamp:record.savedAt||record.date||"",moneyValues:true}));
       });
       safeHistory("pmpMinimumHistory_v3_48").forEach(record=>{
         (record.changes||[]).forEach(change=>entries.push({date:record.date||record.savedAt,type:"Minimum Change",product:change.product||"Unknown product",change:(historyNumber(change.next)||0)-(historyNumber(change.previous)||0),before:historyNumber(change.previous),after:historyNumber(change.next),source:"Product Manager",reference:"Minimums",details:"Minimum stock level updated",stamp:record.savedAt||record.date||""}));
@@ -4748,6 +5151,7 @@
         }
         if (tile.dataset.managerModule === "Price Review") {
           priceReviewScreen.classList.add("active");
+          populateManualPriceProducts();
           renderPriceReview();
         }
       });
