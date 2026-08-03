@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v4.15</title>
+  <title>PMP Operations Center v4.18</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -467,7 +467,34 @@
     }
 
 
-    /* v4.15 — Manual master price maintenance */
+    /* v4.18 — Manual master price maintenance */
+
+    /* v4.18 — Add New Product Wizard */
+    .add-product-shell{max-width:1180px}
+    .wizard-progress{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;flex:0 0 auto}
+    .wizard-step{border:2px solid rgba(255,255,255,.4);border-radius:11px;background:rgba(11,39,67,.52);color:#fff;padding:10px;font-weight:800;cursor:pointer}
+    .wizard-step span{display:inline-flex;width:24px;height:24px;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,.18);margin-right:7px}
+    .wizard-step.active{background:var(--red);border-color:var(--red)}
+    .wizard-step.complete{background:#176b3a;border-color:#176b3a}
+    .wizard-card{min-height:0;flex:1;display:flex;flex-direction:column;background:rgba(255,255,255,.98);border-radius:15px;padding:18px;box-shadow:0 16px 36px rgba(0,0,0,.18);overflow:auto}
+    .wizard-panel{display:none}
+    .wizard-panel.active{display:block}
+    .wizard-panel h3{margin:0 0 14px;color:var(--navy-dark)}
+    .wizard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+    .wizard-grid label.wide{grid-column:1/-1}
+    .wizard-grid label span{display:block;margin-bottom:5px;color:var(--muted);font-size:.75rem;font-weight:800;text-transform:uppercase}
+    .wizard-grid input,.wizard-grid select,.wizard-grid textarea{width:100%;border:1px solid var(--border);border-radius:9px;padding:10px 11px;background:#fff;color:var(--text);font:inherit}
+    .wizard-grid textarea{min-height:76px;resize:vertical}
+    .wizard-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:auto;padding-top:18px}
+    .wizard-actions button[hidden]{display:none!important}
+    .wizard-review{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .wizard-review-row{border:1px solid var(--border);border-radius:9px;padding:9px 11px;background:#f8fafc}
+    .wizard-review-row span{display:block;color:var(--muted);font-size:.68rem;font-weight:800;text-transform:uppercase}
+    .wizard-review-row strong{display:block;margin-top:4px;color:var(--navy-dark);overflow-wrap:anywhere}
+    .wizard-confirmation{margin-top:16px;padding:12px 14px;border-radius:10px;background:#fff7e8;border:1px solid #f2cf8d;font-weight:700}
+    @media(max-width:900px){.wizard-progress{grid-template-columns:repeat(2,1fr)}.wizard-grid,.wizard-review{grid-template-columns:1fr}.wizard-grid label.wide{grid-column:auto}.wizard-actions{display:grid;grid-template-columns:1fr 1fr}}
+    @media(max-width:520px){.wizard-progress,.wizard-actions{grid-template-columns:1fr}}
+
     .manual-price-editor{
       background:rgba(255,255,255,.97);
       border:2px solid rgba(255,255,255,.45);
@@ -677,7 +704,7 @@
     .manager-number{width:92px;padding:7px 8px;border:1px solid var(--border);border-radius:8px;text-align:right}
     .manager-minimum-entry{display:flex;align-items:center;justify-content:flex-end;gap:8px;white-space:nowrap}
     .manager-current-minimum{font-size:.72rem;color:#8a98a6;font-weight:700}
-    /* v4.15 — Remove number spinners and soften current minimum */
+    /* v4.18 — Remove number spinners and soften current minimum */
     input[type=number]::-webkit-outer-spin-button,
     input[type=number]::-webkit-inner-spin-button{
       -webkit-appearance:none;
@@ -1308,7 +1335,7 @@
 
 
 
-    /* v4.15 — Receive Inventory iPad portrait header and column alignment */
+    /* v4.18 — Receive Inventory iPad portrait header and column alignment */
     @media (max-width: 900px) and (orientation: portrait) {
       #receive-inventory-screen .products-table th:nth-child(2),
       #receive-inventory-screen .products-table th:nth-child(4),
@@ -2376,7 +2403,7 @@
     #initialize-cloud-data[hidden]{display:none !important;}
   
 
-    /* v4.15 — trustworthy inventory summary and Cloud Manager page positioning */
+    /* v4.18 — trustworthy inventory summary and Cloud Manager page positioning */
     .products-summary {display:grid;grid-template-columns:repeat(6,minmax(0,1fr)) minmax(190px,1.45fr);gap:9px}
     .products-summary-item{min-width:0;background:rgba(255,255,255,.97);border:2px solid rgba(255,255,255,.4);border-radius:11px;padding:9px 11px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
     .products-summary-item span{display:block;color:var(--muted);font-size:.68rem;font-weight:800;letter-spacing:.035em;line-height:1.15;text-transform:uppercase}
@@ -2399,6 +2426,34 @@
       .products-view-count{text-align:left;margin-top:-5px}
     }
 
+
+    /* v4.18 — Hidden Product IDs and alphabetical operational lists */
+    @media (max-width: 900px) and (orientation: portrait) {
+      #order-inventory-screen .products-table th:nth-child(1) { width: 36% !important; text-align:left !important; }
+      #order-inventory-screen .products-table th:nth-child(2) { display:none !important; }
+      #order-inventory-screen .products-table th:nth-child(3) { width: 11% !important; text-align:center !important; }
+      #order-inventory-screen .products-table th:nth-child(4) { width: 11% !important; text-align:center !important; }
+      #order-inventory-screen .products-table th:nth-child(5) { width: 12% !important; text-align:center !important; }
+      #order-inventory-screen .products-table th:nth-child(6) { display:none !important; }
+      #order-inventory-screen .products-table th:nth-child(7) { width: 30% !important; text-align:center !important; }
+      #order-inventory-screen .products-table th:nth-child(8) { display:none !important; }
+
+      #receive-inventory-screen .products-table th:nth-child(1) { width: 40% !important; text-align:left !important; }
+      #receive-inventory-screen .products-table th:nth-child(2) { display:none !important; }
+      #receive-inventory-screen .products-table th:nth-child(3) { width: 16% !important; text-align:center !important; }
+      #receive-inventory-screen .products-table th:nth-child(4) { display:none !important; }
+      #receive-inventory-screen .products-table th:nth-child(5) { display:none !important; }
+      #receive-inventory-screen .products-table th:nth-child(6) { width: 22% !important; text-align:center !important; }
+      #receive-inventory-screen .products-table th:nth-child(7) { width: 22% !important; text-align:center !important; }
+
+      #product-manager-screen .products-table th:nth-child(1) { width: 40% !important; text-align:left !important; }
+      #product-manager-screen .products-table th:nth-child(2),
+      #product-manager-screen .products-table th:nth-child(3) { display:none !important; }
+      #product-manager-screen .products-table th:nth-child(4) { width: 14% !important; text-align:center !important; }
+      #product-manager-screen .products-table th:nth-child(5) { width: 20% !important; text-align:center !important; }
+      #product-manager-screen .products-table th:nth-child(6) { width: 26% !important; text-align:center !important; }
+    }
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -2410,7 +2465,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.15</div>
+      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.18</div>
     </header>
 
     <main>
@@ -2545,6 +2600,12 @@
         </div>
 
         <section class="module-grid" aria-label="Product Manager tools">
+          <button class="module-tile manager-menu-tile" type="button" data-manager-module="Add Product">
+            <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/><path d="M4 4h16v16H4z"/></svg></div>
+            <h3>Add New Product</h3>
+            <p>Use a guided wizard to add a complete product record to the master.</p>
+          </button>
+
           <button class="module-tile manager-menu-tile" type="button" data-manager-module="Order">
             <div class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L20 7H7"/><circle cx="10" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg></div>
             <h3>Order</h3>
@@ -2657,7 +2718,6 @@
             <table class="products-table">
               <thead>
                 <tr>
-                  <th>Item #</th>
                   <th>Product</th>
                   <th>Manufacturer</th>
                   <th>On Hand</th>
@@ -2717,7 +2777,6 @@
             <table class="products-table">
               <thead>
                 <tr>
-                  <th>Item #</th>
                   <th>Product</th>
                   <th>Manufacturer</th>
                   <th>Current On Hand</th>
@@ -2826,6 +2885,100 @@
         </div>
       </section>
 
+
+
+      <section id="add-product-screen" class="screen products-screen" aria-label="Add New Product">
+        <div class="products-shell add-product-shell">
+          <div class="inventory-header">
+            <div class="inventory-title">
+              <h2>Add New Product</h2>
+              <p>Complete each step. Unused master fields are saved as N/A.</p>
+            </div>
+            <button id="back-from-add-product" class="back-button" type="button">← Back to Product Manager</button>
+          </div>
+
+          <div class="wizard-progress">
+            <button type="button" class="wizard-step active" data-wizard-step="1"><span>1</span>Product</button>
+            <button type="button" class="wizard-step" data-wizard-step="2"><span>2</span>Inventory & Price</button>
+            <button type="button" class="wizard-step" data-wizard-step="3"><span>3</span>Master Details</button>
+            <button type="button" class="wizard-step" data-wizard-step="4"><span>4</span>Review</button>
+          </div>
+
+          <div class="wizard-card">
+            <section class="wizard-panel active" data-wizard-panel="1">
+              <h3>Product identification</h3>
+              <div class="wizard-grid">
+                <label class="wide"><span>Product Name *</span><input id="wizard-name" type="text"></label>
+                <label><span>Manufacturer *</span><input id="wizard-manufacturer" type="text"></label>
+                <label><span>Category *</span><select id="wizard-category"></select></label>
+                <label><span>New Category</span><input id="wizard-custom-category" type="text" placeholder="Only if not listed"></label>
+                <label><span>Formulation / Product Type *</span><select id="wizard-formulation"></select></label>
+                <label><span>New Formulation / Product Type</span><input id="wizard-custom-formulation" type="text" placeholder="Only if not listed"></label>
+                <label><span>Service Type *</span><select id="wizard-service-type"></select></label>
+                <label><span>New Service Type</span><input id="wizard-custom-service-type" type="text" placeholder="Only if not listed"></label>
+              </div>
+            </section>
+
+            <section class="wizard-panel" data-wizard-panel="2">
+              <h3>Inventory and pricing</h3>
+              <div class="wizard-grid">
+                <label><span>Inventory UOM *</span><select id="wizard-unit"></select></label>
+                <label><span>New Inventory UOM</span><input id="wizard-custom-unit" type="text" placeholder="Only if not listed"></label>
+                <label><span>On Hand *</span><input id="wizard-onhand" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off"></label>
+                <label><span>Minimum *</span><input id="wizard-minimum" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off"></label>
+                <label><span>Status *</span><select id="wizard-status"><option value="active">Active</option><option value="use-remaining">Use Remaining Stock</option><option value="inactive">Inactive</option></select></label>
+                <label><span>Unit Price</span><input id="wizard-price" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00"></label>
+                <label><span>Price UOM</span><select id="wizard-price-uom"></select></label>
+                <label><span>New Price UOM</span><input id="wizard-custom-price-uom" type="text" placeholder="Only if not listed"></label>
+                <label><span>Preferred Distributor</span><input id="wizard-distributor" type="text" value="Forshaw"></label>
+                <label><span>Distributor SKU</span><input id="wizard-sku" type="text"></label>
+              </div>
+            </section>
+
+            <section class="wizard-panel" data-wizard-panel="3">
+              <h3>Compliance, documents, and technical details</h3>
+              <div class="wizard-grid">
+                <label><span>EPA Registration</span><input id="wizard-epa" type="text"></label>
+                <label><span>Active Ingredient(s)</span><input id="wizard-active" type="text"></label>
+                <label><span>Active Percentage</span><input id="wizard-percent" type="text"></label>
+                <label><span>IRAC / MOA</span><input id="wizard-irac" type="text"></label>
+                <label><span>Repellency</span><input id="wizard-repellency" type="text"></label>
+                <label><span>Virginia License Category</span><input id="wizard-va-category" type="text"></label>
+                <label><span>Restricted Use Pesticide (RUP)</span><select id="wizard-rup"><option value="No">No</option><option value="Yes">Yes</option><option value="N/A – Not Applicable">N/A – Not Applicable</option></select></label>
+                <label><span>Signal Word</span><input id="wizard-signal" type="text"></label>
+                <label><span>Indoor / Outdoor</span><input id="wizard-indoor-outdoor" type="text"></label>
+                <label class="wide"><span>Target Pests / Purpose</span><input id="wizard-target-pests" type="text"></label>
+                <label><span>Mix Rate Low</span><input id="wizard-mix-low" type="text"></label>
+                <label><span>Mix Rate High</span><input id="wizard-mix-high" type="text"></label>
+                <label class="wide"><span>Mix Rate Notes</span><textarea id="wizard-mix-notes"></textarea></label>
+                <label><span>Rotation Pairs</span><input id="wizard-rotation" type="text"></label>
+                <label><span>Avoid Rotation</span><input id="wizard-avoid-rotation" type="text"></label>
+                <label class="wide"><span>Resistance / Safety Notes</span><textarea id="wizard-resistance"></textarea></label>
+                <label><span>Label File / Link</span><input id="wizard-label-link" type="text"></label>
+                <label><span>SDS File / Link</span><input id="wizard-sds-link" type="text"></label>
+                <label><span>Technical Bulletin</span><input id="wizard-tech-link" type="text"></label>
+                <label><span>Training Document</span><input id="wizard-training-link" type="text"></label>
+                <label class="wide"><span>Manager Notes</span><textarea id="wizard-notes"></textarea></label>
+              </div>
+            </section>
+
+            <section class="wizard-panel" data-wizard-panel="4">
+              <h3>Review new product</h3>
+              <div id="wizard-review" class="wizard-review"></div>
+              <div class="wizard-confirmation">
+                <label><input id="wizard-confirm" type="checkbox"> I reviewed the product record and it is ready to add to the master.</label>
+              </div>
+            </section>
+
+            <div class="wizard-actions">
+              <button id="wizard-previous" class="action-button" type="button" disabled>← Previous</button>
+              <button id="wizard-cancel" class="action-button" type="button">Clear Wizard</button>
+              <button id="wizard-next" class="excel-button" type="button">Next →</button>
+              <button id="wizard-save" class="excel-button" type="button" hidden>Add Product to Master</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section id="price-review-screen" class="screen price-review-screen" aria-label="Inventory price review">
         <div class="price-review-shell">
@@ -3071,7 +3224,7 @@
 
     </main>
 
-    <footer>PMP Operations Center • v4.15</footer>
+    <footer>PMP Operations Center • v4.18</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -3156,7 +3309,7 @@
         if(!cloudReady || !cloudInitialized || applyingCloud || !stateRef) return;
         const revision=makeRevision();
         lastKnownRevision=revision;
-        setStatus("SAVING TO CLOUD • v4.15","warning");
+        setStatus("SAVING TO CLOUD • v4.18","warning");
         setDetail(`${reason}…`);
         try{
           await stateRef.set({
@@ -3169,11 +3322,11 @@
             updatedBy:auth.currentUser ? auth.currentUser.uid : "unknown"
           });
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD SYNCED • v4.15","ready");
+          setStatus("CLOUD SYNCED • v4.18","ready");
           setDetail(`Saved to cloud at ${new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}.`);
         }catch(error){
           console.error("PMP cloud save failed",error);
-          setStatus("CLOUD SAVE FAILED • v4.15","error");
+          setStatus("CLOUD SAVE FAILED • v4.18","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud data can be saved." : `Cloud save failed: ${error.message}`);
         }
       }
@@ -3201,7 +3354,7 @@
         if(!stateRef || !cloudReady) return;
         if(!confirm("Initialize Firebase using the PMP data currently stored on this device? Use the device with the authoritative inventory data.")) return;
         const revision=makeRevision();
-        setStatus("INITIALIZING CLOUD • v4.15","warning");
+        setStatus("INITIALIZING CLOUD • v4.18","warning");
         setDetail("Creating the first shared PMP cloud record…");
         try{
           await stateRef.set({
@@ -3217,7 +3370,7 @@
           cloudInitialized=true;
           lastKnownRevision=revision;
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD SYNCED • v4.15","ready");
+          setStatus("CLOUD SYNCED • v4.18","ready");
           setDetail("Cloud initialized from this device. Future PMP changes will synchronize automatically.");
           showCloudSuccess(`The Go-Live Master is now stored in Firebase. ${Object.keys(snapshotRecords()).length} PMP data records are synchronized and this device is live.`);
           setButtons();
@@ -3225,13 +3378,13 @@
           watchCloud();
         }catch(error){
           console.error("PMP cloud initialization failed",error);
-          setStatus("CLOUD SETUP BLOCKED • v4.15","error");
+          setStatus("CLOUD SETUP BLOCKED • v4.18","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud initialization." : `Cloud initialization failed: ${error.message}`);
         }
       }
       async function loadCloudData({reload=true}={}){
         if(!stateRef || !cloudReady) return;
-        setStatus("LOADING CLOUD DATA • v4.15","warning");
+        setStatus("LOADING CLOUD DATA • v4.18","warning");
         try{
           const snap=await stateRef.get();
           if(!snap.exists || !snap.data().initialized){
@@ -3246,14 +3399,14 @@
           lastKnownRevision=data.revision||"";
           replaceLocalRecords(data.records||{});
           localStorage.setItem("pmpCloudRevision_v4",lastKnownRevision);
-          setStatus("CLOUD SYNCED • v4.15","ready");
+          setStatus("CLOUD SYNCED • v4.18","ready");
           setDetail("Latest shared PMP data loaded successfully.");
           showCloudSuccess("The latest shared PMP records were loaded onto this device successfully.");
           setButtons();
           if(reload) location.reload();
         }catch(error){
           console.error("PMP cloud load failed",error);
-          setStatus("CLOUD ACCESS BLOCKED • v4.15","error");
+          setStatus("CLOUD ACCESS BLOCKED • v4.18","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before the app can read cloud data." : `Cloud load failed: ${error.message}`);
         }
       }
@@ -3267,12 +3420,12 @@
           lastKnownRevision=revision;
           replaceLocalRecords(data.records||{});
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD UPDATE RECEIVED • v4.15","ready");
+          setStatus("CLOUD UPDATE RECEIVED • v4.18","ready");
           setDetail("Another device updated PMP. Refreshing with the latest cloud data…");
           setTimeout(()=>location.reload(),500);
         },error=>{
           console.error("PMP live sync failed",error);
-          setStatus("LIVE SYNC PAUSED • v4.15","error");
+          setStatus("LIVE SYNC PAUSED • v4.18","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated to enable live synchronization." : `Live sync paused: ${error.message}`);
         });
       }
@@ -3282,7 +3435,7 @@
           auth=firebase.auth();
           db=firebase.firestore();
           stateRef=db.collection(STATE_COLLECTION).doc(STATE_DOCUMENT);
-          setStatus("AUTHENTICATING • v4.15","starting");
+          setStatus("AUTHENTICATING • v4.18","starting");
           await auth.signInAnonymously();
           cloudReady=true;
           setButtons();
@@ -3304,13 +3457,13 @@
             replaceLocalRecords(data.records||{});
             localStorage.setItem("pmpCloudRevision_v4",cloudRevision);
             lastKnownRevision=cloudRevision;
-            setStatus("CLOUD DATA LOADED • v4.15","ready");
+            setStatus("CLOUD DATA LOADED • v4.18","ready");
             setDetail("Latest shared PMP data loaded. Refreshing…");
             setTimeout(()=>location.reload(),350);
             return;
           }
           lastKnownRevision=cloudRevision;
-          setStatus("CLOUD SYNCED • v4.15","ready");
+          setStatus("CLOUD SYNCED • v4.18","ready");
           setDetail("This device is connected to the shared PMP cloud data.");
           const created = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : "previously";
           showCloudSuccess(`Firebase was initialized ${created}. Automatic synchronization is active. Use “Load Latest Cloud Data” only when you need to manually refresh this device.`);
@@ -3319,7 +3472,7 @@
           console.error("PMP Firebase startup failed",error);
           cloudReady=false;
           setButtons();
-          setStatus("CLOUD CONNECTION FAILED • v4.15","error");
+          setStatus("CLOUD CONNECTION FAILED • v4.18","error");
           setDetail(error.code==="permission-denied" ? "Firebase connected, but Firestore rules must be updated next." : `Firebase connection failed: ${error.message}`);
         }
       }
@@ -3409,6 +3562,14 @@
     const receivingDate = document.getElementById("receiving-date");
     const postReceiving = document.getElementById("post-receiving");
     const receivingQuantities = {};
+    const addProductScreen = document.getElementById("add-product-screen");
+    const backFromAddProduct = document.getElementById("back-from-add-product");
+    const wizardPrevious = document.getElementById("wizard-previous");
+    const wizardNext = document.getElementById("wizard-next");
+    const wizardSave = document.getElementById("wizard-save");
+    const wizardCancel = document.getElementById("wizard-cancel");
+    const wizardReview = document.getElementById("wizard-review");
+    const wizardConfirm = document.getElementById("wizard-confirm");
     const priceReviewScreen = document.getElementById("price-review-screen");
     const backFromPriceReview = document.getElementById("back-from-price-review");
     const priceReviewBody = document.getElementById("price-review-body");
@@ -3494,6 +3655,21 @@
       localStorage.setItem("pmpGoLiveMasterVersion_v4", GO_LIVE_MASTER_VERSION);
     }
 
+    const savedAddedProducts = JSON.parse(localStorage.getItem("pmpAddedProducts_v4_16") || "[]");
+    savedAddedProducts.forEach(savedProduct=>{
+      if(savedProduct && !productData.some(product=>Number(product.item)===Number(savedProduct.item))){
+        productData.push(savedProduct);
+      }
+    });
+
+    function formatProductId(value){
+      return String(Math.max(0, Number(value) || 0)).padStart(4, "0");
+    }
+
+    productData.forEach(product=>{
+      product.productId = formatProductId(product.item);
+    });
+
     const savedProductStatuses = JSON.parse(localStorage.getItem("pmpProductStatuses_v3_37") || "{}");
     const savedMinimumOverrides = JSON.parse(localStorage.getItem("pmpMinimumOverrides_v3_47") || "{}");
     productData.forEach(product => {
@@ -3523,6 +3699,89 @@
       const needed = Math.max(0, Number(product.minimum||0) - Number(product.onHand||0));
       reorderQuantities[product.item] = Number.isFinite(needed) ? needed : 0;
     });
+
+    let wizardCurrentStep=1;
+    const wizardFieldIds=["wizard-name","wizard-manufacturer","wizard-category","wizard-custom-category","wizard-formulation","wizard-custom-formulation","wizard-service-type","wizard-custom-service-type","wizard-unit","wizard-custom-unit","wizard-onhand","wizard-minimum","wizard-status","wizard-price","wizard-price-uom","wizard-custom-price-uom","wizard-distributor","wizard-sku","wizard-epa","wizard-active","wizard-percent","wizard-irac","wizard-repellency","wizard-va-category","wizard-rup","wizard-signal","wizard-indoor-outdoor","wizard-target-pests","wizard-mix-low","wizard-mix-high","wizard-mix-notes","wizard-rotation","wizard-avoid-rotation","wizard-resistance","wizard-label-link","wizard-sds-link","wizard-tech-link","wizard-training-link","wizard-notes"];
+    const wizardElement=id=>document.getElementById(id);
+    const wizardValue=id=>String(wizardElement(id)?.value||"").trim();
+    const nA=value=>String(value||"").trim()||"N/A";
+
+    function populateWizardOptions(){
+      const categories=[...new Set(productData.map(p=>String(p.category||"").trim()).filter(Boolean))].sort();
+      const units=[...new Set(productData.map(p=>String(p.unit||"").trim()).filter(Boolean))].sort();
+      const priceUoms=[...new Set(productData.map(p=>String(p.priceUom||"").trim().toUpperCase()).filter(Boolean))].sort();
+      const formulations=[...new Set(productData.map(p=>String(p.formulation||"").trim()).filter(Boolean))].sort();
+      const serviceTypes=[...new Set(productData.map(p=>String(p.serviceType||"").trim()).filter(Boolean))].sort();
+      wizardElement("wizard-category").innerHTML='<option value="">Select category…</option>'+categories.map(v=>`<option>${escapeHtml(v)}</option>`).join('');
+      wizardElement("wizard-unit").innerHTML='<option value="">Select inventory UOM…</option>'+units.map(v=>`<option>${escapeHtml(v)}</option>`).join('');
+      wizardElement("wizard-price-uom").innerHTML='<option value="">Select price UOM…</option>'+priceUoms.map(v=>`<option>${escapeHtml(v)}</option>`).join('');
+      wizardElement("wizard-formulation").innerHTML='<option value="">Select formulation / product type…</option>'+formulations.map(v=>`<option>${escapeHtml(v)}</option>`).join('');
+      wizardElement("wizard-service-type").innerHTML='<option value="">Select service type…</option>'+serviceTypes.map(v=>`<option>${escapeHtml(v)}</option>`).join('');
+    }
+
+    function wizardProductRecord(){
+      const item=Math.max(0,...productData.map(p=>Number(p.item)||0))+1;
+      const category=wizardValue("wizard-custom-category")||wizardValue("wizard-category");
+      const unit=wizardValue("wizard-custom-unit")||wizardValue("wizard-unit");
+      const priceUom=(wizardValue("wizard-custom-price-uom")||wizardValue("wizard-price-uom")).toUpperCase();
+      const onHand=Number(wizardValue("wizard-onhand"));
+      const minimum=Number(wizardValue("wizard-minimum"));
+      const rawPrice=wizardValue("wizard-price");
+      const price=rawPrice===""?null:Math.round(Number(rawPrice)*100)/100;
+      return {item,productId:formatProductId(item),name:wizardValue("wizard-name"),onHand,unit,minimum,reorder:Math.max(0,minimum-onHand),manufacturer:wizardValue("wizard-manufacturer"),category,price,priceUom,epaReg:nA(wizardValue("wizard-epa")),activeIngredients:nA(wizardValue("wizard-active")),activePercent:nA(wizardValue("wizard-percent")),formulation:wizardValue("wizard-custom-formulation")||wizardValue("wizard-formulation"),iracMoa:nA(wizardValue("wizard-irac")),repellency:nA(wizardValue("wizard-repellency")),rotationPairs:nA(wizardValue("wizard-rotation")),avoidRotation:nA(wizardValue("wizard-avoid-rotation")),resistanceNotes:nA(wizardValue("wizard-resistance")),mixRateLow:nA(wizardValue("wizard-mix-low")),mixRateHigh:nA(wizardValue("wizard-mix-high")),mixRateNotes:nA(wizardValue("wizard-mix-notes")),serviceType:wizardValue("wizard-custom-service-type")||wizardValue("wizard-service-type"),indoorOutdoor:nA(wizardValue("wizard-indoor-outdoor")),targetPests:nA(wizardValue("wizard-target-pests")),vaLicenseCategory:nA(wizardValue("wizard-va-category")),rup:nA(wizardValue("wizard-rup")),signalWord:nA(wizardValue("wizard-signal")),labelLink:nA(wizardValue("wizard-label-link")),sdsLink:nA(wizardValue("wizard-sds-link")),technicalBulletinLink:nA(wizardValue("wizard-tech-link")),trainingDocumentLink:nA(wizardValue("wizard-training-link")),preferredDistributor:nA(wizardValue("wizard-distributor")),distributorSku:nA(wizardValue("wizard-sku")),managerNotes:nA(wizardValue("wizard-notes")),status:wizardValue("wizard-status")||"active"};
+    }
+
+    function validateWizardStep(step){
+      const required={1:["wizard-name","wizard-manufacturer"],2:["wizard-onhand","wizard-minimum","wizard-status"]};
+      for(const id of required[step]||[]){const field=wizardElement(id);if(!String(field.value||"").trim()){field.focus();showNotice("Complete the required fields before continuing.");return false}}
+      if(step===1 && !(wizardValue("wizard-category")||wizardValue("wizard-custom-category"))){showNotice("Select or enter a category.");return false}
+      if(step===1 && !(wizardValue("wizard-formulation")||wizardValue("wizard-custom-formulation"))){showNotice("Select or enter a formulation / product type.");return false}
+      if(step===1 && !(wizardValue("wizard-service-type")||wizardValue("wizard-custom-service-type"))){showNotice("Select or enter a service type.");return false}
+      if(step===2 && !(wizardValue("wizard-unit")||wizardValue("wizard-custom-unit"))){showNotice("Select or enter an inventory UOM.");return false}
+      if(step===2 && !/^\d+$/.test(wizardValue("wizard-onhand"))){wizardElement("wizard-onhand").focus();showNotice("On Hand must be a whole number.");return false}
+      if(step===2 && !/^\d+$/.test(wizardValue("wizard-minimum"))){wizardElement("wizard-minimum").focus();showNotice("Minimum must be a whole number.");return false}
+      if(step===2 && wizardValue("wizard-price") && !/^\d+(\.\d{0,2})?$/.test(wizardValue("wizard-price"))){wizardElement("wizard-price").focus();showNotice("Enter a valid price with up to two decimal places.");return false}
+      if(step===2 && wizardValue("wizard-price") && !(wizardValue("wizard-price-uom")||wizardValue("wizard-custom-price-uom"))){showNotice("Select or enter a Price UOM.");return false}
+      if(step===1 && productData.some(p=>String(p.name||"").trim().toLowerCase()===wizardValue("wizard-name").toLowerCase())){showNotice("That product already exists in the master.");return false}
+      return true;
+    }
+
+    function renderWizardReview(){
+      const p=wizardProductRecord();
+      const rows=[["Product",p.name],["Manufacturer",p.manufacturer],["Category",p.category],["Inventory UOM",p.unit],["On Hand",p.onHand],["Minimum",p.minimum],["Status",p.status],["Unit Price",p.price==null?"No price entered":money(p.price)],["Price UOM",p.priceUom||"N/A"],["EPA Registration",p.epaReg],["Active Ingredient",p.activeIngredients],["Formulation",p.formulation],["Service Type",p.serviceType],["Virginia Category",p.vaLicenseCategory],["Label",p.labelLink],["SDS",p.sdsLink],["Distributor",p.preferredDistributor],["Distributor SKU",p.distributorSku]];
+      wizardReview.innerHTML=rows.map(([l,v])=>`<div class="wizard-review-row"><span>${escapeHtml(l)}</span><strong>${escapeHtml(v)}</strong></div>`).join("");
+    }
+
+    function showWizardStep(step){
+      wizardCurrentStep=Math.min(4,Math.max(1,step));
+      document.querySelectorAll("[data-wizard-panel]").forEach(p=>p.classList.toggle("active",Number(p.dataset.wizardPanel)===wizardCurrentStep));
+      document.querySelectorAll("[data-wizard-step]").forEach(b=>{const n=Number(b.dataset.wizardStep);b.classList.toggle("active",n===wizardCurrentStep);b.classList.toggle("complete",n<wizardCurrentStep)});
+      wizardPrevious.disabled=wizardCurrentStep===1;
+      wizardNext.hidden=wizardCurrentStep===4;
+      wizardSave.hidden=wizardCurrentStep!==4;
+      if(wizardCurrentStep===4) renderWizardReview();
+      const wizardCard=document.querySelector(".wizard-card");
+      if(wizardCard) wizardCard.scrollTo({top:0,behavior:"instant"});
+      addProductScreen.scrollTo?.({top:0,behavior:"instant"});
+    }
+
+    function clearProductWizard(){
+      wizardFieldIds.forEach(id=>{const f=wizardElement(id);if(!f)return;if(f.tagName==="SELECT")f.selectedIndex=0;else f.value=""});
+      wizardElement("wizard-distributor").value="Forshaw";wizardElement("wizard-status").value="active";wizardElement("wizard-rup").value="No";wizardConfirm.checked=false;showWizardStep(1);
+    }
+
+    function saveWizardProduct(){
+      if(!wizardConfirm.checked){showNotice("Confirm that you reviewed the product record.");return}
+      const p=wizardProductRecord();
+      if(productData.some(existing=>String(existing.name).trim().toLowerCase()===p.name.trim().toLowerCase())){showNotice("That product already exists in the master.");return}
+      p.productId=formatProductId(p.item);
+      productData.push(p);
+      const saved=JSON.parse(localStorage.getItem("pmpAddedProducts_v4_16")||"[]");saved.push(p);localStorage.setItem("pmpAddedProducts_v4_16",JSON.stringify(saved));
+      const statuses=JSON.parse(localStorage.getItem("pmpProductStatuses_v3_37")||"{}");statuses[p.item]=p.status;localStorage.setItem("pmpProductStatuses_v3_37",JSON.stringify(statuses));
+      const minimums=JSON.parse(localStorage.getItem("pmpMinimumOverrides_v3_47")||"{}");minimums[p.item]=p.minimum;localStorage.setItem("pmpMinimumOverrides_v3_47",JSON.stringify(minimums));
+      if(p.price!=null){const prices=JSON.parse(localStorage.getItem("pmpPriceOverrides_v3_23")||"{}");prices[p.item]=p.price;localStorage.setItem("pmpPriceOverrides_v3_23",JSON.stringify(prices));const uoms=JSON.parse(localStorage.getItem("pmpPriceUomOverrides_v4_11")||"{}");uoms[p.item]=p.priceUom;localStorage.setItem("pmpPriceUomOverrides_v4_11",JSON.stringify(uoms))}
+      reorderQuantities[p.item]=p.reorder;saveProductStatuses();populateWizardOptions();populateManualPriceProducts();renderProducts();renderProductManager();renderOrderInventory();renderReceiveInventory();renderPhysicalCount();showNotice(`${p.name} added as product #${p.item}.`);clearProductWizard();addProductScreen.classList.remove("active");productManagerMenuScreen.classList.add("active");
+    }
 
     let timer;
 
@@ -3880,10 +4139,9 @@
           String(product.item).includes(search);
         const matchesStatus=status==="all" || product.status===status;
         return matchesSearch && matchesStatus;
-      }).sort((a,b)=>Number(a.item)-Number(b.item));
+      }).sort((a,b)=>String(a.name||"").localeCompare(String(b.name||"")));
 
       managerHeaderRow.innerHTML=`
-        <th>Item #</th>
         <th>Product</th>
         <th>Manufacturer</th>
         <th>Category</th>
@@ -3893,7 +4151,6 @@
 
       managerBody.innerHTML=rows.map(product=>`
         <tr>
-          <td class="number manager-col-item">${product.item}</td>
           <td class="manager-col-product"><strong>${escapeHtml(product.name)}</strong><div class="manager-product-meta">${escapeHtml(product.manufacturer||"")} • ${escapeHtml(product.category||"")} • ${escapeHtml(product.unit||"")}</div></td>
           <td class="manager-col-manufacturer">${escapeHtml(product.manufacturer||"")}</td>
           <td class="manager-col-category">${escapeHtml(product.category||"")}</td>
@@ -3989,14 +4246,13 @@
           product.onHand!=null && product.minimum!=null &&
           Number(product.onHand)<Number(product.minimum) &&
           isReorderableProduct(product);
-      }).sort((a,b)=>Number(a.item)-Number(b.item));
+      }).sort((a,b)=>String(a.name||"").localeCompare(String(b.name||"")));
 
       orderBody.innerHTML=rows.map(product=>{
         const suggested=Math.max(0,Number(product.minimum||0)-Number(product.onHand||0));
         if(reorderQuantities[product.item]==null) reorderQuantities[product.item]=suggested;
         const qty=Number(reorderQuantities[product.item])||0;
         return `<tr>
-          <td class="number order-col-item">${product.item}</td>
           <td class="order-col-product"><strong>${escapeHtml(product.name)}</strong><div class="order-product-meta">${escapeHtml(product.manufacturer||"")} • ${escapeHtml(product.unit||"")}</div></td>
           <td class="order-col-manufacturer">${escapeHtml(product.manufacturer||"")}</td>
           <td class="number order-col-onhand">${product.onHand==null?"—":product.onHand}</td>
@@ -4069,13 +4325,12 @@
           String(product.manufacturer).toLowerCase().includes(search) ||
           String(product.item).includes(search);
         return matchesSearch && product.status==="active";
-      }).sort((a,b)=>Number(a.item)-Number(b.item));
+      }).sort((a,b)=>String(a.name||"").localeCompare(String(b.name||"")));
 
       receiveBody.innerHTML=rows.map(product=>{
         const qty=Number(receiveQuantitiesDedicated[product.item])||0;
         const newOnHand=(Number(product.onHand)||0)+qty;
         return `<tr data-receive-row="${product.item}">
-          <td class="number receive-col-item">${product.item}</td>
           <td class="receive-col-product"><strong>${escapeHtml(product.name)}</strong><span class="receive-product-meta">${escapeHtml(product.manufacturer||"")}${product.unit?` • ${escapeHtml(product.unit)}`:""}</span></td>
           <td class="receive-col-manufacturer">${escapeHtml(product.manufacturer||"")}</td>
           <td class="number receive-col-current">${product.onHand==null?"—":product.onHand}</td>
@@ -4114,6 +4369,7 @@
     receivePost.addEventListener("click",()=>{
       const lines=productData.filter(product=>(Number(receiveQuantitiesDedicated[product.item])||0)>0).map(product=>({
         item:product.item,
+        productId:formatProductId(product.item),
         product:product.name,
         quantity:Number(receiveQuantitiesDedicated[product.item]),
         unitPrice:Number(product.price)||0,
@@ -5120,6 +5376,12 @@
     document.querySelectorAll(".manager-menu-tile").forEach((tile) => {
       tile.addEventListener("click", () => {
         productManagerMenuScreen.classList.remove("active");
+        if (tile.dataset.managerModule === "Add Product") {
+          addProductScreen.classList.add("active");
+          populateWizardOptions();
+          showWizardStep(1);
+          return;
+        }
         if (tile.dataset.managerModule === "Minimums") {
           productManagerScreen.classList.add("active");
           renderProductManager();
@@ -5156,6 +5418,27 @@
         }
       });
     });
+
+    backFromAddProduct.addEventListener("click",()=>{addProductScreen.classList.remove("active");productManagerMenuScreen.classList.add("active")});
+    wizardPrevious.addEventListener("click",()=>showWizardStep(wizardCurrentStep-1));
+    wizardNext.addEventListener("click",()=>{if(validateWizardStep(wizardCurrentStep))showWizardStep(wizardCurrentStep+1)});
+    wizardCancel.addEventListener("click",()=>{clearProductWizard();showNotice("Add Product Wizard cleared.");});
+    wizardSave.addEventListener("click",saveWizardProduct);
+    ["wizard-onhand","wizard-minimum"].forEach(id=>{
+      const field=wizardElement(id);
+      field.addEventListener("input",()=>{field.value=field.value.replace(/\D/g,"");});
+    });
+    wizardElement("wizard-price").addEventListener("input",event=>{
+      let value=event.target.value.replace(/[^0-9.]/g,"");
+      const parts=value.split(".");
+      if(parts.length>2) value=parts.shift()+"."+parts.join("");
+      if(value.includes(".")){
+        const [whole,decimal=""]=value.split(".");
+        value=whole+"."+decimal.slice(0,2);
+      }
+      event.target.value=value;
+    });
+    document.querySelectorAll("[data-wizard-step]").forEach(button=>button.addEventListener("click",()=>{const target=Number(button.dataset.wizardStep);if(target<=wizardCurrentStep||validateWizardStep(wizardCurrentStep))showWizardStep(target)}));
 
     backFromProductManagerMenu.addEventListener("click", () => {
       productManagerMenuScreen.classList.remove("active");
