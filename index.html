@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v4.18</title>
+  <title>PMP Operations Center v4.17</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -467,9 +467,9 @@
     }
 
 
-    /* v4.18 — Manual master price maintenance */
+    /* v4.17 — Manual master price maintenance */
 
-    /* v4.18 — Add New Product Wizard */
+    /* v4.17 — Add New Product Wizard */
     .add-product-shell{max-width:1180px}
     .wizard-progress{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;flex:0 0 auto}
     .wizard-step{border:2px solid rgba(255,255,255,.4);border-radius:11px;background:rgba(11,39,67,.52);color:#fff;padding:10px;font-weight:800;cursor:pointer}
@@ -704,7 +704,7 @@
     .manager-number{width:92px;padding:7px 8px;border:1px solid var(--border);border-radius:8px;text-align:right}
     .manager-minimum-entry{display:flex;align-items:center;justify-content:flex-end;gap:8px;white-space:nowrap}
     .manager-current-minimum{font-size:.72rem;color:#8a98a6;font-weight:700}
-    /* v4.18 — Remove number spinners and soften current minimum */
+    /* v4.17 — Remove number spinners and soften current minimum */
     input[type=number]::-webkit-outer-spin-button,
     input[type=number]::-webkit-inner-spin-button{
       -webkit-appearance:none;
@@ -1335,7 +1335,7 @@
 
 
 
-    /* v4.18 — Receive Inventory iPad portrait header and column alignment */
+    /* v4.17 — Receive Inventory iPad portrait header and column alignment */
     @media (max-width: 900px) and (orientation: portrait) {
       #receive-inventory-screen .products-table th:nth-child(2),
       #receive-inventory-screen .products-table th:nth-child(4),
@@ -2403,7 +2403,7 @@
     #initialize-cloud-data[hidden]{display:none !important;}
   
 
-    /* v4.18 — trustworthy inventory summary and Cloud Manager page positioning */
+    /* v4.17 — trustworthy inventory summary and Cloud Manager page positioning */
     .products-summary {display:grid;grid-template-columns:repeat(6,minmax(0,1fr)) minmax(190px,1.45fr);gap:9px}
     .products-summary-item{min-width:0;background:rgba(255,255,255,.97);border:2px solid rgba(255,255,255,.4);border-radius:11px;padding:9px 11px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
     .products-summary-item span{display:block;color:var(--muted);font-size:.68rem;font-weight:800;letter-spacing:.035em;line-height:1.15;text-transform:uppercase}
@@ -2426,34 +2426,6 @@
       .products-view-count{text-align:left;margin-top:-5px}
     }
 
-
-    /* v4.18 — Hidden Product IDs and alphabetical operational lists */
-    @media (max-width: 900px) and (orientation: portrait) {
-      #order-inventory-screen .products-table th:nth-child(1) { width: 36% !important; text-align:left !important; }
-      #order-inventory-screen .products-table th:nth-child(2) { display:none !important; }
-      #order-inventory-screen .products-table th:nth-child(3) { width: 11% !important; text-align:center !important; }
-      #order-inventory-screen .products-table th:nth-child(4) { width: 11% !important; text-align:center !important; }
-      #order-inventory-screen .products-table th:nth-child(5) { width: 12% !important; text-align:center !important; }
-      #order-inventory-screen .products-table th:nth-child(6) { display:none !important; }
-      #order-inventory-screen .products-table th:nth-child(7) { width: 30% !important; text-align:center !important; }
-      #order-inventory-screen .products-table th:nth-child(8) { display:none !important; }
-
-      #receive-inventory-screen .products-table th:nth-child(1) { width: 40% !important; text-align:left !important; }
-      #receive-inventory-screen .products-table th:nth-child(2) { display:none !important; }
-      #receive-inventory-screen .products-table th:nth-child(3) { width: 16% !important; text-align:center !important; }
-      #receive-inventory-screen .products-table th:nth-child(4) { display:none !important; }
-      #receive-inventory-screen .products-table th:nth-child(5) { display:none !important; }
-      #receive-inventory-screen .products-table th:nth-child(6) { width: 22% !important; text-align:center !important; }
-      #receive-inventory-screen .products-table th:nth-child(7) { width: 22% !important; text-align:center !important; }
-
-      #product-manager-screen .products-table th:nth-child(1) { width: 40% !important; text-align:left !important; }
-      #product-manager-screen .products-table th:nth-child(2),
-      #product-manager-screen .products-table th:nth-child(3) { display:none !important; }
-      #product-manager-screen .products-table th:nth-child(4) { width: 14% !important; text-align:center !important; }
-      #product-manager-screen .products-table th:nth-child(5) { width: 20% !important; text-align:center !important; }
-      #product-manager-screen .products-table th:nth-child(6) { width: 26% !important; text-align:center !important; }
-    }
-
   </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -2465,7 +2437,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.18</div>
+      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.17</div>
     </header>
 
     <main>
@@ -2718,6 +2690,7 @@
             <table class="products-table">
               <thead>
                 <tr>
+                  <th>Item #</th>
                   <th>Product</th>
                   <th>Manufacturer</th>
                   <th>On Hand</th>
@@ -2777,6 +2750,7 @@
             <table class="products-table">
               <thead>
                 <tr>
+                  <th>Item #</th>
                   <th>Product</th>
                   <th>Manufacturer</th>
                   <th>Current On Hand</th>
@@ -3224,7 +3198,7 @@
 
     </main>
 
-    <footer>PMP Operations Center • v4.18</footer>
+    <footer>PMP Operations Center • v4.17</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -3309,7 +3283,7 @@
         if(!cloudReady || !cloudInitialized || applyingCloud || !stateRef) return;
         const revision=makeRevision();
         lastKnownRevision=revision;
-        setStatus("SAVING TO CLOUD • v4.18","warning");
+        setStatus("SAVING TO CLOUD • v4.17","warning");
         setDetail(`${reason}…`);
         try{
           await stateRef.set({
@@ -3322,11 +3296,11 @@
             updatedBy:auth.currentUser ? auth.currentUser.uid : "unknown"
           });
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD SYNCED • v4.18","ready");
+          setStatus("CLOUD SYNCED • v4.17","ready");
           setDetail(`Saved to cloud at ${new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}.`);
         }catch(error){
           console.error("PMP cloud save failed",error);
-          setStatus("CLOUD SAVE FAILED • v4.18","error");
+          setStatus("CLOUD SAVE FAILED • v4.17","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud data can be saved." : `Cloud save failed: ${error.message}`);
         }
       }
@@ -3354,7 +3328,7 @@
         if(!stateRef || !cloudReady) return;
         if(!confirm("Initialize Firebase using the PMP data currently stored on this device? Use the device with the authoritative inventory data.")) return;
         const revision=makeRevision();
-        setStatus("INITIALIZING CLOUD • v4.18","warning");
+        setStatus("INITIALIZING CLOUD • v4.17","warning");
         setDetail("Creating the first shared PMP cloud record…");
         try{
           await stateRef.set({
@@ -3370,7 +3344,7 @@
           cloudInitialized=true;
           lastKnownRevision=revision;
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD SYNCED • v4.18","ready");
+          setStatus("CLOUD SYNCED • v4.17","ready");
           setDetail("Cloud initialized from this device. Future PMP changes will synchronize automatically.");
           showCloudSuccess(`The Go-Live Master is now stored in Firebase. ${Object.keys(snapshotRecords()).length} PMP data records are synchronized and this device is live.`);
           setButtons();
@@ -3378,13 +3352,13 @@
           watchCloud();
         }catch(error){
           console.error("PMP cloud initialization failed",error);
-          setStatus("CLOUD SETUP BLOCKED • v4.18","error");
+          setStatus("CLOUD SETUP BLOCKED • v4.17","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud initialization." : `Cloud initialization failed: ${error.message}`);
         }
       }
       async function loadCloudData({reload=true}={}){
         if(!stateRef || !cloudReady) return;
-        setStatus("LOADING CLOUD DATA • v4.18","warning");
+        setStatus("LOADING CLOUD DATA • v4.17","warning");
         try{
           const snap=await stateRef.get();
           if(!snap.exists || !snap.data().initialized){
@@ -3399,14 +3373,14 @@
           lastKnownRevision=data.revision||"";
           replaceLocalRecords(data.records||{});
           localStorage.setItem("pmpCloudRevision_v4",lastKnownRevision);
-          setStatus("CLOUD SYNCED • v4.18","ready");
+          setStatus("CLOUD SYNCED • v4.17","ready");
           setDetail("Latest shared PMP data loaded successfully.");
           showCloudSuccess("The latest shared PMP records were loaded onto this device successfully.");
           setButtons();
           if(reload) location.reload();
         }catch(error){
           console.error("PMP cloud load failed",error);
-          setStatus("CLOUD ACCESS BLOCKED • v4.18","error");
+          setStatus("CLOUD ACCESS BLOCKED • v4.17","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before the app can read cloud data." : `Cloud load failed: ${error.message}`);
         }
       }
@@ -3420,12 +3394,12 @@
           lastKnownRevision=revision;
           replaceLocalRecords(data.records||{});
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD UPDATE RECEIVED • v4.18","ready");
+          setStatus("CLOUD UPDATE RECEIVED • v4.17","ready");
           setDetail("Another device updated PMP. Refreshing with the latest cloud data…");
           setTimeout(()=>location.reload(),500);
         },error=>{
           console.error("PMP live sync failed",error);
-          setStatus("LIVE SYNC PAUSED • v4.18","error");
+          setStatus("LIVE SYNC PAUSED • v4.17","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated to enable live synchronization." : `Live sync paused: ${error.message}`);
         });
       }
@@ -3435,7 +3409,7 @@
           auth=firebase.auth();
           db=firebase.firestore();
           stateRef=db.collection(STATE_COLLECTION).doc(STATE_DOCUMENT);
-          setStatus("AUTHENTICATING • v4.18","starting");
+          setStatus("AUTHENTICATING • v4.17","starting");
           await auth.signInAnonymously();
           cloudReady=true;
           setButtons();
@@ -3457,13 +3431,13 @@
             replaceLocalRecords(data.records||{});
             localStorage.setItem("pmpCloudRevision_v4",cloudRevision);
             lastKnownRevision=cloudRevision;
-            setStatus("CLOUD DATA LOADED • v4.18","ready");
+            setStatus("CLOUD DATA LOADED • v4.17","ready");
             setDetail("Latest shared PMP data loaded. Refreshing…");
             setTimeout(()=>location.reload(),350);
             return;
           }
           lastKnownRevision=cloudRevision;
-          setStatus("CLOUD SYNCED • v4.18","ready");
+          setStatus("CLOUD SYNCED • v4.17","ready");
           setDetail("This device is connected to the shared PMP cloud data.");
           const created = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : "previously";
           showCloudSuccess(`Firebase was initialized ${created}. Automatic synchronization is active. Use “Load Latest Cloud Data” only when you need to manually refresh this device.`);
@@ -3472,7 +3446,7 @@
           console.error("PMP Firebase startup failed",error);
           cloudReady=false;
           setButtons();
-          setStatus("CLOUD CONNECTION FAILED • v4.18","error");
+          setStatus("CLOUD CONNECTION FAILED • v4.17","error");
           setDetail(error.code==="permission-denied" ? "Firebase connected, but Firestore rules must be updated next." : `Firebase connection failed: ${error.message}`);
         }
       }
@@ -3662,14 +3636,6 @@
       }
     });
 
-    function formatProductId(value){
-      return String(Math.max(0, Number(value) || 0)).padStart(4, "0");
-    }
-
-    productData.forEach(product=>{
-      product.productId = formatProductId(product.item);
-    });
-
     const savedProductStatuses = JSON.parse(localStorage.getItem("pmpProductStatuses_v3_37") || "{}");
     const savedMinimumOverrides = JSON.parse(localStorage.getItem("pmpMinimumOverrides_v3_47") || "{}");
     productData.forEach(product => {
@@ -3728,7 +3694,7 @@
       const minimum=Number(wizardValue("wizard-minimum"));
       const rawPrice=wizardValue("wizard-price");
       const price=rawPrice===""?null:Math.round(Number(rawPrice)*100)/100;
-      return {item,productId:formatProductId(item),name:wizardValue("wizard-name"),onHand,unit,minimum,reorder:Math.max(0,minimum-onHand),manufacturer:wizardValue("wizard-manufacturer"),category,price,priceUom,epaReg:nA(wizardValue("wizard-epa")),activeIngredients:nA(wizardValue("wizard-active")),activePercent:nA(wizardValue("wizard-percent")),formulation:wizardValue("wizard-custom-formulation")||wizardValue("wizard-formulation"),iracMoa:nA(wizardValue("wizard-irac")),repellency:nA(wizardValue("wizard-repellency")),rotationPairs:nA(wizardValue("wizard-rotation")),avoidRotation:nA(wizardValue("wizard-avoid-rotation")),resistanceNotes:nA(wizardValue("wizard-resistance")),mixRateLow:nA(wizardValue("wizard-mix-low")),mixRateHigh:nA(wizardValue("wizard-mix-high")),mixRateNotes:nA(wizardValue("wizard-mix-notes")),serviceType:wizardValue("wizard-custom-service-type")||wizardValue("wizard-service-type"),indoorOutdoor:nA(wizardValue("wizard-indoor-outdoor")),targetPests:nA(wizardValue("wizard-target-pests")),vaLicenseCategory:nA(wizardValue("wizard-va-category")),rup:nA(wizardValue("wizard-rup")),signalWord:nA(wizardValue("wizard-signal")),labelLink:nA(wizardValue("wizard-label-link")),sdsLink:nA(wizardValue("wizard-sds-link")),technicalBulletinLink:nA(wizardValue("wizard-tech-link")),trainingDocumentLink:nA(wizardValue("wizard-training-link")),preferredDistributor:nA(wizardValue("wizard-distributor")),distributorSku:nA(wizardValue("wizard-sku")),managerNotes:nA(wizardValue("wizard-notes")),status:wizardValue("wizard-status")||"active"};
+      return {item,name:wizardValue("wizard-name"),onHand,unit,minimum,reorder:Math.max(0,minimum-onHand),manufacturer:wizardValue("wizard-manufacturer"),category,price,priceUom,epaReg:nA(wizardValue("wizard-epa")),activeIngredients:nA(wizardValue("wizard-active")),activePercent:nA(wizardValue("wizard-percent")),formulation:wizardValue("wizard-custom-formulation")||wizardValue("wizard-formulation"),iracMoa:nA(wizardValue("wizard-irac")),repellency:nA(wizardValue("wizard-repellency")),rotationPairs:nA(wizardValue("wizard-rotation")),avoidRotation:nA(wizardValue("wizard-avoid-rotation")),resistanceNotes:nA(wizardValue("wizard-resistance")),mixRateLow:nA(wizardValue("wizard-mix-low")),mixRateHigh:nA(wizardValue("wizard-mix-high")),mixRateNotes:nA(wizardValue("wizard-mix-notes")),serviceType:wizardValue("wizard-custom-service-type")||wizardValue("wizard-service-type"),indoorOutdoor:nA(wizardValue("wizard-indoor-outdoor")),targetPests:nA(wizardValue("wizard-target-pests")),vaLicenseCategory:nA(wizardValue("wizard-va-category")),rup:nA(wizardValue("wizard-rup")),signalWord:nA(wizardValue("wizard-signal")),labelLink:nA(wizardValue("wizard-label-link")),sdsLink:nA(wizardValue("wizard-sds-link")),technicalBulletinLink:nA(wizardValue("wizard-tech-link")),trainingDocumentLink:nA(wizardValue("wizard-training-link")),preferredDistributor:nA(wizardValue("wizard-distributor")),distributorSku:nA(wizardValue("wizard-sku")),managerNotes:nA(wizardValue("wizard-notes")),status:wizardValue("wizard-status")||"active"};
     }
 
     function validateWizardStep(step){
@@ -3774,7 +3740,6 @@
       if(!wizardConfirm.checked){showNotice("Confirm that you reviewed the product record.");return}
       const p=wizardProductRecord();
       if(productData.some(existing=>String(existing.name).trim().toLowerCase()===p.name.trim().toLowerCase())){showNotice("That product already exists in the master.");return}
-      p.productId=formatProductId(p.item);
       productData.push(p);
       const saved=JSON.parse(localStorage.getItem("pmpAddedProducts_v4_16")||"[]");saved.push(p);localStorage.setItem("pmpAddedProducts_v4_16",JSON.stringify(saved));
       const statuses=JSON.parse(localStorage.getItem("pmpProductStatuses_v3_37")||"{}");statuses[p.item]=p.status;localStorage.setItem("pmpProductStatuses_v3_37",JSON.stringify(statuses));
@@ -4139,9 +4104,10 @@
           String(product.item).includes(search);
         const matchesStatus=status==="all" || product.status===status;
         return matchesSearch && matchesStatus;
-      }).sort((a,b)=>String(a.name||"").localeCompare(String(b.name||"")));
+      }).sort((a,b)=>Number(a.item)-Number(b.item));
 
       managerHeaderRow.innerHTML=`
+        <th>Item #</th>
         <th>Product</th>
         <th>Manufacturer</th>
         <th>Category</th>
@@ -4151,6 +4117,7 @@
 
       managerBody.innerHTML=rows.map(product=>`
         <tr>
+          <td class="number manager-col-item">${product.item}</td>
           <td class="manager-col-product"><strong>${escapeHtml(product.name)}</strong><div class="manager-product-meta">${escapeHtml(product.manufacturer||"")} • ${escapeHtml(product.category||"")} • ${escapeHtml(product.unit||"")}</div></td>
           <td class="manager-col-manufacturer">${escapeHtml(product.manufacturer||"")}</td>
           <td class="manager-col-category">${escapeHtml(product.category||"")}</td>
@@ -4246,13 +4213,14 @@
           product.onHand!=null && product.minimum!=null &&
           Number(product.onHand)<Number(product.minimum) &&
           isReorderableProduct(product);
-      }).sort((a,b)=>String(a.name||"").localeCompare(String(b.name||"")));
+      }).sort((a,b)=>Number(a.item)-Number(b.item));
 
       orderBody.innerHTML=rows.map(product=>{
         const suggested=Math.max(0,Number(product.minimum||0)-Number(product.onHand||0));
         if(reorderQuantities[product.item]==null) reorderQuantities[product.item]=suggested;
         const qty=Number(reorderQuantities[product.item])||0;
         return `<tr>
+          <td class="number order-col-item">${product.item}</td>
           <td class="order-col-product"><strong>${escapeHtml(product.name)}</strong><div class="order-product-meta">${escapeHtml(product.manufacturer||"")} • ${escapeHtml(product.unit||"")}</div></td>
           <td class="order-col-manufacturer">${escapeHtml(product.manufacturer||"")}</td>
           <td class="number order-col-onhand">${product.onHand==null?"—":product.onHand}</td>
@@ -4325,12 +4293,13 @@
           String(product.manufacturer).toLowerCase().includes(search) ||
           String(product.item).includes(search);
         return matchesSearch && product.status==="active";
-      }).sort((a,b)=>String(a.name||"").localeCompare(String(b.name||"")));
+      }).sort((a,b)=>Number(a.item)-Number(b.item));
 
       receiveBody.innerHTML=rows.map(product=>{
         const qty=Number(receiveQuantitiesDedicated[product.item])||0;
         const newOnHand=(Number(product.onHand)||0)+qty;
         return `<tr data-receive-row="${product.item}">
+          <td class="number receive-col-item">${product.item}</td>
           <td class="receive-col-product"><strong>${escapeHtml(product.name)}</strong><span class="receive-product-meta">${escapeHtml(product.manufacturer||"")}${product.unit?` • ${escapeHtml(product.unit)}`:""}</span></td>
           <td class="receive-col-manufacturer">${escapeHtml(product.manufacturer||"")}</td>
           <td class="number receive-col-current">${product.onHand==null?"—":product.onHand}</td>
@@ -4369,7 +4338,6 @@
     receivePost.addEventListener("click",()=>{
       const lines=productData.filter(product=>(Number(receiveQuantitiesDedicated[product.item])||0)>0).map(product=>({
         item:product.item,
-        productId:formatProductId(product.item),
         product:product.name,
         quantity:Number(receiveQuantitiesDedicated[product.item]),
         unitPrice:Number(product.price)||0,
