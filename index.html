@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v4.17</title>
+  <title>PMP Operations Center v4.18</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -467,9 +467,9 @@
     }
 
 
-    /* v4.17 — Manual master price maintenance */
+    /* v4.18 — Manual master price maintenance */
 
-    /* v4.17 — Add New Product Wizard */
+    /* v4.18 — Add New Product Wizard */
     .add-product-shell{max-width:1180px}
     .wizard-progress{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;flex:0 0 auto}
     .wizard-step{border:2px solid rgba(255,255,255,.4);border-radius:11px;background:rgba(11,39,67,.52);color:#fff;padding:10px;font-weight:800;cursor:pointer}
@@ -704,7 +704,7 @@
     .manager-number{width:92px;padding:7px 8px;border:1px solid var(--border);border-radius:8px;text-align:right}
     .manager-minimum-entry{display:flex;align-items:center;justify-content:flex-end;gap:8px;white-space:nowrap}
     .manager-current-minimum{font-size:.72rem;color:#8a98a6;font-weight:700}
-    /* v4.17 — Remove number spinners and soften current minimum */
+    /* v4.18 — Remove number spinners and soften current minimum */
     input[type=number]::-webkit-outer-spin-button,
     input[type=number]::-webkit-inner-spin-button{
       -webkit-appearance:none;
@@ -1335,7 +1335,7 @@
 
 
 
-    /* v4.17 — Receive Inventory iPad portrait header and column alignment */
+    /* v4.18 — Receive Inventory iPad portrait header and column alignment */
     @media (max-width: 900px) and (orientation: portrait) {
       #receive-inventory-screen .products-table th:nth-child(2),
       #receive-inventory-screen .products-table th:nth-child(4),
@@ -2403,7 +2403,7 @@
     #initialize-cloud-data[hidden]{display:none !important;}
   
 
-    /* v4.17 — trustworthy inventory summary and Cloud Manager page positioning */
+    /* v4.18 — trustworthy inventory summary and Cloud Manager page positioning */
     .products-summary {display:grid;grid-template-columns:repeat(6,minmax(0,1fr)) minmax(190px,1.45fr);gap:9px}
     .products-summary-item{min-width:0;background:rgba(255,255,255,.97);border:2px solid rgba(255,255,255,.4);border-radius:11px;padding:9px 11px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
     .products-summary-item span{display:block;color:var(--muted);font-size:.68rem;font-weight:800;letter-spacing:.035em;line-height:1.15;text-transform:uppercase}
@@ -2426,18 +2426,173 @@
       .products-view-count{text-align:left;margin-top:-5px}
     }
 
+    /* ---- Sign-in gate (v4.18) ---- */
+    #auth-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: linear-gradient(160deg, var(--navy-dark), var(--navy));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    #auth-gate[hidden] { display: none; }
+    .auth-card {
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 32px 28px;
+      width: 100%;
+      max-width: 420px;
+    }
+    .auth-card h2 {
+      margin: 0 0 4px;
+      color: var(--navy-dark);
+      font-size: 1.35rem;
+      letter-spacing: 0.02em;
+    }
+    .auth-card p.auth-sub {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .auth-card label {
+      display: block;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+    }
+    .auth-card input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 14px 12px;
+      font-size: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 16px;
+      background: var(--light);
+      color: var(--text);
+    }
+    .auth-card input:focus {
+      outline: 2px solid var(--navy);
+      outline-offset: 1px;
+    }
+    #auth-submit {
+      width: 100%;
+      padding: 15px 12px;
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: #fff;
+      background: var(--navy);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+    }
+    #auth-submit:disabled { opacity: 0.6; cursor: default; }
+    #auth-error {
+      display: none;
+      margin: 0 0 16px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #fdecec;
+      border: 1px solid #f3c3c3;
+      color: #91232a;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+    #auth-error.active { display: block; }
+    .auth-foot {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    /* ---- Cloud update banner (v4.18) ---- */
+    #cloud-update-banner {
+      display: none;
+      position: fixed;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      z-index: 9000;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 6px solid var(--navy);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 14px 16px;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    #cloud-update-banner.active { display: flex; }
+    #cloud-update-banner .banner-text {
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.95rem;
+      flex: 1 1 260px;
+    }
+    #cloud-update-banner .banner-text small {
+      display: block;
+      font-weight: 500;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+    #cloud-update-banner button {
+      border-radius: 9px;
+      padding: 11px 16px;
+      font-weight: 800;
+      font-size: 0.92rem;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--light);
+      color: var(--text);
+    }
+    #cloud-update-load {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy);
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 </head>
 <body>
+  <div id="auth-gate" hidden>
+    <div class="auth-card">
+      <h2>PMP Operations Center</h2>
+      <p class="auth-sub">Sign in to access warehouse inventory.</p>
+      <div id="auth-error" role="alert"></div>
+      <label for="auth-email">Email</label>
+      <input id="auth-email" type="email" autocomplete="username" inputmode="email" autocapitalize="none" spellcheck="false" />
+      <label for="auth-password">Password</label>
+      <input id="auth-password" type="password" autocomplete="current-password" />
+      <button id="auth-submit" type="button">Sign In</button>
+      <p class="auth-foot">This device stays signed in until you sign out.</p>
+    </div>
+  </div>
+
+  <div id="cloud-update-banner" role="status">
+    <div class="banner-text">
+      Newer PMP data is available from another device.
+      <small>Your current screen will reload when you load it. Finish what you are doing first.</small>
+    </div>
+    <button id="cloud-update-dismiss" type="button">Not now</button>
+    <button id="cloud-update-load" type="button">Load Now</button>
+  </div>
+
   <div class="app-shell">
     <header class="topbar">
       <div class="brand-block">
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.17</div>
+      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.18</div>
     </header>
 
     <main>
@@ -3189,6 +3344,7 @@
             <div class="cloud-sync-actions">
               <button id="initialize-cloud-data" class="action-button primary" type="button" disabled>Initialize Cloud from This Device</button>
               <button id="load-cloud-data" class="action-button" type="button" disabled>Load Latest Cloud Data</button>
+              <button id="cloud-sign-out" class="action-button" type="button">Sign Out of This Device</button>
             </div>
             <div id="cloud-sync-detail" class="data-transfer-note" role="status" aria-live="polite">Waiting for Firebase…</div>
             <div id="cloud-sync-success" class="cloud-success" role="status" aria-live="polite"></div>
@@ -3198,7 +3354,7 @@
 
     </main>
 
-    <footer>PMP Operations Center • v4.17</footer>
+    <footer>PMP Operations Center • v4.18</footer>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -3229,6 +3385,33 @@
       let applyingCloud = false;
       let lastKnownRevision = "";
       let unsubscribe = null;
+      let pendingRevision = "";
+
+      function updateBanner(){ return document.getElementById("cloud-update-banner"); }
+      function showUpdateBanner(){ const el=updateBanner(); if(el) el.classList.add("active"); }
+      function hideUpdateBanner(){ const el=updateBanner(); if(el) el.classList.remove("active"); }
+
+      // Pull the waiting cloud revision down onto this device, on the user's command.
+      async function applyPendingUpdate(){
+        if(!stateRef || !cloudReady) return;
+        hideUpdateBanner();
+        setStatus("LOADING CLOUD DATA • v4.18","warning");
+        try{
+          const snap=await stateRef.get();
+          if(!snap.exists) return;
+          const data=snap.data();
+          lastKnownRevision=data.revision||"";
+          pendingRevision="";
+          replaceLocalRecords(data.records||{});
+          localStorage.setItem("pmpCloudRevision_v4",lastKnownRevision);
+          location.reload();
+        }catch(error){
+          console.error("PMP cloud update failed",error);
+          setStatus("CLOUD LOAD FAILED • v4.18","error");
+          setDetail(`Could not load the update: ${error.message}`);
+          showUpdateBanner();
+        }
+      }
 
       function statusElement(){ return document.getElementById("cloud-status"); }
       function detailElement(){ return document.getElementById("cloud-sync-detail"); }
@@ -3283,24 +3466,24 @@
         if(!cloudReady || !cloudInitialized || applyingCloud || !stateRef) return;
         const revision=makeRevision();
         lastKnownRevision=revision;
-        setStatus("SAVING TO CLOUD • v4.17","warning");
+        setStatus("SAVING TO CLOUD • v4.18","warning");
         setDetail(`${reason}…`);
         try{
           await stateRef.set({
             initialized:true,
             schemaVersion:1,
-            appVersion:"4.04",
+            appVersion:"4.18",
             records:snapshotRecords(),
             revision,
             updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
             updatedBy:auth.currentUser ? auth.currentUser.uid : "unknown"
           });
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD SYNCED • v4.17","ready");
+          setStatus("CLOUD SYNCED • v4.18","ready");
           setDetail(`Saved to cloud at ${new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}.`);
         }catch(error){
           console.error("PMP cloud save failed",error);
-          setStatus("CLOUD SAVE FAILED • v4.17","error");
+          setStatus("CLOUD SAVE FAILED • v4.18","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud data can be saved." : `Cloud save failed: ${error.message}`);
         }
       }
@@ -3328,13 +3511,13 @@
         if(!stateRef || !cloudReady) return;
         if(!confirm("Initialize Firebase using the PMP data currently stored on this device? Use the device with the authoritative inventory data.")) return;
         const revision=makeRevision();
-        setStatus("INITIALIZING CLOUD • v4.17","warning");
+        setStatus("INITIALIZING CLOUD • v4.18","warning");
         setDetail("Creating the first shared PMP cloud record…");
         try{
           await stateRef.set({
             initialized:true,
             schemaVersion:1,
-            appVersion:"4.04",
+            appVersion:"4.18",
             records:snapshotRecords(),
             revision,
             createdAt:firebase.firestore.FieldValue.serverTimestamp(),
@@ -3344,7 +3527,7 @@
           cloudInitialized=true;
           lastKnownRevision=revision;
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD SYNCED • v4.17","ready");
+          setStatus("CLOUD SYNCED • v4.18","ready");
           setDetail("Cloud initialized from this device. Future PMP changes will synchronize automatically.");
           showCloudSuccess(`The Go-Live Master is now stored in Firebase. ${Object.keys(snapshotRecords()).length} PMP data records are synchronized and this device is live.`);
           setButtons();
@@ -3352,13 +3535,13 @@
           watchCloud();
         }catch(error){
           console.error("PMP cloud initialization failed",error);
-          setStatus("CLOUD SETUP BLOCKED • v4.17","error");
+          setStatus("CLOUD SETUP BLOCKED • v4.18","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud initialization." : `Cloud initialization failed: ${error.message}`);
         }
       }
       async function loadCloudData({reload=true}={}){
         if(!stateRef || !cloudReady) return;
-        setStatus("LOADING CLOUD DATA • v4.17","warning");
+        setStatus("LOADING CLOUD DATA • v4.18","warning");
         try{
           const snap=await stateRef.get();
           if(!snap.exists || !snap.data().initialized){
@@ -3373,14 +3556,14 @@
           lastKnownRevision=data.revision||"";
           replaceLocalRecords(data.records||{});
           localStorage.setItem("pmpCloudRevision_v4",lastKnownRevision);
-          setStatus("CLOUD SYNCED • v4.17","ready");
+          setStatus("CLOUD SYNCED • v4.18","ready");
           setDetail("Latest shared PMP data loaded successfully.");
           showCloudSuccess("The latest shared PMP records were loaded onto this device successfully.");
           setButtons();
           if(reload) location.reload();
         }catch(error){
           console.error("PMP cloud load failed",error);
-          setStatus("CLOUD ACCESS BLOCKED • v4.17","error");
+          setStatus("CLOUD ACCESS BLOCKED • v4.18","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before the app can read cloud data." : `Cloud load failed: ${error.message}`);
         }
       }
@@ -3391,26 +3574,20 @@
           const data=snap.data();
           const revision=data.revision||"";
           if(!revision || revision===lastKnownRevision) return;
-          lastKnownRevision=revision;
-          replaceLocalRecords(data.records||{});
-          localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD UPDATE RECEIVED • v4.17","ready");
-          setDetail("Another device updated PMP. Refreshing with the latest cloud data…");
-          setTimeout(()=>location.reload(),500);
+          if(revision===pendingRevision) return;
+          pendingRevision=revision;
+          setStatus("CLOUD UPDATE AVAILABLE • v4.18","warning");
+          setDetail("Another device updated PMP. Load it when you are ready.");
+          showUpdateBanner();
         },error=>{
           console.error("PMP live sync failed",error);
-          setStatus("LIVE SYNC PAUSED • v4.17","error");
+          setStatus("LIVE SYNC PAUSED • v4.18","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated to enable live synchronization." : `Live sync paused: ${error.message}`);
         });
       }
-      async function start(){
+      // Runs once a real user is signed in.
+      async function afterSignIn(){
         try{
-          firebase.initializeApp(firebaseConfig);
-          auth=firebase.auth();
-          db=firebase.firestore();
-          stateRef=db.collection(STATE_COLLECTION).doc(STATE_DOCUMENT);
-          setStatus("AUTHENTICATING • v4.17","starting");
-          await auth.signInAnonymously();
           cloudReady=true;
           setButtons();
           const snap=await stateRef.get();
@@ -3428,26 +3605,118 @@
           const localRevision=localStorage.getItem("pmpCloudRevision_v4")||"";
           setButtons();
           if(cloudRevision && cloudRevision!==localRevision){
-            replaceLocalRecords(data.records||{});
-            localStorage.setItem("pmpCloudRevision_v4",cloudRevision);
-            lastKnownRevision=cloudRevision;
-            setStatus("CLOUD DATA LOADED • v4.17","ready");
-            setDetail("Latest shared PMP data loaded. Refreshing…");
-            setTimeout(()=>location.reload(),350);
+            // Do not overwrite this device silently. Offer it instead.
+            pendingRevision=cloudRevision;
+            lastKnownRevision=localRevision;
+            setStatus("CLOUD UPDATE AVAILABLE • v4.18","warning");
+            setDetail("Newer cloud data exists. Load it when you are ready.");
+            showUpdateBanner();
+            watchCloud();
             return;
           }
           lastKnownRevision=cloudRevision;
-          setStatus("CLOUD SYNCED • v4.17","ready");
+          setStatus("CLOUD SYNCED • v4.18","ready");
           setDetail("This device is connected to the shared PMP cloud data.");
           const created = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : "previously";
-          showCloudSuccess(`Firebase was initialized ${created}. Automatic synchronization is active. Use “Load Latest Cloud Data” only when you need to manually refresh this device.`);
+          showCloudSuccess(`Firebase was initialized ${created}. Automatic synchronization is active. Use \u201cLoad Latest Cloud Data\u201d only when you need to manually refresh this device.`);
           watchCloud();
+        }catch(error){
+          console.error("PMP cloud startup failed",error);
+          cloudReady=false;
+          setButtons();
+          setStatus("CLOUD CONNECTION FAILED • v4.18","error");
+          setDetail(error.code==="permission-denied" ? "Signed in, but Firestore rules are blocking access." : `Cloud connection failed: ${error.message}`);
+        }
+      }
+
+      function authError(message){
+        const el=document.getElementById("auth-error");
+        if(el){ el.textContent=message; el.classList.add("active"); }
+      }
+      function clearAuthError(){
+        const el=document.getElementById("auth-error");
+        if(el){ el.textContent=""; el.classList.remove("active"); }
+      }
+      function showGate(){
+        const gate=document.getElementById("auth-gate");
+        if(gate) gate.hidden=false;
+        setStatus("SIGN IN REQUIRED • v4.18","warning");
+        setDetail("Sign in to connect this device to the PMP cloud.");
+      }
+      function hideGate(){
+        const gate=document.getElementById("auth-gate");
+        if(gate) gate.hidden=true;
+        const pw=document.getElementById("auth-password");
+        if(pw) pw.value="";
+      }
+
+      async function submitSignIn(){
+        const button=document.getElementById("auth-submit");
+        const email=(document.getElementById("auth-email").value||"").trim();
+        const password=document.getElementById("auth-password").value||"";
+        if(!email || !password){ authError("Enter your email and password."); return; }
+        clearAuthError();
+        if(button){ button.disabled=true; button.textContent="Signing in\u2026"; }
+        try{
+          await auth.signInWithEmailAndPassword(email,password);
+          // onAuthStateChanged takes over from here.
+        }catch(error){
+          console.error("PMP sign-in failed",error);
+          const map={
+            "auth/invalid-email":"That email address is not formatted correctly.",
+            "auth/user-not-found":"No account found for that email.",
+            "auth/wrong-password":"Incorrect password.",
+            "auth/invalid-credential":"Email or password is incorrect.",
+            "auth/too-many-requests":"Too many attempts. Wait a few minutes and try again.",
+            "auth/network-request-failed":"No connection. Check your hotspot and try again."
+          };
+          authError(map[error.code] || `Sign-in failed: ${error.message}`);
+        }finally{
+          if(button){ button.disabled=false; button.textContent="Sign In"; }
+        }
+      }
+
+      async function signOutOfPmp(){
+        if(!confirm("Sign out of PMP Operations Center on this device? Your saved data stays on the device.")) return;
+        try{
+          if(unsubscribe){ unsubscribe(); unsubscribe=null; }
+          cloudReady=false;
+          cloudInitialized=false;
+          setButtons();
+          await auth.signOut();
+        }catch(error){
+          console.error("PMP sign-out failed",error);
+        }
+      }
+
+      async function start(){
+        try{
+          firebase.initializeApp(firebaseConfig);
+          auth=firebase.auth();
+          db=firebase.firestore();
+          stateRef=db.collection(STATE_COLLECTION).doc(STATE_DOCUMENT);
+          setStatus("CONNECTING • v4.18","starting");
+          // Keep the session on this device so the iPad is not asked to sign in daily.
+          try{ await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); }catch(e){ console.warn("Auth persistence unavailable",e); }
+          auth.onAuthStateChanged(user=>{
+            if(user && !user.isAnonymous){
+              hideGate();
+              afterSignIn();
+            }else{
+              if(unsubscribe){ unsubscribe(); unsubscribe=null; }
+              cloudReady=false;
+              cloudInitialized=false;
+              setButtons();
+              hideUpdateBanner();
+              showGate();
+            }
+          });
         }catch(error){
           console.error("PMP Firebase startup failed",error);
           cloudReady=false;
           setButtons();
-          setStatus("CLOUD CONNECTION FAILED • v4.17","error");
-          setDetail(error.code==="permission-denied" ? "Firebase connected, but Firestore rules must be updated next." : `Firebase connection failed: ${error.message}`);
+          setStatus("CLOUD CONNECTION FAILED • v4.18","error");
+          setDetail(`Firebase connection failed: ${error.message}`);
         }
       }
       window.PMPCloud={start, initializeCloudFromDevice, loadCloudData, uploadNow, snapshotRecords};
@@ -3455,6 +3724,22 @@
         const init=initializeButton(), load=loadButton();
         if(init) init.addEventListener("click",initializeCloudFromDevice);
         if(load) load.addEventListener("click",()=>loadCloudData({reload:true}));
+
+        const submit=document.getElementById("auth-submit");
+        if(submit) submit.addEventListener("click",submitSignIn);
+        ["auth-email","auth-password"].forEach(id=>{
+          const field=document.getElementById(id);
+          if(field) field.addEventListener("keydown",event=>{ if(event.key==="Enter") submitSignIn(); });
+        });
+
+        const loadNow=document.getElementById("cloud-update-load");
+        if(loadNow) loadNow.addEventListener("click",applyPendingUpdate);
+        const dismiss=document.getElementById("cloud-update-dismiss");
+        if(dismiss) dismiss.addEventListener("click",hideUpdateBanner);
+
+        const signOut=document.getElementById("cloud-sign-out");
+        if(signOut) signOut.addEventListener("click",signOutOfPmp);
+
         setButtons();
         start();
       });
@@ -3528,14 +3813,7 @@
     const managerEmpty = document.getElementById("manager-empty");
     const updateMinimums = document.getElementById("update-minimums");
     const managerHeaderRow = document.getElementById("manager-header-row");
-    const managerOrderList = null;
-    const managerReceiving = null;
     const managerReceivingDetails = document.getElementById("manager-receiving-details");
-    const receivingVendor = document.getElementById("receiving-vendor");
-    const receivingReference = document.getElementById("receiving-reference");
-    const receivingDate = document.getElementById("receiving-date");
-    const postReceiving = document.getElementById("post-receiving");
-    const receivingQuantities = {};
     const addProductScreen = document.getElementById("add-product-screen");
     const backFromAddProduct = document.getElementById("back-from-add-product");
     const wizardPrevious = document.getElementById("wizard-previous");
@@ -4386,78 +4664,11 @@
     statusFilter.addEventListener("change", renderProducts);
     // Legacy Product Manager order/receiving controls were removed from the HTML.
     // Guard their old handlers so a missing control cannot stop the entire app.
-    if (managerOrderList && managerReceiving) {
-      managerOrderList.addEventListener("click", () => {
-        const active = managerOrderList.getAttribute("aria-pressed") === "true";
-        managerReceiving.setAttribute("aria-pressed","false");
-        managerReceiving.classList.remove("active");
-        managerReceiving.textContent="Receive Inventory";
-        managerOrderList.setAttribute("aria-pressed", String(!active));
-        managerOrderList.classList.toggle("active", !active);
-        managerOrderList.textContent = !active ? "Back to Product Manager" : "Order List";
-        managerStatusFilter.value = !active ? "active" : "all";
-        renderProductManager();
-      });
+    // Removed v4.18: toggle handlers for manager-order-list / manager-receiving buttons
+    // that no longer exist in the markup.
 
-      managerReceiving.addEventListener("click", () => {
-        const active = managerReceiving.getAttribute("aria-pressed") === "true";
-        managerOrderList.setAttribute("aria-pressed","false");
-        managerOrderList.classList.remove("active");
-        managerOrderList.textContent="Order List";
-        managerReceiving.setAttribute("aria-pressed", String(!active));
-        managerReceiving.classList.toggle("active", !active);
-        managerReceiving.textContent = !active ? "Back to Product Manager" : "Receive Inventory";
-        managerStatusFilter.value = !active ? "active" : "all";
-        renderProductManager();
-      });
-    }
-
-    if (postReceiving) postReceiving.addEventListener("click",()=>{
-      const lines=productData
-        .filter(product=>(Number(receivingQuantities[product.item])||0)>0)
-        .map(product=>({
-          item:product.item,
-          product:product.name,
-          quantity:Number(receivingQuantities[product.item]),
-          unitPrice:Number(product.price)||0,
-          previousOnHand:Number(product.onHand)||0,
-          newOnHand:(Number(product.onHand)||0)+Number(receivingQuantities[product.item])
-        }));
-
-      if(!lines.length){
-        showNotice("Enter at least one received quantity before posting.");
-        return;
-      }
-
-      lines.forEach(line=>{
-        const product=productData.find(p=>String(p.item)===String(line.item));
-        product.onHand=line.newOnHand;
-        receivingQuantities[line.item]=0;
-      });
-
-      const overrides={};
-      productData.forEach(product=>overrides[product.item]=product.onHand);
-      localStorage.setItem("pmpInventoryOverrides_v3_2",JSON.stringify(overrides));
-
-      const receivingHistory=JSON.parse(localStorage.getItem("pmpReceivingHistory_v3_39")||"[]");
-      receivingHistory.unshift({
-        id:"RCV-"+Date.now(),
-        date:receivingDate.value||new Date().toISOString().slice(0,10),
-        vendor:receivingVendor.value.trim(),
-        reference:receivingReference.value.trim(),
-        lines,
-        totalQuantity:lines.reduce((sum,line)=>sum+line.quantity,0),
-        totalValue:lines.reduce((sum,line)=>sum+(line.quantity*line.unitPrice),0),
-        postedAt:new Date().toISOString()
-      });
-      localStorage.setItem("pmpReceivingHistory_v3_39",JSON.stringify(receivingHistory));
-
-      receivingReference.value="";
-      renderProductManager();
-      renderProducts();
-      renderPhysicalCount();
-      showNotice(`${lines.length} product${lines.length===1?"":"s"} received and inventory updated.`);
-    });
+    // Removed v4.18: orphaned second receive path (no matching DOM elements, wrote to a
+    // stale pmpReceivingHistory_v3_39 key). The live path is the receive-* handler above.
 
 
     const savedInventory = JSON.parse(localStorage.getItem("pmpInventoryOverrides_v3_2") || "{}");
@@ -5039,6 +5250,7 @@
     function historyNumber(value){return value==null||value===""?null:Number(value)}
     function inventoryHistoryEntries(){
       const entries=[];
+      // v3_39 is a retired key, still read so any historical rows remain visible.
       const receiving=[...safeHistory("pmpReceivingHistory_v3_39"),...safeHistory("pmpReceivingHistory_v3_41")];
       const seenReceiving=new Set();
       receiving.forEach(record=>{
@@ -5097,7 +5309,49 @@
     function syncLegacyStage(){stagedUsageRows=stagedCheckouts.flatMap(c=>c.rows);stagedCheckoutMeta=stagedCheckouts[0]?stagedCheckouts[0].meta:{date:'',technician:'',technicianId:'',orderNumber:'',pdfTotal:null,pdfFile:''};}
     function refreshMoneyCards(){checkoutValue.textContent=money(stagedCheckouts.reduce((sum,c)=>sum+c.rows.reduce((s,r)=>{const p=productData.find(x=>String(x.item)===String(r.item));return s+(r.use&&!isQuantityOnlyProduct(p)?(Number(r.extended)||0):0);},0),0));issuedValue.textContent=money(checkoutHistory().reduce((s,e)=>s+(e.lines||[]).reduce((ls,line)=>{const p=productData.find(x=>String(x.item)===String(line.item));return ls+(isQuantityOnlyProduct(p)?0:(Number(line.extendedCost)||0));},0),0));renderTechnicianSpend()}
     function norm(v){return String(v||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim()}
-    function bestMatch(d){const c=norm(d);let best=null,score=0;productData.forEach(p=>{const n=norm(p.name);let s=(c.includes(n)||n.includes(c))?100:0;if(!s){const a=new Set(c.split(" ").filter(x=>x.length>2)),b=new Set(n.split(" ").filter(x=>x.length>2));s=[...a].filter(x=>b.has(x)).length/Math.max(1,b.size)*80}if(s>score){score=s;best=p}});return score>=45?best:null}
+    // Pull out size tokens (240 ml, 16 oz, 2 lb, 1 gal, "Box of 4"...) so that products
+    // sharing a name — Temprid FX 240/400/900 mL, NyGuard 140/480 mL — can be told apart.
+    function sizeTokens(text){
+      const out=new Set();
+      const source=String(text||"").toLowerCase();
+      const unitPattern=/(\d+(?:\.\d+)?)\s*(ml|milliliter|l|liter|oz|ounce|fl\s?oz|lb|lbs|pound|g|gram|kg|gal|gallon|qt|quart|pt|pint)\b/g;
+      let match;
+      while((match=unitPattern.exec(source))!==null){
+        let unit=match[2].replace(/\s+/g,"");
+        const alias={milliliter:"ml",liter:"l",ounce:"oz",floz:"oz",lbs:"lb",pound:"lb",gram:"g",gallon:"gal",quart:"qt",pint:"pt"};
+        unit=alias[unit]||unit;
+        out.add(`${parseFloat(match[1])}${unit}`);
+      }
+      const countPattern=/\b(?:box|case|bag|pail|pack|pk|cs)\s*of\s*(\d+)\b|\b(\d+)\s*(?:\/\s*(?:pk|cs|case)|per\s*(?:case|bag|pail))\b/g;
+      while((match=countPattern.exec(source))!==null){
+        out.add(`count${match[1]||match[2]}`);
+      }
+      return out;
+    }
+
+    function bestMatch(d){
+      const c=norm(d);
+      const descriptionSizes=sizeTokens(d);
+      let best=null,score=0;
+      productData.forEach(p=>{
+        const n=norm(p.name);
+        let s=(c.includes(n)||n.includes(c))?100:0;
+        if(!s){
+          const a=new Set(c.split(" ").filter(x=>x.length>2)),b=new Set(n.split(" ").filter(x=>x.length>2));
+          s=[...a].filter(x=>b.has(x)).length/Math.max(1,b.size)*80;
+        }
+        if(s>0 && descriptionSizes.size){
+          // Same name, different bottle: reward the size that matches, penalise the ones that clash.
+          const productSizes=sizeTokens(`${p.unit||""} ${p.priceUom||""}`);
+          if(productSizes.size){
+            const overlap=[...descriptionSizes].some(token=>productSizes.has(token));
+            s=overlap ? s+12 : s-25;
+          }
+        }
+        if(s>score){score=s;best=p}
+      });
+      return score>=45?best:null;
+    }
     function formatPdfDate(mmddyyyy){const m=String(mmddyyyy||'').match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);return m?`${m[3]}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`:''}
     function parseCheckout(text,fileName){
       const raw=String(text||'').replace(/\r/g,'');
