@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v4.22</title>
+  <title>PMP Operations Center v4.23</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -116,7 +116,7 @@
        center); when main constrains the screen's box shorter than its
        content, that second layer of centering is what actually pushed the
        cards above the header. Top-align this layer too.
-       v4.22 — the Inventory and Product Manager menus share the same trap
+       v4.23 — the Inventory and Product Manager menus share the same trap
        (their tile grids exceed short desktop windows), so they get the same
        treatment as the dashboard. */
     #dashboard-screen,
@@ -1230,7 +1230,7 @@
        The header, toolbar, and summary strip were together consuming most of the
        screen, leaving room for only 2-3 product rows. This compacts all three so
        the table gets the space instead.
-       v4.22 — same compact header extended to Order, Receive, and Minimums
+       v4.23 — same compact header extended to Order, Receive, and Minimums
        (explicit id list, NOT the shared .products-screen class — see the
        v4.19 scoping lesson). */
     @media (max-width: 900px) and (orientation: portrait) {
@@ -1277,7 +1277,7 @@
         white-space: nowrap;
       }
 
-      /* v4.22 — Order toolbar: search full-width, filter + export side by side */
+      /* v4.23 — Order toolbar: search full-width, filter + export side by side */
       #order-inventory-screen .products-toolbar,
       #product-manager-screen .products-toolbar {
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -1294,7 +1294,7 @@
         grid-column: 1 / -1;
       }
 
-      /* v4.22 — bigger touch targets for field entry (Order stepper sizing
+      /* v4.23 — bigger touch targets for field entry (Order stepper sizing
          lives in the v3.53 block below, which wins the cascade there) */
       #product-manager-screen .manager-number {
         min-height: 44px;
@@ -1423,7 +1423,7 @@
         gap: 3px;
       }
 
-      /* v4.22 — grown from 27×30px to real touch-target size for field use */
+      /* v4.23 — grown from 27×30px to real touch-target size for field use */
       #order-inventory-screen .reorder-qty-control button {
         width: 40px;
         height: 42px;
@@ -2931,7 +2931,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.22</div>
+      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.23</div>
     </header>
 
     <main>
@@ -3694,7 +3694,7 @@
 
     </main>
 
-    <footer>PMP Operations Center • v4.22</footer>
+    <footer>PMP Operations Center • v4.23</footer>
   </div>
 
   <div id="product-detail-overlay" role="dialog" aria-modal="true" aria-labelledby="product-detail-name">
@@ -3747,7 +3747,7 @@
       async function applyPendingUpdate(){
         if(!stateRef || !cloudReady) return;
         hideUpdateBanner();
-        setStatus("LOADING CLOUD DATA • v4.22","warning");
+        setStatus("LOADING CLOUD DATA • v4.23","warning");
         try{
           const snap=await stateRef.get();
           if(!snap.exists) return;
@@ -3759,7 +3759,7 @@
           location.reload();
         }catch(error){
           console.error("PMP cloud update failed",error);
-          setStatus("CLOUD LOAD FAILED • v4.22","error");
+          setStatus("CLOUD LOAD FAILED • v4.23","error");
           setDetail(`Could not load the update: ${error.message}`);
           showUpdateBanner();
         }
@@ -3818,7 +3818,7 @@
         if(!cloudReady || !cloudInitialized || applyingCloud || !stateRef) return;
         const revision=makeRevision();
         lastKnownRevision=revision;
-        setStatus("SAVING TO CLOUD • v4.22","warning");
+        setStatus("SAVING TO CLOUD • v4.23","warning");
         setDetail(`${reason}…`);
         try{
           await stateRef.set({
@@ -3831,11 +3831,11 @@
             updatedBy:auth.currentUser ? auth.currentUser.uid : "unknown"
           });
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD SYNCED • v4.22","ready");
+          setStatus("CLOUD SYNCED • v4.23","ready");
           setDetail(`Saved to cloud at ${new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}.`);
         }catch(error){
           console.error("PMP cloud save failed",error);
-          setStatus("CLOUD SAVE FAILED • v4.22","error");
+          setStatus("CLOUD SAVE FAILED • v4.23","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud data can be saved." : `Cloud save failed: ${error.message}`);
         }
       }
@@ -3863,7 +3863,7 @@
         if(!stateRef || !cloudReady) return;
         if(!confirm("Initialize Firebase using the PMP data currently stored on this device? Use the device with the authoritative inventory data.")) return;
         const revision=makeRevision();
-        setStatus("INITIALIZING CLOUD • v4.22","warning");
+        setStatus("INITIALIZING CLOUD • v4.23","warning");
         setDetail("Creating the first shared PMP cloud record…");
         try{
           await stateRef.set({
@@ -3879,7 +3879,7 @@
           cloudInitialized=true;
           lastKnownRevision=revision;
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD SYNCED • v4.22","ready");
+          setStatus("CLOUD SYNCED • v4.23","ready");
           setDetail("Cloud initialized from this device. Future PMP changes will synchronize automatically.");
           showCloudSuccess(`The Go-Live Master is now stored in Firebase. ${Object.keys(snapshotRecords()).length} PMP data records are synchronized and this device is live.`);
           setButtons();
@@ -3887,13 +3887,13 @@
           watchCloud();
         }catch(error){
           console.error("PMP cloud initialization failed",error);
-          setStatus("CLOUD SETUP BLOCKED • v4.22","error");
+          setStatus("CLOUD SETUP BLOCKED • v4.23","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud initialization." : `Cloud initialization failed: ${error.message}`);
         }
       }
       async function loadCloudData({reload=true}={}){
         if(!stateRef || !cloudReady) return;
-        setStatus("LOADING CLOUD DATA • v4.22","warning");
+        setStatus("LOADING CLOUD DATA • v4.23","warning");
         try{
           const snap=await stateRef.get();
           if(!snap.exists || !snap.data().initialized){
@@ -3908,14 +3908,14 @@
           lastKnownRevision=data.revision||"";
           replaceLocalRecords(data.records||{});
           localStorage.setItem("pmpCloudRevision_v4",lastKnownRevision);
-          setStatus("CLOUD SYNCED • v4.22","ready");
+          setStatus("CLOUD SYNCED • v4.23","ready");
           setDetail("Latest shared PMP data loaded successfully.");
           showCloudSuccess("The latest shared PMP records were loaded onto this device successfully.");
           setButtons();
           if(reload) location.reload();
         }catch(error){
           console.error("PMP cloud load failed",error);
-          setStatus("CLOUD ACCESS BLOCKED • v4.22","error");
+          setStatus("CLOUD ACCESS BLOCKED • v4.23","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before the app can read cloud data." : `Cloud load failed: ${error.message}`);
         }
       }
@@ -3928,12 +3928,12 @@
           if(!revision || revision===lastKnownRevision) return;
           if(revision===pendingRevision) return;
           pendingRevision=revision;
-          setStatus("CLOUD UPDATE AVAILABLE • v4.22","warning");
+          setStatus("CLOUD UPDATE AVAILABLE • v4.23","warning");
           setDetail("Another device updated PMP. Load it when you are ready.");
           showUpdateBanner();
         },error=>{
           console.error("PMP live sync failed",error);
-          setStatus("LIVE SYNC PAUSED • v4.22","error");
+          setStatus("LIVE SYNC PAUSED • v4.23","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated to enable live synchronization." : `Live sync paused: ${error.message}`);
         });
       }
@@ -3960,14 +3960,14 @@
             // Do not overwrite this device silently. Offer it instead.
             pendingRevision=cloudRevision;
             lastKnownRevision=localRevision;
-            setStatus("CLOUD UPDATE AVAILABLE • v4.22","warning");
+            setStatus("CLOUD UPDATE AVAILABLE • v4.23","warning");
             setDetail("Newer cloud data exists. Load it when you are ready.");
             showUpdateBanner();
             watchCloud();
             return;
           }
           lastKnownRevision=cloudRevision;
-          setStatus("CLOUD SYNCED • v4.22","ready");
+          setStatus("CLOUD SYNCED • v4.23","ready");
           setDetail("This device is connected to the shared PMP cloud data.");
           const created = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : "previously";
           showCloudSuccess(`Firebase was initialized ${created}. Automatic synchronization is active. Use \u201cLoad Latest Cloud Data\u201d only when you need to manually refresh this device.`);
@@ -3976,7 +3976,7 @@
           console.error("PMP cloud startup failed",error);
           cloudReady=false;
           setButtons();
-          setStatus("CLOUD CONNECTION FAILED • v4.22","error");
+          setStatus("CLOUD CONNECTION FAILED • v4.23","error");
           setDetail(error.code==="permission-denied" ? "Signed in, but Firestore rules are blocking access." : `Cloud connection failed: ${error.message}`);
         }
       }
@@ -3992,7 +3992,7 @@
       function showGate(){
         const gate=document.getElementById("auth-gate");
         if(gate) gate.hidden=false;
-        setStatus("SIGN IN REQUIRED • v4.22","warning");
+        setStatus("SIGN IN REQUIRED • v4.23","warning");
         setDetail("Sign in to connect this device to the PMP cloud.");
       }
       function hideGate(){
@@ -4047,7 +4047,7 @@
           auth=firebase.auth();
           db=firebase.firestore();
           stateRef=db.collection(STATE_COLLECTION).doc(STATE_DOCUMENT);
-          setStatus("CONNECTING • v4.22","starting");
+          setStatus("CONNECTING • v4.23","starting");
           // Keep the session on this device so the iPad is not asked to sign in daily.
           try{ await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); }catch(e){ console.warn("Auth persistence unavailable",e); }
           auth.onAuthStateChanged(user=>{
@@ -4067,7 +4067,7 @@
           console.error("PMP Firebase startup failed",error);
           cloudReady=false;
           setButtons();
-          setStatus("CLOUD CONNECTION FAILED • v4.22","error");
+          setStatus("CLOUD CONNECTION FAILED • v4.23","error");
           setDetail(`Firebase connection failed: ${error.message}`);
         }
       }
@@ -4418,15 +4418,12 @@
     document.querySelectorAll(".dashboard-card").forEach((card) => {
       card.addEventListener("click", () => {
         const section = card.dataset.section;
-        console.log("PMP: Dashboard card clicked -", section);
         if (section === "Inventory") {
-          console.log("PMP: Navigating to Inventory");
           dashboardScreen.classList.remove("active");
           inventoryScreen.classList.add("active");
           return;
         }
         if (section === "Cloud Manager") {
-          console.log("PMP: Navigating to Cloud Manager");
           dashboardScreen.classList.remove("active");
           dataTransferScreen.classList.add("active");
           dataTransferOrigin = "dashboard";
@@ -4439,14 +4436,11 @@
     });
 
     backButton.addEventListener("click", () => {
-      console.log("PMP: Back button clicked. Modal active?", productDetailOverlay && productDetailOverlay.classList.contains("active"));
-      // Prevent navigation if product detail modal is open
+      // If the product detail card is open, close it instead of leaving the screen.
       if(productDetailOverlay && productDetailOverlay.classList.contains("active")) {
-        console.log("PMP: Modal is open - closing instead of navigating");
         closeProductDetail();
         return;
       }
-      console.log("PMP: Navigating back to Dashboard");
       inventoryScreen.classList.remove("active");
       dashboardScreen.classList.add("active");
     });
@@ -4748,28 +4742,9 @@
         .join("");
       productDetailOverlay.classList.add("active");
       if(productDetailClose) productDetailClose.focus();
-      // Prevent document button clicks from propagating to parent elements or modal handlers
-      // Also preserve the current screen state to prevent accidental navigation
-      const currentScreen=document.querySelector('.screen.active');
-      const currentScreenId=currentScreen ? currentScreen.id : null;
-      console.log("PMP: Opening product detail modal. Current screen:", currentScreenId);
+      // Keep doc-button clicks from bubbling into row/overlay handlers.
       productDetailDocs.querySelectorAll(".product-doc-button").forEach(btn=>{
-        btn.addEventListener("click",(e)=>{
-          console.log("PMP: Document button clicked - href:", btn.href, "target:", btn.target);
-          e.stopPropagation();
-          e.stopImmediatePropagation();
-          // Ensure we restore the screen if it changes unexpectedly
-          setTimeout(()=>{
-            const nowActive=document.querySelector('.screen.active');
-            console.log("PMP: 100ms after button click - current screen:", nowActive ? nowActive.id : "none", "expected:", currentScreenId);
-            if(nowActive && nowActive.id!==currentScreenId && currentScreenId){
-              console.log("PMP: SCREEN CHANGED! Restoring from", nowActive.id, "to", currentScreenId);
-              nowActive.classList.remove('active');
-              const screen=document.getElementById(currentScreenId);
-              if(screen) screen.classList.add('active');
-            }
-          },100);
-        });
+        btn.addEventListener("click",(e)=>{ e.stopPropagation(); });
       });
     }
     function closeProductDetail(){ productDetailOverlay.classList.remove("active"); }
@@ -6188,15 +6163,6 @@
 
     renderProducts();
     renderProductManager();
-
-    // Reset modal state on page load to prevent cached modal from persisting
-    window.addEventListener("load", () => {
-      if(productDetailOverlay) productDetailOverlay.classList.remove("active");
-    });
-    // Also reset when page becomes visible (tab switch, resume from background)
-    document.addEventListener("visibilitychange", () => {
-      if(!document.hidden && productDetailOverlay) productDetailOverlay.classList.remove("active");
-    });
   </script>
 
   <script>
