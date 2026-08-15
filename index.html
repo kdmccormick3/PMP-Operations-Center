@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PMP Operations Center v4.19</title>
+  <title>PMP Operations Center v4.20</title>
 
   <meta name="theme-color" content="#0b2743" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -106,15 +106,22 @@
        where it's reachable, instead of hiding behind the header above.
        Scoped to the dashboard only so every other screen's centered look
        is unchanged. */
-    main:has(#dashboard-screen.active) {
+    main:has(#dashboard-screen.active),
+    main:has(#inventory-screen.active),
+    main:has(#product-manager-menu-screen.active) {
       justify-content: flex-start;
     }
 
     /* The .screen base class also centers its own children (justify-content:
        center); when main constrains the screen's box shorter than its
        content, that second layer of centering is what actually pushed the
-       cards above the header. Top-align this layer too. */
-    #dashboard-screen {
+       cards above the header. Top-align this layer too.
+       v4.20 — the Inventory and Product Manager menus share the same trap
+       (their tile grids exceed short desktop windows), so they get the same
+       treatment as the dashboard. */
+    #dashboard-screen,
+    #inventory-screen,
+    #product-manager-menu-screen {
       justify-content: flex-start;
     }
 
@@ -1222,9 +1229,15 @@
     /* v4.19 — Products iPad portrait: reclaim vertical space for the product list.
        The header, toolbar, and summary strip were together consuming most of the
        screen, leaving room for only 2-3 product rows. This compacts all three so
-       the table gets the space instead. */
+       the table gets the space instead.
+       v4.20 — same compact header extended to Order, Receive, and Minimums
+       (explicit id list, NOT the shared .products-screen class — see the
+       v4.19 scoping lesson). */
     @media (max-width: 900px) and (orientation: portrait) {
-      #products-screen .inventory-header {
+      #products-screen .inventory-header,
+      #order-inventory-screen .inventory-header,
+      #receive-inventory-screen .inventory-header,
+      #product-manager-screen .inventory-header {
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
@@ -1232,24 +1245,70 @@
         gap: 10px;
       }
 
-      #products-screen .inventory-title {
+      #products-screen .inventory-title,
+      #order-inventory-screen .inventory-title,
+      #receive-inventory-screen .inventory-title,
+      #product-manager-screen .inventory-title {
         min-width: 0;
       }
 
-      #products-screen .inventory-title h2 {
+      #products-screen .inventory-title h2,
+      #order-inventory-screen .inventory-title h2,
+      #receive-inventory-screen .inventory-title h2,
+      #product-manager-screen .inventory-title h2 {
         font-size: 1.28rem;
       }
 
-      #products-screen .inventory-title p {
+      #products-screen .inventory-title p,
+      #order-inventory-screen .inventory-title p,
+      #receive-inventory-screen .inventory-title p,
+      #product-manager-screen .inventory-title p {
         display: none;
       }
 
-      #products-screen .back-button {
+      #products-screen .back-button,
+      #order-inventory-screen .back-button,
+      #receive-inventory-screen .back-button,
+      #product-manager-screen .back-button {
         width: auto;
         flex: 0 0 auto;
         padding: 9px 14px;
         font-size: .82rem;
         white-space: nowrap;
+      }
+
+      /* v4.20 — Order toolbar: search full-width, filter + export side by side */
+      #order-inventory-screen .products-toolbar,
+      #product-manager-screen .products-toolbar {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 8px;
+      }
+
+      #order-inventory-screen .products-toolbar select,
+      #product-manager-screen .products-toolbar select {
+        min-width: 0;
+      }
+
+      #order-inventory-screen #order-search,
+      #product-manager-screen #manager-search {
+        grid-column: 1 / -1;
+      }
+
+      /* v4.20 — bigger touch targets for field entry (Order stepper sizing
+         lives in the v3.53 block below, which wins the cascade there) */
+      #product-manager-screen .manager-number {
+        min-height: 44px;
+        font-size: .95rem;
+      }
+
+      #product-manager-screen .status-toggle {
+        min-height: 44px;
+        padding: 10px 12px;
+      }
+
+      #product-manager-screen #update-minimums {
+        min-height: 46px;
+        font-size: .95rem;
       }
 
       #products-screen .products-toolbar {
@@ -1364,16 +1423,20 @@
         gap: 3px;
       }
 
+      /* v4.20 — grown from 27×30px to real touch-target size for field use */
       #order-inventory-screen .reorder-qty-control button {
-        width: 27px;
-        height: 30px;
-        flex: 0 0 27px;
+        width: 40px;
+        height: 42px;
+        flex: 0 0 40px;
+        font-size: 1.05rem;
       }
 
       #order-inventory-screen .reorder-qty-control input {
-        width: 42px;
+        width: 64px;
         min-width: 0;
+        min-height: 42px;
         padding: 6px 2px;
+        font-size: .95rem;
       }
 
       #order-inventory-screen .products-total-bar {
@@ -2586,6 +2649,122 @@
       .products-view-count{text-align:left;margin-top:-5px}
     }
 
+    /* ---- v4.20: product detail card + document links ---- */
+    .product-row { cursor: pointer; }
+    .product-row:focus-visible { outline: 3px solid var(--red); outline-offset: -3px; }
+    #product-detail-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9500;
+      background: rgba(11, 39, 67, 0.55);
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+    #product-detail-overlay.active { display: flex; }
+    .product-detail-card {
+      width: min(680px, 100%);
+      max-height: min(86vh, 900px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 24px 60px rgba(0,0,0,.35);
+      padding: 20px 22px 22px;
+    }
+    .product-detail-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+    .product-detail-head h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: var(--navy-dark);
+      line-height: 1.25;
+    }
+    .product-detail-close {
+      flex: 0 0 auto;
+      min-width: 44px;
+      min-height: 44px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #f4f7fa;
+      color: var(--navy-dark);
+      font-size: 1.25rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .product-detail-close:hover,
+    .product-detail-close:focus-visible { border-color: var(--navy); outline: none; }
+    .product-detail-sub {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 600;
+    }
+    .product-detail-docs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0 0 16px;
+    }
+    .product-doc-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      background: var(--navy);
+      color: #fff;
+      font-weight: 800;
+      font-size: .92rem;
+      text-decoration: none;
+      border: 2px solid var(--navy);
+    }
+    .product-doc-button:hover,
+    .product-doc-button:focus-visible { filter: brightness(1.12); outline: none; }
+    .product-doc-button svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .product-detail-nodocs {
+      margin: 0 0 16px;
+      padding: 11px 13px;
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: .88rem;
+      font-weight: 600;
+    }
+    .product-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px 16px;
+    }
+    .product-detail-field { min-width: 0; }
+    .product-detail-field span {
+      display: block;
+      color: var(--muted);
+      font-size: .68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .product-detail-field strong {
+      display: block;
+      margin-top: 2px;
+      color: var(--text);
+      font-size: .93rem;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+    .product-detail-field.wide { grid-column: 1 / -1; }
+    @media (max-width: 620px) {
+      .product-detail-grid { grid-template-columns: 1fr; }
+    }
+
     /* ---- Sign-in gate (v4.18) ---- */
     #auth-gate {
       position: fixed;
@@ -2752,7 +2931,7 @@
         <h1>PMP OPERATIONS CENTER</h1>
         <p>Virginia Pest Management Professional Dashboard</p><div class="warehouse-mode-indicator" aria-live="polite">Warehouse Mode • iPad</div>
       </div>
-      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.19</div>
+      <div id="cloud-status" class="status-badge cloud-status cloud-starting">CLOUD STARTING • v4.20</div>
     </header>
 
     <main>
@@ -3226,6 +3405,7 @@
 
             <section class="wizard-panel" data-wizard-panel="3">
               <h3>Compliance, documents, and technical details</h3>
+              <p class="section-note" style="margin:0 0 14px"><strong>Documents:</strong> upload the PDF to the <strong>labels</strong> folder of the GitHub repo (Add file &rarr; Upload files), then enter its exact filename below — or paste a full web link. It becomes a View button on the product's detail card.</p>
               <div class="wizard-grid">
                 <label><span>EPA Registration</span><input id="wizard-epa" type="text"></label>
                 <label><span>Active Ingredient(s)</span><input id="wizard-active" type="text"></label>
@@ -3243,10 +3423,10 @@
                 <label><span>Rotation Pairs</span><input id="wizard-rotation" type="text"></label>
                 <label><span>Avoid Rotation</span><input id="wizard-avoid-rotation" type="text"></label>
                 <label class="wide"><span>Resistance / Safety Notes</span><textarea id="wizard-resistance"></textarea></label>
-                <label><span>Label File / Link</span><input id="wizard-label-link" type="text"></label>
-                <label><span>SDS File / Link</span><input id="wizard-sds-link" type="text"></label>
-                <label><span>Technical Bulletin</span><input id="wizard-tech-link" type="text"></label>
-                <label><span>Training Document</span><input id="wizard-training-link" type="text"></label>
+                <label><span>Label File / Link</span><input id="wizard-label-link" type="text" placeholder="Filename in labels folder, or full link"></label>
+                <label><span>SDS File / Link</span><input id="wizard-sds-link" type="text" placeholder="Filename in labels folder, or full link"></label>
+                <label><span>Technical Bulletin</span><input id="wizard-tech-link" type="text" placeholder="Filename in labels folder, or full link"></label>
+                <label><span>Training Document</span><input id="wizard-training-link" type="text" placeholder="Filename in labels folder, or full link"></label>
                 <label class="wide"><span>Manager Notes</span><textarea id="wizard-notes"></textarea></label>
               </div>
             </section>
@@ -3514,7 +3694,19 @@
 
     </main>
 
-    <footer>PMP Operations Center • v4.19</footer>
+    <footer>PMP Operations Center • v4.20</footer>
+  </div>
+
+  <div id="product-detail-overlay" role="dialog" aria-modal="true" aria-labelledby="product-detail-name">
+    <div class="product-detail-card">
+      <div class="product-detail-head">
+        <h3 id="product-detail-name"></h3>
+        <button id="product-detail-close" class="product-detail-close" type="button" aria-label="Close product details">&times;</button>
+      </div>
+      <p class="product-detail-sub" id="product-detail-sub"></p>
+      <div class="product-detail-docs" id="product-detail-docs"></div>
+      <div class="product-detail-grid" id="product-detail-grid"></div>
+    </div>
   </div>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -3555,7 +3747,7 @@
       async function applyPendingUpdate(){
         if(!stateRef || !cloudReady) return;
         hideUpdateBanner();
-        setStatus("LOADING CLOUD DATA • v4.19","warning");
+        setStatus("LOADING CLOUD DATA • v4.20","warning");
         try{
           const snap=await stateRef.get();
           if(!snap.exists) return;
@@ -3567,7 +3759,7 @@
           location.reload();
         }catch(error){
           console.error("PMP cloud update failed",error);
-          setStatus("CLOUD LOAD FAILED • v4.19","error");
+          setStatus("CLOUD LOAD FAILED • v4.20","error");
           setDetail(`Could not load the update: ${error.message}`);
           showUpdateBanner();
         }
@@ -3626,7 +3818,7 @@
         if(!cloudReady || !cloudInitialized || applyingCloud || !stateRef) return;
         const revision=makeRevision();
         lastKnownRevision=revision;
-        setStatus("SAVING TO CLOUD • v4.19","warning");
+        setStatus("SAVING TO CLOUD • v4.20","warning");
         setDetail(`${reason}…`);
         try{
           await stateRef.set({
@@ -3639,11 +3831,11 @@
             updatedBy:auth.currentUser ? auth.currentUser.uid : "unknown"
           });
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD SYNCED • v4.19","ready");
+          setStatus("CLOUD SYNCED • v4.20","ready");
           setDetail(`Saved to cloud at ${new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}.`);
         }catch(error){
           console.error("PMP cloud save failed",error);
-          setStatus("CLOUD SAVE FAILED • v4.19","error");
+          setStatus("CLOUD SAVE FAILED • v4.20","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud data can be saved." : `Cloud save failed: ${error.message}`);
         }
       }
@@ -3671,7 +3863,7 @@
         if(!stateRef || !cloudReady) return;
         if(!confirm("Initialize Firebase using the PMP data currently stored on this device? Use the device with the authoritative inventory data.")) return;
         const revision=makeRevision();
-        setStatus("INITIALIZING CLOUD • v4.19","warning");
+        setStatus("INITIALIZING CLOUD • v4.20","warning");
         setDetail("Creating the first shared PMP cloud record…");
         try{
           await stateRef.set({
@@ -3687,7 +3879,7 @@
           cloudInitialized=true;
           lastKnownRevision=revision;
           localStorage.setItem("pmpCloudRevision_v4",revision);
-          setStatus("CLOUD SYNCED • v4.19","ready");
+          setStatus("CLOUD SYNCED • v4.20","ready");
           setDetail("Cloud initialized from this device. Future PMP changes will synchronize automatically.");
           showCloudSuccess(`The Go-Live Master is now stored in Firebase. ${Object.keys(snapshotRecords()).length} PMP data records are synchronized and this device is live.`);
           setButtons();
@@ -3695,13 +3887,13 @@
           watchCloud();
         }catch(error){
           console.error("PMP cloud initialization failed",error);
-          setStatus("CLOUD SETUP BLOCKED • v4.19","error");
+          setStatus("CLOUD SETUP BLOCKED • v4.20","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before cloud initialization." : `Cloud initialization failed: ${error.message}`);
         }
       }
       async function loadCloudData({reload=true}={}){
         if(!stateRef || !cloudReady) return;
-        setStatus("LOADING CLOUD DATA • v4.19","warning");
+        setStatus("LOADING CLOUD DATA • v4.20","warning");
         try{
           const snap=await stateRef.get();
           if(!snap.exists || !snap.data().initialized){
@@ -3716,14 +3908,14 @@
           lastKnownRevision=data.revision||"";
           replaceLocalRecords(data.records||{});
           localStorage.setItem("pmpCloudRevision_v4",lastKnownRevision);
-          setStatus("CLOUD SYNCED • v4.19","ready");
+          setStatus("CLOUD SYNCED • v4.20","ready");
           setDetail("Latest shared PMP data loaded successfully.");
           showCloudSuccess("The latest shared PMP records were loaded onto this device successfully.");
           setButtons();
           if(reload) location.reload();
         }catch(error){
           console.error("PMP cloud load failed",error);
-          setStatus("CLOUD ACCESS BLOCKED • v4.19","error");
+          setStatus("CLOUD ACCESS BLOCKED • v4.20","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated before the app can read cloud data." : `Cloud load failed: ${error.message}`);
         }
       }
@@ -3736,12 +3928,12 @@
           if(!revision || revision===lastKnownRevision) return;
           if(revision===pendingRevision) return;
           pendingRevision=revision;
-          setStatus("CLOUD UPDATE AVAILABLE • v4.19","warning");
+          setStatus("CLOUD UPDATE AVAILABLE • v4.20","warning");
           setDetail("Another device updated PMP. Load it when you are ready.");
           showUpdateBanner();
         },error=>{
           console.error("PMP live sync failed",error);
-          setStatus("LIVE SYNC PAUSED • v4.19","error");
+          setStatus("LIVE SYNC PAUSED • v4.20","error");
           setDetail(error.code==="permission-denied" ? "Firestore rules must be updated to enable live synchronization." : `Live sync paused: ${error.message}`);
         });
       }
@@ -3768,14 +3960,14 @@
             // Do not overwrite this device silently. Offer it instead.
             pendingRevision=cloudRevision;
             lastKnownRevision=localRevision;
-            setStatus("CLOUD UPDATE AVAILABLE • v4.19","warning");
+            setStatus("CLOUD UPDATE AVAILABLE • v4.20","warning");
             setDetail("Newer cloud data exists. Load it when you are ready.");
             showUpdateBanner();
             watchCloud();
             return;
           }
           lastKnownRevision=cloudRevision;
-          setStatus("CLOUD SYNCED • v4.19","ready");
+          setStatus("CLOUD SYNCED • v4.20","ready");
           setDetail("This device is connected to the shared PMP cloud data.");
           const created = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : "previously";
           showCloudSuccess(`Firebase was initialized ${created}. Automatic synchronization is active. Use \u201cLoad Latest Cloud Data\u201d only when you need to manually refresh this device.`);
@@ -3784,7 +3976,7 @@
           console.error("PMP cloud startup failed",error);
           cloudReady=false;
           setButtons();
-          setStatus("CLOUD CONNECTION FAILED • v4.19","error");
+          setStatus("CLOUD CONNECTION FAILED • v4.20","error");
           setDetail(error.code==="permission-denied" ? "Signed in, but Firestore rules are blocking access." : `Cloud connection failed: ${error.message}`);
         }
       }
@@ -3800,7 +3992,7 @@
       function showGate(){
         const gate=document.getElementById("auth-gate");
         if(gate) gate.hidden=false;
-        setStatus("SIGN IN REQUIRED • v4.19","warning");
+        setStatus("SIGN IN REQUIRED • v4.20","warning");
         setDetail("Sign in to connect this device to the PMP cloud.");
       }
       function hideGate(){
@@ -3855,7 +4047,7 @@
           auth=firebase.auth();
           db=firebase.firestore();
           stateRef=db.collection(STATE_COLLECTION).doc(STATE_DOCUMENT);
-          setStatus("CONNECTING • v4.19","starting");
+          setStatus("CONNECTING • v4.20","starting");
           // Keep the session on this device so the iPad is not asked to sign in daily.
           try{ await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); }catch(e){ console.warn("Auth persistence unavailable",e); }
           auth.onAuthStateChanged(user=>{
@@ -3875,7 +4067,7 @@
           console.error("PMP Firebase startup failed",error);
           cloudReady=false;
           setButtons();
-          setStatus("CLOUD CONNECTION FAILED • v4.19","error");
+          setStatus("CLOUD CONNECTION FAILED • v4.20","error");
           setDetail(`Firebase connection failed: ${error.message}`);
         }
       }
@@ -4450,7 +4642,7 @@
       productsBody.innerHTML = filtered.map((product) => {
         const isLow = product.onHand != null && product.minimum != null && Number(product.onHand) < Number(product.minimum);
         return `
-          <tr>
+          <tr class="product-row" data-item="${product.item}" tabindex="0" role="button" aria-label="Open details for ${escapeHtml(product.name)}">
             <td>
               <strong>${escapeHtml(product.name)}</strong>
               <div class="product-mobile-meta">
@@ -4488,6 +4680,77 @@
       productsViewCount.textContent = `Showing ${filtered.length} of ${totalProducts} products`;
       exportOnHandExcel.style.display='';
     }
+
+    /* ---- v4.20: product documents + detail card ---- */
+    // Bare filenames resolve into the repo's labels/ folder (a relative URL,
+    // so it works on GitHub Pages and local copies alike); full URLs pass through.
+    function docHref(value){
+      const v=String(value==null?"":value).trim();
+      if(!v || /^n\/?a$/i.test(v) || v==="—") return null;
+      if(/^https?:\/\//i.test(v)) return v;
+      return "labels/"+encodeURIComponent(v);
+    }
+    const productDetailOverlay=document.getElementById("product-detail-overlay");
+    const productDetailName=document.getElementById("product-detail-name");
+    const productDetailSub=document.getElementById("product-detail-sub");
+    const productDetailDocs=document.getElementById("product-detail-docs");
+    const productDetailGrid=document.getElementById("product-detail-grid");
+    const productDetailClose=document.getElementById("product-detail-close");
+    const DOC_ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>';
+    function openProductDetail(itemId){
+      const product=productData.find(p=>String(p.item)===String(itemId));
+      if(!product) return;
+      productDetailName.textContent=product.name;
+      const subParts=[product.manufacturer,product.category,product.unit].filter(v=>v&&String(v).trim()&&!/^n\/?a$/i.test(String(v).trim()));
+      productDetailSub.textContent=subParts.join(" \u2022 ");
+      const docs=[["Label",product.labelLink],["SDS",product.sdsLink],["Technical Bulletin",product.technicalBulletinLink],["Training",product.trainingDocumentLink]]
+        .map(([label,value])=>({label,href:docHref(value)}))
+        .filter(doc=>doc.href);
+      productDetailDocs.innerHTML=docs.length
+        ? docs.map(doc=>`<a class="product-doc-button" href="${doc.href.replace(/"/g,"&quot;")}" target="_blank" rel="noopener">${DOC_ICON}${escapeHtml(doc.label)}</a>`).join("")
+        : '<p class="product-detail-nodocs">No documents on file yet. Upload the PDF to the repo\u2019s <strong>labels</strong> folder and put its exact filename on this product\u2019s record.</p>';
+      const statusLabel={active:"Active","use-remaining":"Use Remaining Stock",inactive:"Inactive"}[product.status]||product.status;
+      const fields=[
+        ["Status",statusLabel],
+        ["On Hand",product.onHand==null?"\u2014":`${product.onHand}${product.unit?` \u00d7 ${product.unit}`:""}`],
+        ["Minimum",product.minimum==null?"\u2014":product.minimum],
+        ["Unit Price",isQuantityOnlyProduct(product)?"Quantity only":(product.price==null?"No price entered":`${money(product.price)}${product.priceUom?` \u2022 ${product.priceUom}`:""}`)],
+        ["EPA Registration",product.epaReg],
+        ["Active Ingredient",product.activeIngredients],
+        ["IRAC / MOA",product.iracMoa],
+        ["Signal Word",product.signalWord],
+        ["Restricted Use",product.rup],
+        ["VA License Category",product.vaLicenseCategory],
+        ["Target Pests",product.targetPests,true],
+        ["Mix Rate",(()=>{const rates=[product.mixRateLow,product.mixRateHigh].map(v=>String(v==null?"":v).trim()).filter(v=>v&&!/^n\/?a$/i.test(v));return [...new Set(rates)].join(" \u2013 ");})(),true],
+        ["Mix Rate Notes",product.mixRateNotes,true],
+        ["Manager Notes",product.managerNotes,true]
+      ];
+      const alwaysShown=new Set(["Status","On Hand","Minimum","Unit Price"]);
+      productDetailGrid.innerHTML=fields
+        .filter(([label,value])=>{
+          if(alwaysShown.has(label)) return true;
+          const text=value==null?"":String(value).trim();
+          return text!==""&&!/^n\/?a(\s*[\u2013-]\s*n\/?a)?$/i.test(text)&&text!=="\u2014";
+        })
+        .map(([label,value,wide])=>`<div class="product-detail-field${wide?" wide":""}"><span>${escapeHtml(label)}</span><strong>${escapeHtml(String(value))}</strong></div>`)
+        .join("");
+      productDetailOverlay.classList.add("active");
+      if(productDetailClose) productDetailClose.focus();
+    }
+    function closeProductDetail(){ productDetailOverlay.classList.remove("active"); }
+    if(productsBody) productsBody.addEventListener("click",(event)=>{
+      const row=event.target.closest("tr[data-item]");
+      if(row) openProductDetail(row.dataset.item);
+    });
+    if(productsBody) productsBody.addEventListener("keydown",(event)=>{
+      if(event.key!=="Enter"&&event.key!==" ") return;
+      const row=event.target.closest("tr[data-item]");
+      if(row){ event.preventDefault(); openProductDetail(row.dataset.item); }
+    });
+    if(productDetailClose) productDetailClose.addEventListener("click",closeProductDetail);
+    if(productDetailOverlay) productDetailOverlay.addEventListener("click",(event)=>{ if(event.target===productDetailOverlay) closeProductDetail(); });
+    document.addEventListener("keydown",(event)=>{ if(event.key==="Escape"&&productDetailOverlay.classList.contains("active")) closeProductDetail(); });
 
     function getMasterReview(product) {
       const issues = [];
