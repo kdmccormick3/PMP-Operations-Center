@@ -4418,12 +4418,15 @@
     document.querySelectorAll(".dashboard-card").forEach((card) => {
       card.addEventListener("click", () => {
         const section = card.dataset.section;
+        console.log("PMP: Dashboard card clicked -", section);
         if (section === "Inventory") {
+          console.log("PMP: Navigating to Inventory");
           dashboardScreen.classList.remove("active");
           inventoryScreen.classList.add("active");
           return;
         }
         if (section === "Cloud Manager") {
+          console.log("PMP: Navigating to Cloud Manager");
           dashboardScreen.classList.remove("active");
           dataTransferScreen.classList.add("active");
           dataTransferOrigin = "dashboard";
@@ -4436,11 +4439,14 @@
     });
 
     backButton.addEventListener("click", () => {
+      console.log("PMP: Back button clicked. Modal active?", productDetailOverlay && productDetailOverlay.classList.contains("active"));
       // Prevent navigation if product detail modal is open
       if(productDetailOverlay && productDetailOverlay.classList.contains("active")) {
+        console.log("PMP: Modal is open - closing instead of navigating");
         closeProductDetail();
         return;
       }
+      console.log("PMP: Navigating back to Dashboard");
       inventoryScreen.classList.remove("active");
       dashboardScreen.classList.add("active");
     });
@@ -4746,14 +4752,18 @@
       // Also preserve the current screen state to prevent accidental navigation
       const currentScreen=document.querySelector('.screen.active');
       const currentScreenId=currentScreen ? currentScreen.id : null;
+      console.log("PMP: Opening product detail modal. Current screen:", currentScreenId);
       productDetailDocs.querySelectorAll(".product-doc-button").forEach(btn=>{
         btn.addEventListener("click",(e)=>{
+          console.log("PMP: Document button clicked - href:", btn.href, "target:", btn.target);
           e.stopPropagation();
           e.stopImmediatePropagation();
           // Ensure we restore the screen if it changes unexpectedly
           setTimeout(()=>{
             const nowActive=document.querySelector('.screen.active');
+            console.log("PMP: 100ms after button click - current screen:", nowActive ? nowActive.id : "none", "expected:", currentScreenId);
             if(nowActive && nowActive.id!==currentScreenId && currentScreenId){
+              console.log("PMP: SCREEN CHANGED! Restoring from", nowActive.id, "to", currentScreenId);
               nowActive.classList.remove('active');
               const screen=document.getElementById(currentScreenId);
               if(screen) screen.classList.add('active');
