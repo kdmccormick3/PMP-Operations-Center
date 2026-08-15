@@ -1151,41 +1151,44 @@
     }
 
     @media (max-width: 900px) and (orientation: portrait) {
-      .products-table-wrap {
+      /* v4.19 fix: these rules were unscoped and hid/sized columns BY POSITION
+         in every table sharing .products-table — putting Order and Minimums
+         headers over the wrong data on iPad portrait. Scoped to Products. */
+      #products-screen .products-table-wrap {
         overflow-x: hidden;
       }
 
-      .products-table {
+      #products-screen .products-table {
         min-width: 0;
         width: 100%;
         table-layout: fixed;
         font-size: 0.82rem;
       }
 
-      .products-table th,
-      .products-table td {
+      #products-screen .products-table th,
+      #products-screen .products-table td {
         padding: 9px 8px;
         white-space: normal;
         overflow-wrap: anywhere;
       }
 
-      .products-table th:nth-child(2),
-      .products-table th:nth-child(3),
-      .products-table th:nth-child(7),
-      .product-col-manufacturer,
-      .product-col-category,
-      .product-col-unit {
+      #products-screen .products-table th:nth-child(2),
+      #products-screen .products-table th:nth-child(3),
+      #products-screen .products-table th:nth-child(7),
+      #products-screen .product-col-manufacturer,
+      #products-screen .product-col-category,
+      #products-screen .product-col-unit {
         display: none;
       }
 
-      .products-table th:nth-child(1) { width: 43%; }
-      .products-table th:nth-child(4) { width: 15%; text-align: center; }
-      .products-table th:nth-child(5) { width: 19%; text-align: right; }
-      .products-table th:nth-child(6) { width: 23%; text-align: right; }
+      #products-screen .products-table th:nth-child(1) { width: 43%; }
+      #products-screen .products-table th:nth-child(4) { width: 15%; text-align: center; }
+      #products-screen .products-table th:nth-child(5) { width: 19%; text-align: right; }
+      #products-screen .products-table th:nth-child(6) { width: 23%; text-align: right; }
 
-      .products-table td:nth-child(4),
-      .products-table td:nth-child(5),
-      .products-table td:nth-child(6) {
+      #products-screen .products-table td:nth-child(4),
+      #products-screen .products-table td:nth-child(5),
+      #products-screen .products-table td:nth-child(6) {
         text-align: right;
       }
 
@@ -1221,7 +1224,7 @@
        screen, leaving room for only 2-3 product rows. This compacts all three so
        the table gets the space instead. */
     @media (max-width: 900px) and (orientation: portrait) {
-      .products-screen .inventory-header {
+      #products-screen .inventory-header {
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
@@ -1229,19 +1232,19 @@
         gap: 10px;
       }
 
-      .products-screen .inventory-title {
+      #products-screen .inventory-title {
         min-width: 0;
       }
 
-      .products-screen .inventory-title h2 {
+      #products-screen .inventory-title h2 {
         font-size: 1.28rem;
       }
 
-      .products-screen .inventory-title p {
+      #products-screen .inventory-title p {
         display: none;
       }
 
-      .products-screen .back-button {
+      #products-screen .back-button {
         width: auto;
         flex: 0 0 auto;
         padding: 9px 14px;
@@ -1249,21 +1252,21 @@
         white-space: nowrap;
       }
 
-      .products-screen .products-toolbar {
+      #products-screen .products-toolbar {
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: 8px;
       }
 
-      .products-screen .products-toolbar select {
+      #products-screen .products-toolbar select {
         min-width: 0;
       }
 
-      .products-screen #product-search,
-      .products-screen #export-on-hand-excel {
+      #products-screen #product-search,
+      #products-screen #export-on-hand-excel {
         grid-column: 1 / -1;
       }
 
-      .products-screen .products-summary {
+      #products-screen .products-summary {
         display: flex;
         flex-wrap: nowrap;
         width: 100%;
@@ -1277,28 +1280,28 @@
         scroll-snap-type: x proximity;
       }
 
-      .products-screen .products-summary-item {
+      #products-screen .products-summary-item {
         flex: 0 0 auto;
         min-width: 104px;
         padding: 7px 10px;
         scroll-snap-align: start;
       }
 
-      .products-screen .products-summary-item span {
+      #products-screen .products-summary-item span {
         font-size: .6rem;
       }
 
-      .products-screen .products-summary-item strong {
+      #products-screen .products-summary-item strong {
         font-size: .9rem;
         margin-top: 2px;
       }
 
-      .products-screen .products-summary-value {
+      #products-screen .products-summary-value {
         grid-column: unset;
         min-width: 150px;
       }
 
-      .products-screen .products-view-count {
+      #products-screen .products-view-count {
         margin-top: 0;
       }
     }
@@ -2880,7 +2883,7 @@
             <h2>Product Manager</h2>
             <p>Choose the inventory maintenance task you need.</p>
           </div>
-          <button id="back-from-product-manager-menu" class="back-button" type="button">← Back to Dashboard</button>
+          <button id="back-from-product-manager-menu" class="back-button" type="button">← Back to Inventory</button>
         </div>
 
         <section class="module-grid" aria-label="Product Manager tools">
@@ -3906,14 +3909,25 @@
   <script>
     const notice = document.getElementById("notice");
     const isIPadWarehouse = /iPad/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    /* v4.19 fix: usageTitle/usageCopy were const-declared INSIDE the iPad-only
+       block below but referenced by handlers on every device — each Orders
+       screen interaction threw "usageTitle is not defined" and skipped the
+       money-card refresh that followed. Declared here, in shared scope. */
+    const usageTitle = document.getElementById("usage-screen-title");
+    const usageCopy = document.getElementById("usage-screen-copy");
     if (isIPadWarehouse) {
       document.body.classList.add("warehouse-mode");
       const usageCardCopy = document.getElementById("technician-inventory-card-copy");
-      const usageTitle = document.getElementById("usage-screen-title");
-      const usageCopy = document.getElementById("usage-screen-copy");
       if (usageCardCopy) usageCardCopy.textContent = "Open order history or truck inventory.";
       if (usageTitle) usageTitle.textContent = "Orders";
       if (usageCopy) usageCopy.textContent = "Select a technician to review order history and product value issued.";
+      /* v4.19 fix: warehouse mode hides every truck-PDF upload control, but the
+         tile and directory copy still advertised uploading. Align the words
+         with what the screen can actually do on the iPad. */
+      const truckTileCopy = document.querySelector('[data-technician-module="Truck"] p');
+      if (truckTileCopy) truckTileCopy.textContent = "Open truck inventory records and value by technician.";
+      const truckDirectoryCopy = document.querySelector("#truck-directory .tech-spend-title p");
+      if (truckDirectoryCopy) truckDirectoryCopy.textContent = "Select a technician to view their truck inventory.";
     }
 
     const dashboardScreen = document.getElementById("dashboard-screen");
@@ -4082,6 +4096,22 @@
         product.minimum = savedMinimumOverrides[product.item];
       }
     });
+    /* v4.19 fix: this hydration used to run much later in the file, AFTER
+       reorderQuantities was seeded — so order prefills were computed from the
+       embedded master's stock numbers, not the saved ones, and items that fell
+       below minimum since go-live prefilled at 0 and dropped off the reorder
+       export. Moved here so every downstream consumer sees current data. */
+    const savedInventory = JSON.parse(localStorage.getItem("pmpInventoryOverrides_v3_2") || "{}");
+    productData.forEach((product)=>{if(Object.prototype.hasOwnProperty.call(savedInventory,product.item)){product.onHand=savedInventory[product.item];}});
+    /* v4.19 fix: Number(null) is 0, so the 38 master products with no price
+       were silently becoming $0.00 on every load (breaking the Missing Price
+       audit and misclassifying first prices as increases). Null stays null. */
+    const savedPriceOverrides = JSON.parse(localStorage.getItem("pmpPriceOverrides_v3_23") || "{}");
+    productData.forEach((product)=>{if(Object.prototype.hasOwnProperty.call(savedPriceOverrides,product.item)){const savedPrice=savedPriceOverrides[product.item];product.price=(savedPrice==null||savedPrice==="")?null:Number(savedPrice);}});
+    /* v4.19 fix: price-UOM overrides were written on every edit but never read
+       back at startup, so UOM changes silently reverted on reload. */
+    const savedPriceUoms = JSON.parse(localStorage.getItem("pmpPriceUomOverrides_v4_11") || "{}");
+    productData.forEach((product)=>{const savedUom=savedPriceUoms[product.item];if(savedUom!=null&&savedUom!==""){product.priceUom=savedUom;}});
     function saveProductStatuses(){
       const statuses={};
       productData.forEach(product=>statuses[product.item]=product.status);
@@ -4173,6 +4203,7 @@
 
     function saveWizardProduct(){
       if(!wizardConfirm.checked){showNotice("Confirm that you reviewed the product record.");return}
+      for(let step=1;step<=3;step++){if(!validateWizardStep(step)){showWizardStep(step);return}}
       const p=wizardProductRecord();
       if(productData.some(existing=>String(existing.name).trim().toLowerCase()===p.name.trim().toLowerCase())){showNotice("That product already exists in the master.");return}
       productData.push(p);
@@ -4203,6 +4234,8 @@
         if (section === "Cloud Manager") {
           dashboardScreen.classList.remove("active");
           dataTransferScreen.classList.add("active");
+          dataTransferOrigin = "dashboard";
+          if (backFromDataTransfer) backFromDataTransfer.textContent = "\u2190 Back to Dashboard";
           updateDataTransferSummary();
           return;
         }
@@ -4513,7 +4546,7 @@
           <td>${escapeHtml(product.unit)}</td>
           <td class="number">${product.onHand == null ? "—" : product.onHand}</td>
           <td class="number">${product.minimum == null ? "—" : product.minimum}</td>
-          <td class="number">${product.price == null ? "—" : formatMoney(product.price)}</td>
+          <td class="number">${product.price == null ? "—" : money(product.price)}</td>
           <td>${result}</td>
         </tr>`;
       }).join("");
@@ -4629,6 +4662,14 @@
       });
       productData.forEach(product=>{overrides[product.item]=product.minimum;});
       localStorage.setItem("pmpMinimumOverrides_v3_47",JSON.stringify(overrides));
+      /* v4.19 fix: the changes array was built and then discarded, so the
+         History screen's "Minimum Changes" filter was permanently empty. */
+      if(changes.length){
+        const minimumHistory=JSON.parse(localStorage.getItem("pmpMinimumHistory_v3_48")||"[]");
+        const now=new Date();
+        minimumHistory.push({date:now.toISOString().slice(0,10),savedAt:now.toISOString(),changes});
+        localStorage.setItem("pmpMinimumHistory_v3_48",JSON.stringify(minimumHistory));
+      }
       renderProducts();
       renderOrderInventory();
       renderProductManager();
@@ -4776,6 +4817,7 @@
         product:product.name,
         quantity:Number(receiveQuantitiesDedicated[product.item]),
         unitPrice:Number(product.price)||0,
+        unit:product.unit,
         previousOnHand:Number(product.onHand)||0,
         newOnHand:(Number(product.onHand)||0)+Number(receiveQuantitiesDedicated[product.item])
       }));
@@ -4828,15 +4870,13 @@
     // stale pmpReceivingHistory_v3_39 key). The live path is the receive-* handler above.
 
 
-    const savedInventory = JSON.parse(localStorage.getItem("pmpInventoryOverrides_v3_2") || "{}");
-    productData.forEach((product)=>{if(Object.prototype.hasOwnProperty.call(savedInventory,product.item)){product.onHand=savedInventory[product.item];}});
-    const savedPriceOverrides = JSON.parse(localStorage.getItem("pmpPriceOverrides_v3_23") || "{}");
-    productData.forEach((product)=>{if(Object.prototype.hasOwnProperty.call(savedPriceOverrides,product.item)){product.price=Number(savedPriceOverrides[product.item]);}});
+    /* v4.19: saved inventory/price hydration moved up next to the status and
+       minimum hydration (before reorderQuantities seeding) — see note there. */
 
     function renderPhysicalCount(){
       if(!countDate.value) countDate.value=new Date().toISOString().slice(0,10);
       countBody.innerHTML=productData.filter(isAvailableProduct).map((product)=>`<tr data-item="${product.item}"><td><strong>${product.name}</strong><br><span style="color:var(--muted)">${product.unit}</span></td><td class="number">${product.onHand == null ? "—" : product.onHand}</td><td><input class="counted-qty" type="number" min="0" step="0.01" aria-label="Counted quantity for ${product.name}" /></td><td class="difference">—</td><td><input class="count-note" type="text" placeholder="Optional note" aria-label="Note for ${product.name}" /></td></tr>`).join('');
-      countBody.querySelectorAll('.counted-qty').forEach((input)=>input.addEventListener('input',()=>{const row=input.closest('tr');const product=productData.find((item)=>String(item.item)===row.dataset.item);const cell=row.querySelector('.difference');if(input.value===''){cell.textContent='—';cell.className='difference';return;}const diff=Number(input.value)-Number(product.onHand);cell.textContent=diff>0?`+${diff}`:String(diff);cell.className='difference '+(diff===0?'match':'mismatch');}));
+      countBody.querySelectorAll('.counted-qty').forEach((input)=>input.addEventListener('input',()=>{const row=input.closest('tr');const product=productData.find((item)=>String(item.item)===row.dataset.item);const cell=row.querySelector('.difference');if(input.value===''){cell.textContent='—';cell.className='difference';return;}const diff=Math.round((Number(input.value)-Number(product.onHand))*100)/100;cell.textContent=diff>0?`+${diff}`:String(diff);cell.className='difference '+(diff===0?'match':'mismatch');}));
     }
     clearCount.addEventListener('click',()=>{countBody.querySelectorAll('input').forEach((input)=>input.value='');countBody.querySelectorAll('.difference').forEach((cell)=>{cell.textContent='—';cell.className='difference';});showNotice('Physical count cleared.');});
 
@@ -4947,7 +4987,9 @@
     if(importPmpData)importPmpData.addEventListener('change',()=>importPmpBackupFile(importPmpData.files&&importPmpData.files[0]));
     if(cancelPmpImport)cancelPmpImport.addEventListener('click',resetPmpImportSelection);
     if(confirmPmpImport)confirmPmpImport.addEventListener('click',confirmPmpBackupImport);
-    if(backFromDataTransfer)backFromDataTransfer.addEventListener('click',()=>{dataTransferScreen.classList.remove('active');dashboardScreen.classList.add('active')});
+    /* v4.19 fix: Back was hardcoded to Dashboard even when entered from Inventory (regression of the Session-1 dataTransferOrigin fix, which never made it into the live line). */
+    let dataTransferOrigin='dashboard';
+    if(backFromDataTransfer)backFromDataTransfer.addEventListener('click',()=>{dataTransferScreen.classList.remove('active');(dataTransferOrigin==='inventory'?inventoryScreen:dashboardScreen).classList.add('active')});
 
     applyCount.addEventListener('click',()=>{const changed=[];countBody.querySelectorAll('tr[data-item]').forEach((row)=>{const input=row.querySelector('.counted-qty');if(input.value==='')return;const product=productData.find((item)=>String(item.item)===row.dataset.item);const previous=Number(product.onHand),counted=Number(input.value);if(counted!==previous){changed.push({item:product.item,product:product.name,previous,counted,difference:counted-previous,note:row.querySelector('.count-note').value.trim()});product.onHand=counted;updateUseRemainingAtZero(product);}});if(!changed.length){showNotice('No inventory differences were entered.');return;}const overrides={};productData.forEach((product)=>overrides[product.item]=product.onHand);localStorage.setItem('pmpInventoryOverrides_v3_2',JSON.stringify(overrides));const history=JSON.parse(localStorage.getItem('pmpPhysicalCountHistory_v3_2')||'[]');history.push({date:countDate.value,countedBy:countedBy.value.trim(),location:countLocation.value.trim(),reason:countReason.value,changes:changed,savedAt:new Date().toISOString()});localStorage.setItem('pmpPhysicalCountHistory_v3_2',JSON.stringify(history));renderProducts();renderPhysicalCount();showNotice(`${changed.length} inventory ${changed.length===1?'quantity':'quantities'} updated on this device. Export a data backup to transfer the count.`);});
     backFromCount.addEventListener('click',()=>{countScreen.classList.remove('active');productManagerMenuScreen.classList.add('active');});
@@ -5059,7 +5101,7 @@
       usageScreen.classList.remove('directory-mode');
       usageScreen.classList.add('profile-mode');
       usageTitle.textContent='Orders';
-      usageCopy.textContent='Upload checkout PDFs, review the parsed order, and view '+name+"'s order history.";
+      usageCopy.textContent=isIPadWarehouse?('Review '+name+"'s order history and product value issued."):('Upload checkout PDFs, review the parsed order, and view '+name+"'s order history.");
       issuedValue.textContent=money(total);
       techProfile.classList.add('active');
       window.scrollTo({top:0,behavior:'auto'});
@@ -5413,7 +5455,7 @@
       receiving.forEach(record=>{
         const recordKey=record.id||`${record.date}|${record.vendor}|${record.reference}|${record.postedAt}`;
         if(seenReceiving.has(recordKey))return;seenReceiving.add(recordKey);
-        (record.lines||[]).forEach(line=>entries.push({date:record.date||record.postedAt,type:"Receiving",product:line.product||line.name||"Unknown product",change:Number(line.quantity)||0,before:historyNumber(line.previous),after:historyNumber(line.newOnHand),source:record.vendor||"Receiving",reference:record.reference||record.id||"",details:`Received ${Number(line.quantity)||0}${line.unit?` ${line.unit}`:""}${line.unitPrice!=null?` at ${money(line.unitPrice)} each`:""}`,stamp:record.postedAt||record.date||""}));
+        (record.lines||[]).forEach(line=>entries.push({date:record.date||record.postedAt,type:"Receiving",product:line.product||line.name||"Unknown product",change:Number(line.quantity)||0,before:historyNumber(line.previousOnHand!=null?line.previousOnHand:line.previous),after:historyNumber(line.newOnHand),source:record.vendor||"Receiving",reference:record.reference||record.id||"",details:`Received ${Number(line.quantity)||0}${line.unit?` ${line.unit}`:""}${line.unitPrice!=null?` at ${money(line.unitPrice)} each`:""}`,stamp:record.postedAt||record.date||""}));
       });
       safeHistory("pmpTechnicianCheckoutHistory_v3_2").forEach(record=>{
         (record.lines||[]).forEach(line=>{
@@ -5664,7 +5706,7 @@
       usageScreen.classList.remove('profile-mode');
       usageScreen.classList.add('directory-mode');
       usageTitle.textContent='Orders';
-      usageCopy.textContent='Select a technician to review orders, upload checkout PDFs, and view order history.';
+      usageCopy.textContent=isIPadWarehouse?'Select a technician to review order history and product value issued.':'Select a technician to review orders, upload checkout PDFs, and view order history.';
       techDirectory.classList.remove('hidden');
       techDirectory.style.display='block';
       renderTechnicianSpend();
@@ -5679,7 +5721,10 @@
     };
     refreshMoneyCards();
 
-    document.querySelectorAll(".module-tile").forEach((tile) => {
+    /* v4.19 fix: scope to [data-module] so the shared .module-tile class on
+       manager-menu and technician tiles no longer triggers the fallback
+       "undefined is waiting until Products is complete." toast. */
+    document.querySelectorAll(".module-tile[data-module]").forEach((tile) => {
       tile.addEventListener("click", () => {
         if (tile.dataset.module === "Products") {
           inventoryScreen.classList.remove("active");
@@ -5708,7 +5753,7 @@
         }
         if (tile.dataset.module === "Technician Inventory") {inventoryScreen.classList.remove("active");technicianInventoryScreen.classList.add("active");return;}
         if (tile.dataset.module === "Inventory History") {inventoryScreen.classList.remove("active");inventoryHistoryScreen.classList.add("active");renderInventoryHistory();return;}
-        if (tile.dataset.module === "Data Backup & Transfer") {inventoryScreen.classList.remove("active");dataTransferScreen.classList.add("active");updateDataTransferSummary();return;}
+        if (tile.dataset.module === "Data Backup & Transfer") {inventoryScreen.classList.remove("active");dataTransferScreen.classList.add("active");dataTransferOrigin="inventory";if(backFromDataTransfer)backFromDataTransfer.textContent="\u2190 Back to Inventory";updateDataTransferSummary();return;}
         if (tile.dataset.module === "Price Review") {inventoryScreen.classList.remove("active");priceReviewScreen.classList.add("active");renderPriceReview();return;}
         if (tile.dataset.module === "Physical Count") {
           inventoryScreen.classList.remove("active");
@@ -5741,7 +5786,7 @@
           techDirectory.style.display='block';
           renderTechnicianSpend();
           usageTitle.textContent='Orders';
-          usageCopy.textContent='Select a technician to review orders, upload checkout PDFs, and view order history.';
+          usageCopy.textContent=isIPadWarehouse?'Select a technician to review order history and product value issued.':'Select a technician to review orders, upload checkout PDFs, and view order history.';
           refreshMoneyCards();
           return;
         }
@@ -5817,7 +5862,7 @@
       }
       event.target.value=value;
     });
-    document.querySelectorAll("[data-wizard-step]").forEach(button=>button.addEventListener("click",()=>{const target=Number(button.dataset.wizardStep);if(target<=wizardCurrentStep||validateWizardStep(wizardCurrentStep))showWizardStep(target)}));
+    document.querySelectorAll("[data-wizard-step]").forEach(button=>button.addEventListener("click",()=>{const target=Number(button.dataset.wizardStep);if(target<=wizardCurrentStep){showWizardStep(target);return;}/* v4.19 fix: jumping ahead used to validate only the current step, letting a click on chip 4 skip step-2 validation entirely and save products with blank units and zero counts. */for(let step=wizardCurrentStep;step<target;step++){if(!validateWizardStep(step)){if(step!==wizardCurrentStep)showWizardStep(step);return;}}showWizardStep(target)}));
 
     backFromProductManagerMenu.addEventListener("click", () => {
       productManagerMenuScreen.classList.remove("active");
