@@ -4737,6 +4737,13 @@
         .join("");
       productDetailOverlay.classList.add("active");
       if(productDetailClose) productDetailClose.focus();
+      // Prevent document button clicks from propagating to parent elements or modal handlers
+      productDetailDocs.querySelectorAll(".product-doc-button").forEach(btn=>{
+        btn.addEventListener("click",(e)=>{
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+        });
+      });
     }
     function closeProductDetail(){ productDetailOverlay.classList.remove("active"); }
     if(productsBody) productsBody.addEventListener("click",(event)=>{
